@@ -12,13 +12,13 @@ tags:
 
 >自iOS8之后，苹果支持了扩展（Extension）的开发，开发者可以通过系统提供给我们的扩展接入点 (Extension point) 来为系统特定的服务提供某些附加的功能。今年iOS10的推出，让Widget扩展应用渐渐的火了起来，地位得到重大的提升，从这也可以看出苹果对他的重视，今天我们就来一起学习下Widget，来实现一个简单的扩展程序。
 
-![iOS Widget扩展程序](http://upload-images.jianshu.io/upload_images/1269906-dd0a3ebee434a9ec.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/1269906-dd0a3ebee434a9ec.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 
 ##程序效果
 
 
-![程序效果图](http://upload-images.jianshu.io/upload_images/1269906-9a62de27618dd755.gif?imageMogr2/auto-orient/strip)
+![](http://upload-images.jianshu.io/upload_images/1269906-9a62de27618dd755.gif?imageMogr2/auto-orient/strip)
 
 
 ##创建Widget程序
