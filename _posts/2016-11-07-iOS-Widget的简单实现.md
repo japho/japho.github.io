@@ -209,4 +209,5 @@ iOS10之后，Widget支持展开及折叠两种展现方式，通过设置`widge
 
 ### 最后感谢一下文章的博主😏
 [Widget的简单应用并适配iOS10](http://www.jianshu.com/p/42516ee26a45)
+
 [ iOS开发------Widget(Today Extension)插件化开发  ](http://blog.csdn.net/runintolove/article/details/52595770)
