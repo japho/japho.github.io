@@ -10,6 +10,8 @@ tags:
     - iOS
 ---
 
+## 前言
+
 >自iOS8之后，苹果支持了扩展（Extension）的开发，开发者可以通过系统提供给我们的扩展接入点 (Extension point) 来为系统特定的服务提供某些附加的功能。今年iOS10的推出，让Widget扩展应用渐渐的火了起来，地位得到重大的提升，从这也可以看出苹果对他的重视，今天我们就来一起学习下Widget，来实现一个简单的扩展程序。
 
 ![](http://upload-images.jianshu.io/upload_images/1269906-dd0a3ebee434a9ec.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
@@ -83,7 +85,7 @@ iOS10之后，Widget支持展开及折叠两种展现方式，通过设置`widge
 }
 ```
 
-# 应用唤醒
+## 应用唤醒
 本来想叫应用间跳转的，想想还是这个名字比较高大上些😏
 如下，配置url scheme，这个定义的时候尽量不要和其他用用冲突，笔者定义的为`WidgetDemo`。这样，通过访问`WidgetDemo://`就可以实现应用唤醒了。代码如下：
 
@@ -205,6 +207,6 @@ iOS10之后，Widget支持展开及折叠两种展现方式，通过设置`widge
 [博主双手奉上demo，同学们如果喜欢就给我点个star吧~~ 😘](https://github.com/japho/WidgetDemo)
 
 
-##### 最后感谢一下文章的博主😏
+### 最后感谢一下文章的博主😏
 [Widget的简单应用并适配iOS10](http://www.jianshu.com/p/42516ee26a45)
 [ iOS开发------Widget(Today Extension)插件化开发  ](http://blog.csdn.net/runintolove/article/details/52595770)
