@@ -26,14 +26,14 @@
 }
 .sidebar-container a:hover,
 .sidebar-container a:active {
-  color: #FDBD2D !important;
+  color: #0085a1 !important;
 }
 .sidebar-container .tags a {
   border-color: #bfbfbf;
 }
 .sidebar-container .tags a:hover,
 .sidebar-container .tags a:active {
-  border-color: #FDBD2D;
+  border-color: #0085a1;
 }
 .sidebar-container .short-about img {
   width: 80%;
@@ -122,7 +122,7 @@
   background-color: #F5F5F5;
 }
 .side-catalog .catalog-body .active a {
-  color: #FDBD2D!important;
+  color: #0085a1!important;
 }
 @media (max-width: 1200px) {
   .side-catalog {
@@ -166,7 +166,7 @@ a {
 }
 a:hover,
 a:focus {
-  color: #FDBD2D;
+  color: #0085a1;
 }
 a img:hover,
 a img:focus {
@@ -177,6 +177,7 @@ article {
 }
 blockquote {
   color: #808080;
+  font-style: italic;
   font-size: 0.95em;
   margin: 20px 0 20px;
 }
@@ -234,7 +235,7 @@ pre code {
 }
 .post-container a:hover,
 .post-container a:focus {
-  color: #FDBD2D;
+  color: #0085a1;
 }
 .post-container h1,
 .post-container h2,
@@ -476,14 +477,14 @@ pre code {
   }
   .navbar-custom.is-fixed .navbar-brand:hover,
   .navbar-custom.is-fixed .navbar-brand:focus {
-    color: #FDBD2D;
+    color: #0085a1;
   }
   .navbar-custom.is-fixed .nav li a {
     color: #404040;
   }
   .navbar-custom.is-fixed .nav li a:hover,
   .navbar-custom.is-fixed .nav li a:focus {
-    color: #FDBD2D;
+    color: #0085a1;
   }
   .navbar-custom.is-visible {
     /* if the user changes the scrolling direction, we show the header */
@@ -609,7 +610,7 @@ pre code {
 .post-preview > a:hover,
 .post-preview > a:focus {
   text-decoration: none;
-  color: #FDBD2D;
+  color: #0085a1;
 }
 .post-preview > a > .post-title {
   font-size: 21px;
@@ -628,6 +629,7 @@ pre code {
   font-family: 'Lora', 'Times New Roman', serif;
   color: #808080;
   font-size: 16px;
+  font-style: italic;
   margin-top: 0;
 }
 .post-preview > .post-meta > a {
@@ -636,7 +638,7 @@ pre code {
 }
 .post-preview > .post-meta > a:hover,
 .post-preview > .post-meta > a:focus {
-  color: #FDBD2D;
+  color: #0085a1;
   text-decoration: underline;
 }
 @media only screen and (min-width: 768px) {
@@ -654,10 +656,11 @@ pre code {
 }
 .post-content-preview {
   font-size: 13px;
+  font-style: italic;
   color: #a3a3a3;
 }
 .post-content-preview:hover {
-  color: #FDBD2D;
+  color: #0085a1;
 }
 @media only screen and (min-width: 768px) {
   .post-content-preview {
@@ -673,6 +676,7 @@ pre code {
   text-align: center;
   font-size: 14px;
   padding: 10px;
+  font-style: italic;
   margin: 0;
   display: block;
   border-bottom-right-radius: 5px;
@@ -696,7 +700,7 @@ footer .copyright a {
 }
 footer .copyright a:hover,
 footer .copyright a:focus {
-  color: #FDBD2D;
+  color: #0085a1;
 }
 .floating-label-form-group {
   font-size: 14px;
@@ -743,7 +747,7 @@ footer .copyright a:focus {
   opacity: 1;
 }
 .floating-label-form-group-with-focus label {
-  color: #FDBD2D;
+  color: #0085a1;
 }
 form .row:first-child .floating-label-form-group {
   border-top: 1px solid #eeeeee;
@@ -768,8 +772,8 @@ form .row:first-child .floating-label-form-group {
 }
 .btn-default:hover,
 .btn-default:focus {
-  background-color: #FDBD2D;
-  border: 1px solid #FDBD2D;
+  background-color: #0085a1;
+  border: 1px solid #0085a1;
   color: white;
 }
 .pager {
@@ -805,8 +809,8 @@ form .row:first-child .floating-label-form-group {
 .pager li > a:hover,
 .pager li > a:focus {
   color: white;
-  background-color: #FDBD2D;
-  border: 1px solid #FDBD2D;
+  background-color: #0085a1;
+  border: 1px solid #0085a1;
 }
 .pager li > a:hover > span,
 .pager li > a:focus > span {
@@ -823,12 +827,12 @@ form .row:first-child .floating-label-form-group {
 ::-moz-selection {
   color: white;
   text-shadow: none;
-  background: #FDBD2D;
+  background: #0085a1;
 }
 ::selection {
   color: white;
   text-shadow: none;
-  background: #FDBD2D;
+  background: #0085a1;
 }
 img::selection {
   color: white;
@@ -894,7 +898,7 @@ img::-moz-selection {
 #tag_cloud .tag:hover,
 #tag_cloud a:active,
 #tag_cloud .tag:active {
-  background-color: #FDBD2D !important;
+  background-color: #0085a1 !important;
 }
 @media only screen and (min-width: 768px) {
   #tag_cloud {
@@ -913,7 +917,7 @@ img::-moz-selection {
   margin-top: 0px;
 }
 .listing-seperator {
-  color: #FDBD2D;
+  color: #0085a1;
   font-size: 21px !important;
 }
 .listing-seperator::before {
