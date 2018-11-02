@@ -4,7 +4,7 @@ title:      iOS Widget的简单实现
 subtitle:   基于iOS10的插件开发
 date:       2016-11-07
 author:     Japho
-header-img: img/post-bg-ios10.jpg
+header-img: postimage/post-bg-ios10.jpg
 catalog: true
 tags:
     - iOS
