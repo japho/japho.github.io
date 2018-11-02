@@ -2,7 +2,7 @@
 title: Japho Blog
 SEOTitle: Japho Blog
 header-img: img/home-bg.jpg
-email: mr.wangjifeng@gmail.com
+email: japhoo@163.com
 description: "The shortest answer is doing."
 keyword: "Japho, Japho Blog, Japho的博客, iOS, Apple, iPhone"
 url: "http://japho.github.io/"          # your host, for absolute URL
@@ -107,5 +107,8 @@ friends: [
     },{
         title: "Apple Developer",
         href: "https://developer.apple.com/"
+    },{
+        title: "Google Analytics",
+        href: "https://analytics.google.com"
     }
 ]
