@@ -10,7 +10,7 @@
     <meta name="keywords"  content="Japho, Japho Blog, Japho的博客, iOS, Apple, iPhone">
     <meta name="theme-color" content="#000000">
     
-    <title>iOS 微信第三方登录的实现 - Japho Blog</title>
+    <title>iOS 微博第三方登录的实现 - Japho Blog</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -22,7 +22,7 @@
     <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
     
     <!-- Canonical URL -->
-    <link rel="canonical" href="http://localhost:4000/2016/04/18/iOS-%E5%BE%AE%E4%BF%A1%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95%E7%9A%84%E5%AE%9E%E7%8E%B0/">
+    <link rel="canonical" href="http://localhost:4000/2016/04/19/iOS-%E5%BE%AE%E5%8D%9A%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -154,13 +154,13 @@
 
     <!-- Image to hack wechat -->
 <!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
-<!-- <img src="/postimage/post_img_wechat.jpg" width="0" height="0"> -->
+<!-- <img src="/postimage/post_computer.jpg" width="0" height="0"> -->
 
 <!-- Post Header -->
 <style type="text/css">
     header.intro-header{
         position: relative;
-        background-image: url('/postimage/post_img_wechat.jpg')
+        background-image: url('/postimage/post_computer.jpg')
     }
 
     
@@ -176,12 +176,12 @@
                         <a class="tag" href="/tags/#iOS" title="iOS">iOS</a>
                         
                     </div>
-                    <h1>iOS 微信第三方登录的实现</h1>
+                    <h1>iOS 微博第三方登录的实现</h1>
                     
                     
-                    <h2 class="subheading">原生微信SDK开发</h2>
+                    <h2 class="subheading">基于微博原生SDK开发实现</h2>
                     
-                    <span class="meta">Posted by Japho on April 18, 2016</span>
+                    <span class="meta">Posted by Japho on April 19, 2016</span>
                 </div>
             </div>
         </div>
@@ -199,222 +199,206 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-				<h3 id="下载微信sdk">下载微信SDK</h3>
+				<h3 id="下载微博sdk">下载微博SDK</h3>
 
-<p>微信开放平台 <a href="https://open.weixin.qq.com">https://open.weixin.qq.com</a></p>
+<p>微博SDK的官方github：<a href="https://github.com/sinaweibosdk/weibo_ios_sdk">https://github.com/sinaweibosdk/weibo_ios_sdk</a>
+下载所需要的SDK</p>
 
-<p><img src="http://upload-images.jianshu.io/upload_images/1269906-03c3fafce683fa65.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="微信开放平台" /></p>
+<h3 id="集成sdk">集成SDK</h3>
 
-<h3 id="导入sdk">导入SDK</h3>
+<p>下载后的SDK文件结构如下：</p>
 
-<p>导入SDK，并添加依赖库</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1269906-df38a81f23cecd38.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
 
-<p><img src="http://upload-images.jianshu.io/upload_images/1269906-4e5a0e9baf265421.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+<p>将这个文件夹拖拽到你所要添加的工程中。</p>
 
-<h3 id="配置url-scheme">配置URL scheme</h3>
+<h3 id="引入依赖库及相关设置">引入依赖库及相关设置</h3>
 
-<p>在Xcode中，选择你的工程设置项，选中<code class="highlighter-rouge">TARGETS</code>一栏，在<code class="highlighter-rouge">info</code>标签栏的<code class="highlighter-rouge">URL type</code>添加<code class="highlighter-rouge">URL scheme</code>为你所注册的应用程序id（如下图所示），此步为配置应用间的跳转。</p>
+<p><strong>如图点击添加依赖库</strong></p>
 
-<p><img src="http://upload-images.jianshu.io/upload_images/1269906-c20b3c9b67a92432.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="配置Url Scheme" /></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1269906-06737caa9db98130.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
 
-<h2 id="开始编写代码">开始编写代码</h2>
+<p><strong>所需依赖库：</strong></p>
+
+<blockquote>
+  <p><code class="highlighter-rouge">QuartzCore.framework</code>,
+<code class="highlighter-rouge">ImageIO.framework</code>,
+<code class="highlighter-rouge">SystemConfiguration.framework</code>,
+<code class="highlighter-rouge">Security.framework</code>,
+<code class="highlighter-rouge">CoreTelephony.framework</code>,
+<code class="highlighter-rouge">CoreText.framework</code>,
+<code class="highlighter-rouge">UIKit.framework</code>,
+<code class="highlighter-rouge">Foundation.framework</code>,
+<code class="highlighter-rouge">CoreGraphics.framework</code>,
+<code class="highlighter-rouge">libz.dylib</code>,
+<code class="highlighter-rouge">ibsqlite3.dylib</code></p>
+</blockquote>
+
+<p><strong>添加编译选项：</strong></p>
+
+<p>引入静态库后，需添加-ObjC编译选项，避免静态库中类加载不全引起崩溃。</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1269906-e514ec4a7ce1f65e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<h3 id="创建应用">创建应用</h3>
+
+<p>参考SDK包文件中文档进行应用的创建，这里要强调一下，申请应用时的AppleID和BundleID一定要与工程对应，否则运行会出错，无法进行授权。</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1269906-ffcfb508fe04dacc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<h3 id="设置工程回调url-scheme">设置工程回调URL Scheme</h3>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1269906-f7fa91be97a49511.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>如图，设置<code class="highlighter-rouge">URLSchemes</code>为你申请的<code class="highlighter-rouge">AppKey</code>,
+例如:<code class="highlighter-rouge">wb25432236852</code></p>
+
+<h3 id="编写代码">编写代码</h3>
 
 <ul>
-  <li>在<code class="highlighter-rouge">Appdelegate.h</code>中引用微信文件，声明遵循代理。</li>
+  <li>在<code class="highlighter-rouge">Appdelegate</code>中导入头文件，声明遵循微博代理</li>
 </ul>
+
+<p><code class="highlighter-rouge">Appdelegate.m</code></p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="cp">#import &lt;UIKit/UIKit.h&gt;  </span>
-<span class="cp">#import "WXApi.h"  </span>
+<span class="cp">#import "WeiboSDK.h"  </span>
   
-<span class="kd">@interface</span> <span class="kt">AppDelegate</span> <span class="p">:</span> <span class="kt">UIResponder</span> <span class="o">&lt;</span><span class="kt">UIApplicationDelegate</span><span class="p">,</span><span class="kt">WXApiDelegate</span><span class="o">&gt;</span>  
+<span class="cp">#define kAppKey         @"这里是你的AppKey"  </span>
+<span class="cp">#define kRedirectURI    @"这里是你的回调网址"  </span>
+  
+<span class="kd">@interface</span> <span class="kt">AppDelegate</span> <span class="p">:</span> <span class="kt">UIResponder</span> <span class="o">&lt;</span><span class="kt">UIApplicationDelegate</span><span class="p">,</span> <span class="kt">WeiboSDKDelegate</span><span class="o">&gt;</span>  
   
 <span class="kd">@property</span> <span class="p">(</span><span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="kt">UIWindow</span> <span class="o">*</span><span class="n">window</span><span class="p">;</span>  
   
-<span class="kd">@end</span>
-
+<span class="kd">@end</span>  
 
 </code></pre></div></div>
 
 <ul>
-  <li><code class="highlighter-rouge">注册SDK</code>要使你的程序启动后微信终端能响应你的程序，必须在代码中向微信终端注册你的id。（在 <code class="highlighter-rouge">AppDelegate</code> 的 <code class="highlighter-rouge">didFinishLaunchingWithOptions</code> 函数中向微信注册<code class="highlighter-rouge">id</code>）。</li>
+  <li>在<code class="highlighter-rouge">Appdelegate</code>中注册微博SDK</li>
 </ul>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="o">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nv">application</span><span class="p">:(</span><span class="kt">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="n">application</span> <span class="nv">didFinishLaunchingWithOptions</span><span class="p">:(</span><span class="kt">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="n">launchOptions</span> <span class="p">{</span>  
     <span class="c1">// Override point for customization after application launch.  </span>
       
-    <span class="p">[</span><span class="kt">WXApi</span> <span class="nv">registerApp</span><span class="p">:</span><span class="s">@"这里填写你的AppID"</span><span class="p">];</span>  
+    <span class="p">[</span><span class="kt">WeiboSDK</span> <span class="nv">enableDebugMode</span><span class="p">:</span><span class="kt">YES</span><span class="p">];</span>  
+    <span class="p">[</span><span class="kt">WeiboSDK</span> <span class="nv">registerApp</span><span class="p">:</span><span class="s">@"这里填写你申请的Appkey"</span><span class="p">];</span>  
       
     <span class="k">return</span> <span class="kt">YES</span><span class="p">;</span>  
 <span class="p">}</span>  
 
-
 </code></pre></div></div>
 
 <ul>
-  <li>重写<code class="highlighter-rouge">AppDelegate</code>的<code class="highlighter-rouge">handleOpenURL</code>和<code class="highlighter-rouge">openURL</code>方法</li>
+  <li>重写<code class="highlighter-rouge">AppDelegate</code>中的<code class="highlighter-rouge">handleOpenURL</code>和<code class="highlighter-rouge">openURL</code>方法</li>
 </ul>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
-<span class="c1">//和QQ,新浪并列回调句柄  </span>
 <span class="o">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nv">application</span><span class="p">:(</span><span class="kt">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="n">application</span> <span class="nv">openURL</span><span class="p">:(</span><span class="kt">NSURL</span> <span class="o">*</span><span class="p">)</span><span class="n">url</span> <span class="nv">sourceApplication</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">sourceApplication</span> <span class="nv">annotation</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="n">annotation</span>  
 <span class="p">{</span>  
-    <span class="k">return</span> <span class="p">[</span><span class="kt">WXApi</span> <span class="nv">handleOpenURL</span><span class="p">:</span><span class="n">url</span> <span class="nv">delegate</span><span class="p">:</span><span class="k">self</span><span class="p">];</span>  
+    <span class="k">return</span> <span class="p">[</span><span class="kt">WeiboSDK</span> <span class="nv">handleOpenURL</span><span class="p">:</span><span class="n">url</span> <span class="nv">delegate</span><span class="p">:</span><span class="k">self</span><span class="p">];</span>  
 <span class="p">}</span>  
   
 <span class="o">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nv">application</span><span class="p">:(</span><span class="kt">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="n">application</span> <span class="nv">handleOpenURL</span><span class="p">:(</span><span class="kt">NSURL</span> <span class="o">*</span><span class="p">)</span><span class="n">url</span>  
 <span class="p">{</span>  
-    <span class="k">return</span> <span class="p">[</span><span class="kt">WXApi</span> <span class="nv">handleOpenURL</span><span class="p">:</span><span class="n">url</span> <span class="nv">delegate</span><span class="p">:</span><span class="k">self</span><span class="p">];</span>  
+    <span class="k">return</span> <span class="p">[</span><span class="kt">WeiboSDK</span> <span class="nv">handleOpenURL</span><span class="p">:</span><span class="n">url</span> <span class="nv">delegate</span><span class="p">:</span><span class="k">self</span><span class="p">];</span>  
 <span class="p">}</span>  
-
 
 </code></pre></div></div>
 
 <ul>
-  <li>调用微信API，调用微信登录</li>
+  <li>在你所要添加登录方法的<code class="highlighter-rouge">controller</code>中添加以下登录方法，该方法会跳转微博授权</li>
 </ul>
 
-<blockquote>
-  <p><code class="highlighter-rouge">scope</code> : 应用授权作用域，如获取用户个人信息则填写<code class="highlighter-rouge">snsapi_userinfo</code></p>
-
-  <p><code class="highlighter-rouge">state</code> : 用于保持请求和回调的状态，授权请求后原样带回给第三方。该参数可用于防止csrf攻击（跨站请求伪造攻击），建议第三方带上该参数，可设置为简单的随机数加session进行校验（非必填）。</p>
-</blockquote>
-
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
-<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="n">wechatLoginButtonPressed</span>  
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="n">weiboLoginButtonPressed</span>  
 <span class="p">{</span>  
     <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"%s"</span><span class="p">,</span><span class="n">__func__</span><span class="p">);</span>  
       
-    <span class="c1">//构造SendAuthReq结构体  </span>
-    <span class="kt">SendAuthReq</span><span class="o">*</span> <span class="n">req</span> <span class="o">=</span><span class="p">[[</span><span class="kt">SendAuthReq</span> <span class="n">alloc</span><span class="p">]</span> <span class="kd">init</span><span class="p">];</span>  
-    <span class="n">req</span><span class="o">.</span><span class="n">scope</span> <span class="o">=</span> <span class="s">@"snsapi_userinfo"</span> <span class="p">;</span>  
-    <span class="n">req</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s">@"123"</span> <span class="p">;</span>  
-    <span class="c1">//第三方向微信终端发送一个SendAuthReq消息结构  </span>
-    <span class="p">[</span><span class="kt">WXApi</span> <span class="nv">sendReq</span><span class="p">:</span><span class="n">req</span><span class="p">];</span>  
-<span class="p">}</span>  
+    <span class="kt">WBAuthorizeRequest</span> <span class="o">*</span><span class="n">request</span> <span class="o">=</span> <span class="p">[</span><span class="kt">WBAuthorizeRequest</span> <span class="n">request</span><span class="p">];</span>  
+    <span class="n">request</span><span class="o">.</span><span class="n">redirectURI</span> <span class="o">=</span> <span class="n">kRedirectURI</span><span class="p">;</span>  
+    <span class="n">request</span><span class="o">.</span><span class="n">scope</span> <span class="o">=</span> <span class="s">@"all"</span><span class="p">;</span>  
+    <span class="n">request</span><span class="o">.</span><span class="n">userInfo</span> <span class="o">=</span> <span class="err">@</span><span class="p">{</span><span class="s">@"SSO_From"</span><span class="p">:</span> <span class="s">@"SendMessageToWeiboViewController"</span><span class="p">,</span>  
+                         <span class="s">@"Other_Info_1"</span><span class="p">:</span> <span class="p">[</span><span class="kt">NSNumber</span> <span class="nv">numberWithInt</span><span class="p">:</span><span class="mi">123</span><span class="p">],</span>  
+                         <span class="s">@"Other_Info_2"</span><span class="p">:</span> <span class="err">@</span><span class="p">[</span><span class="s">@"obj1"</span><span class="p">,</span> <span class="s">@"obj2"</span><span class="p">],</span>  
+                         <span class="s">@"Other_Info_3"</span><span class="p">:</span> <span class="err">@</span><span class="p">{</span><span class="s">@"key1"</span><span class="p">:</span> <span class="s">@"obj1"</span><span class="p">,</span> <span class="s">@"key2"</span><span class="p">:</span> <span class="s">@"obj2"</span><span class="p">}};</span>  
+    <span class="p">[</span><span class="kt">WeiboSDK</span> <span class="nv">sendRequest</span><span class="p">:</span><span class="n">request</span><span class="p">];</span>  
+<span class="p">}</span>
 
 </code></pre></div></div>
 
 <ul>
-  <li>在<code class="highlighter-rouge">Appdelegate</code>中实现微信的代理，获取微信返回的<code class="highlighter-rouge">code</code>，这里我使用了通知的方法来调用登录<code class="highlighter-rouge">controller</code>中的相应才做，也可以使用代理、<code class="highlighter-rouge">KVO</code>等方式来实现。</li>
+  <li>在Appdelegate中实现微博的回调方法，获取回调信息</li>
+</ul>
+
+<p>这里说明一下，下面的方法实现在<code class="highlighter-rouge">Appdelegate</code>中，当在你所需登录的<code class="highlighter-rouge">controller</code>调用的登录方法后会跳转微博进行授权，授权信息会以回调的方式调用<code class="highlighter-rouge">Appdelegate</code>中的下面方法，从该方法中我们可以得出授权所得到的<code class="highlighter-rouge">userId（用户唯一标识）</code>，和<code class="highlighter-rouge">accessToken</code>。拿到这两个参数后可以调用微博接口进行一系列的获取个人信息、转发、评论、发表微博等操作，这里我们只需要获取用户的个人信息就可以了。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1">//微博回调  </span>
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">didReceiveWeiboResponse</span><span class="p">:(</span><span class="kt">WBBaseResponse</span> <span class="o">*</span><span class="p">)</span><span class="n">response</span>  
+<span class="p">{</span>  
+    <span class="k">if</span> <span class="p">([</span><span class="n">response</span> <span class="nv">isKindOfClass</span><span class="p">:</span><span class="kt">WBAuthorizeResponse</span><span class="o">.</span><span class="kd">class</span><span class="p">])</span>  
+    <span class="p">{</span>  
+        <span class="kt">NSString</span> <span class="o">*</span><span class="n">userId</span> <span class="o">=</span> <span class="p">[(</span><span class="kt">WBAuthorizeResponse</span> <span class="o">*</span><span class="p">)</span><span class="n">response</span> <span class="n">userID</span><span class="p">];</span>  
+        <span class="kt">NSString</span> <span class="o">*</span><span class="n">accessToken</span> <span class="o">=</span> <span class="p">[(</span><span class="kt">WBAuthorizeResponse</span> <span class="o">*</span><span class="p">)</span><span class="n">response</span> <span class="n">accessToken</span><span class="p">];</span>  
+          
+        <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"userId %@"</span><span class="p">,</span><span class="n">userId</span><span class="p">);</span>  
+        <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"accessToken %@"</span><span class="p">,</span><span class="n">accessToken</span><span class="p">);</span>  
+          
+        <span class="kt">NSDictionary</span> <span class="o">*</span><span class="n">notification</span> <span class="o">=</span> <span class="err">@</span><span class="p">{</span>  
+                                       <span class="s">@"userId"</span> <span class="p">:</span> <span class="n">userId</span><span class="p">,</span>  
+                                       <span class="s">@"accessToken"</span> <span class="p">:</span> <span class="n">accessToken</span>  
+                                       <span class="p">};</span>  
+          
+        <span class="p">[[</span><span class="kt">NSNotificationCenter</span> <span class="n">defaultCenter</span><span class="p">]</span> <span class="nv">postNotificationName</span><span class="p">:</span><span class="s">@"weiboDidLoginNotification"</span>   
+                                              <span class="nv">object</span><span class="p">:</span><span class="k">self</span> <span class="nv">userInfo</span><span class="p">:</span><span class="n">notification</span><span class="p">];</span>  
+    <span class="p">}</span>  
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>当获取到反馈的<code class="highlighter-rouge">userID</code>和<code class="highlighter-rouge">accessToken</code>后，这里我使用了通知<code class="highlighter-rouge">Notification</code>的方式来调用刚才申请第三方登录的<code class="highlighter-rouge">controller</code>中的相应的方法。记得使用通知的时候在<code class="highlighter-rouge">dealloc</code>方法中进行通知的删除。</p>
+
+<ul>
+  <li>在实现登录的<code class="highlighter-rouge">controller</code>中的相应的通知方法中实现以下功能
+用刚刚在微博的回调方法中得到的<code class="highlighter-rouge">userId</code>和<code class="highlighter-rouge">accessToken</code>来请求微博的接口以获取用户的个人信息</li>
 </ul>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
-<span class="c1">//授权后回调 WXApiDelegate  </span>
-<span class="o">-</span><span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">onResp</span><span class="p">:(</span><span class="kt">BaseReq</span> <span class="o">*</span><span class="p">)</span><span class="n">resp</span>  
-<span class="p">{</span>  
-    <span class="cm">/* 
-     ErrCode ERR_OK = 0(用户同意) 
-     ERR_AUTH_DENIED = -4（用户拒绝授权） 
-     ERR_USER_CANCEL = -2（用户取消） 
-     code    用户换取access_token的code，仅在ErrCode为0时有效 
-     state   第三方程序发送时用来标识其请求的唯一性的标志，由第三方程序调用sendReq时传入，由微信终端回传，state字符串长度不能超过1K 
-     lang    微信客户端当前语言 
-     country 微信用户当前国家信息 
-     */</span>  
+<span class="nv">https</span><span class="p">:</span><span class="c1">//api.weibo.com/2/users/show.json  </span>
+
+</code></pre></div></div>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="cp">#pragma mark - Weibo Methods  </span>
   
-    <span class="k">if</span> <span class="p">([</span><span class="n">resp</span> <span class="nv">isKindOfClass</span><span class="p">:[</span><span class="kt">SendAuthResp</span> <span class="kd">class</span><span class="p">]])</span> <span class="c1">//判断是否为授权请求，否则与微信支付等功能发生冲突  </span>
-    <span class="p">{</span>  
-        <span class="kt">SendAuthResp</span> <span class="o">*</span><span class="n">aresp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">SendAuthResp</span> <span class="o">*</span><span class="p">)</span><span class="n">resp</span><span class="p">;</span>  
-        <span class="k">if</span> <span class="p">(</span><span class="n">aresp</span><span class="o">.</span><span class="n">errCode</span><span class="o">==</span> <span class="mi">0</span><span class="p">)</span>  
-        <span class="p">{</span>  
-            <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"code %@"</span><span class="p">,</span><span class="n">aresp</span><span class="o">.</span><span class="n">code</span><span class="p">);</span>  
-            <span class="p">[[</span><span class="kt">NSNotificationCenter</span> <span class="n">defaultCenter</span><span class="p">]</span> <span class="nv">postNotificationName</span><span class="p">:</span><span class="s">@"wechatDidLoginNotification"</span> <span class="nv">object</span><span class="p">:</span><span class="k">self</span> <span class="nv">userInfo</span><span class="p">:</span><span class="err">@</span><span class="p">{</span><span class="s">@"code"</span><span class="p">:</span><span class="n">aresp</span><span class="o">.</span><span class="n">code</span><span class="p">}];</span>  
-        <span class="p">}</span>  
-    <span class="p">}</span>  
-<span class="p">}</span>  
-
-
-</code></pre></div></div>
-
-<p>相对应注册通知方法：</p>
-
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
- <span class="c1">//跳转到主界面</span>
-    <span class="p">[[</span><span class="kt">NSNotificationCenter</span> <span class="n">defaultCenter</span><span class="p">]</span> <span class="nv">addObserver</span><span class="p">:</span><span class="k">self</span> <span class="nv">selector</span><span class="p">:</span><span class="kd">@selector(wechatDidLoginNotification:)</span> <span class="nv">name</span><span class="p">:</span><span class="s">@"wechatDidLoginNotification"</span> <span class="nv">object</span><span class="p">:</span><span class="kc">nil</span><span class="p">];</span>
-
-
-</code></pre></div></div>
-
-<p>记得在dealloc方法中移除通知，避免发生冲突：</p>
-
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
-<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="n">dealloc</span>  
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">weiboDidLoginNotification</span><span class="p">:(</span><span class="kt">NSNotification</span> <span class="o">*</span><span class="p">)</span><span class="n">notification</span>  
 <span class="p">{</span>  
-    <span class="p">[[</span><span class="kt">NSNotificationCenter</span> <span class="n">defaultCenter</span><span class="p">]</span> <span class="nv">removeObserver</span><span class="p">:</span><span class="k">self</span> <span class="nv">name</span><span class="p">:</span><span class="s">@"wechatDidLoginNotification"</span> <span class="nv">object</span><span class="p">:</span><span class="kc">nil</span><span class="p">];</span>  
+    <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"%s"</span><span class="p">,</span><span class="n">__func__</span><span class="p">);</span>  
+      
+    <span class="kt">NSDictionary</span> <span class="o">*</span><span class="n">userInfo</span> <span class="o">=</span> <span class="p">[</span><span class="n">notification</span> <span class="n">userInfo</span><span class="p">];</span>  
+    <span class="kt">NSString</span> <span class="o">*</span><span class="n">accessToken</span> <span class="o">=</span> <span class="p">[</span><span class="n">userInfo</span> <span class="nv">objectForKey</span><span class="p">:</span><span class="s">@"accessToken"</span><span class="p">];</span>  
+    <span class="kt">NSString</span> <span class="o">*</span><span class="n">uid</span> <span class="o">=</span> <span class="p">[</span><span class="n">userInfo</span> <span class="nv">objectForKey</span><span class="p">:</span><span class="s">@"userId"</span><span class="p">];</span>  
+      
+    <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"userInfo %@"</span><span class="p">,</span><span class="n">userInfo</span><span class="p">);</span>  
+      
+    <span class="p">[</span><span class="k">self</span> <span class="nv">getWeiboUserInfoWithAccessToken</span><span class="p">:</span><span class="n">accessToken</span> <span class="nv">uid</span><span class="p">:</span><span class="n">uid</span><span class="p">];</span>  
 <span class="p">}</span>  
-
-
-</code></pre></div></div>
-
-<p><strong>微信登录认证后获取用户的个人信息比较麻烦，需要三个步骤：</strong></p>
-
-<blockquote>
-  <ul>
-    <li>获取微信登录code</li>
-    <li>根据code获取accessToken和openId</li>
-    <li>根据accessToken和openId获取用户信息</li>
-  </ul>
-</blockquote>
-
-<p><strong>具体步骤：</strong></p>
-
-<p>刚刚我们已经在<code class="highlighter-rouge">appdelegate</code>中微信的代理中获取到了<code class="highlighter-rouge">code</code>，下面直接来进行第二步，根据<code class="highlighter-rouge">code</code>获取<code class="highlighter-rouge">accessToken</code>和<code class="highlighter-rouge">openId</code>：
-参照微信开放平台官方文档：</p>
-
-<p><img src="http://upload-images.jianshu.io/upload_images/1269906-afc238a8d21aac3e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
-
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
-<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">getWechatAccessTokenWithCode</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">code</span>  
+  
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">getWeiboUserInfoWithAccessToken</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">accessToken</span> <span class="nv">uid</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">uid</span>  
 <span class="p">{</span>  
     <span class="kt">NSString</span> <span class="o">*</span><span class="n">url</span> <span class="o">=</span><span class="p">[</span><span class="kt">NSString</span> <span class="nv">stringWithFormat</span><span class="p">:</span>  
-      <span class="s">@"https://api.weixin.qq.com/sns/oauth2/access_token?appid=%@&amp;secret=%@&amp;code=%@&amp;grant_type=authorization_code"</span><span class="p">,</span>  
-        <span class="kt">WechatAppKey</span><span class="p">,</span><span class="kt">WechatSecrectKey</span><span class="p">,</span><span class="n">code</span><span class="p">];</span>  
+    <span class="s">@"https://api.weibo.com/2/users/show.json?access_token=%@&amp;uid=%@"</span><span class="p">,</span><span class="n">accessToken</span><span class="p">,</span><span class="n">uid</span><span class="p">];</span>  
       
     <span class="nf">dispatch_async</span><span class="p">(</span><span class="nf">dispatch_get_global_queue</span><span class="p">(</span><span class="kt">DISPATCH_QUEUE_PRIORITY_DEFAULT</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="o">^</span><span class="p">{</span>  
         <span class="kt">NSURL</span> <span class="o">*</span><span class="n">zoneUrl</span> <span class="o">=</span> <span class="p">[</span><span class="kt">NSURL</span> <span class="kt">URLWithString</span><span class="p">:</span><span class="n">url</span><span class="p">];</span>  
-        <span class="kt">NSString</span> <span class="o">*</span><span class="n">zoneStr</span> <span class="o">=</span> <span class="p">[</span><span class="kt">NSString</span> <span class="nv">stringWithContentsOfURL</span><span class="p">:</span><span class="n">zoneUrl</span> <span class="nv">encoding</span><span class="p">:</span><span class="kt">NSUTF8StringEncoding</span> <span class="nv">error</span><span class="p">:</span><span class="kc">nil</span><span class="p">];</span>  
+        <span class="kt">NSString</span> <span class="o">*</span><span class="n">zoneStr</span> <span class="o">=</span> <span class="p">[</span><span class="kt">NSString</span> <span class="nv">stringWithContentsOfURL</span><span class="p">:</span><span class="n">zoneUrl</span>   
+                                                     <span class="nv">encoding</span><span class="p">:</span><span class="kt">NSUTF8StringEncoding</span> <span class="nv">error</span><span class="p">:</span><span class="kc">nil</span><span class="p">];</span>  
         <span class="kt">NSData</span> <span class="o">*</span><span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">zoneStr</span> <span class="nv">dataUsingEncoding</span><span class="p">:</span><span class="kt">NSUTF8StringEncoding</span><span class="p">];</span>  
         <span class="nf">dispatch_async</span><span class="p">(</span><span class="nf">dispatch_get_main_queue</span><span class="p">(),</span> <span class="o">^</span><span class="p">{</span>  
-              
-            <span class="k">if</span> <span class="p">(</span><span class="n">data</span><span class="p">)</span>  
-            <span class="p">{</span>  
-                <span class="kt">NSDictionary</span> <span class="o">*</span><span class="n">dic</span> <span class="o">=</span> <span class="p">[</span><span class="kt">NSJSONSerialization</span> <span class="kt">JSONObjectWithData</span><span class="p">:</span><span class="n">data</span>   
-                                                                    <span class="nv">options</span><span class="p">:</span><span class="kt">NSJSONReadingMutableContainers</span> <span class="nv">error</span><span class="p">:</span><span class="kc">nil</span><span class="p">];</span>  
-                  
-                <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"%@"</span><span class="p">,</span><span class="n">dic</span><span class="p">);</span>  
-                <span class="kt">NSString</span> <span class="o">*</span><span class="n">accessToken</span> <span class="o">=</span> <span class="n">dic</span><span class="p">[</span><span class="s">@"access_token"</span><span class="p">];</span>  
-                <span class="kt">NSString</span> <span class="o">*</span><span class="n">openId</span> <span class="o">=</span> <span class="n">dic</span><span class="p">[</span><span class="s">@"openid"</span><span class="p">];</span>  
-                  
-                <span class="p">[</span><span class="k">self</span> <span class="nv">getWechatUserInfoWithAccessToken</span><span class="p">:</span><span class="n">accessToken</span> <span class="nv">openId</span><span class="p">:</span><span class="n">openId</span><span class="p">];</span>  
-            <span class="p">}</span>  
-        <span class="p">});</span>  
-    <span class="p">});</span>  
-<span class="p">}</span>  
-
-
-</code></pre></div></div>
-
-<p>现在已经获取了微信的<code class="highlighter-rouge">accessToken</code>和<code class="highlighter-rouge">openId</code>，就可以请求相应的微信接口了。
-参照文档，我们使用以下接口：</p>
-
-<p><img src="http://upload-images.jianshu.io/upload_images/1269906-4350c96c94ce8487.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
-
-<p>使用这个接口就可以获取用户信息了，然后调用自己的方法进行登录，这里可以使用<code class="highlighter-rouge">openId</code>当做账号，他是每个微信用户唯一对应的<code class="highlighter-rouge">id</code></p>
-
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
-<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">getWechatUserInfoWithAccessToken</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">accessToken</span> <span class="nv">openId</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">openId</span>  
-<span class="p">{</span>  
-    <span class="kt">NSString</span> <span class="o">*</span><span class="n">url</span> <span class="o">=</span><span class="p">[</span><span class="kt">NSString</span> <span class="nv">stringWithFormat</span><span class="p">:</span>  
-                    <span class="s">@"https://api.weixin.qq.com/sns/userinfo?access_token=%@&amp;openid=%@"</span><span class="p">,</span><span class="n">accessToken</span><span class="p">,</span><span class="n">openId</span><span class="p">];</span>  
-      
-    <span class="nf">dispatch_async</span><span class="p">(</span><span class="nf">dispatch_get_global_queue</span><span class="p">(</span><span class="kt">DISPATCH_QUEUE_PRIORITY_DEFAULT</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="o">^</span><span class="p">{</span>  
-        <span class="kt">NSURL</span> <span class="o">*</span><span class="n">zoneUrl</span> <span class="o">=</span> <span class="p">[</span><span class="kt">NSURL</span> <span class="kt">URLWithString</span><span class="p">:</span><span class="n">url</span><span class="p">];</span>  
-        <span class="kt">NSString</span> <span class="o">*</span><span class="n">zoneStr</span> <span class="o">=</span> <span class="p">[</span><span class="kt">NSString</span> <span class="nv">stringWithContentsOfURL</span><span class="p">:</span><span class="n">zoneUrl</span> <span class="nv">encoding</span><span class="p">:</span><span class="kt">NSUTF8StringEncoding</span> <span class="nv">error</span><span class="p">:</span><span class="kc">nil</span><span class="p">];</span>  
-        <span class="kt">NSData</span> <span class="o">*</span><span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">zoneStr</span> <span class="nv">dataUsingEncoding</span><span class="p">:</span><span class="kt">NSUTF8StringEncoding</span><span class="p">];</span>  
-        <span class="nf">dispatch_async</span><span class="p">(</span><span class="nf">dispatch_get_main_queue</span><span class="p">(),</span> <span class="o">^</span><span class="p">{</span>  
-              
             <span class="k">if</span> <span class="p">(</span><span class="n">data</span><span class="p">)</span>  
             <span class="p">{</span>  
                 <span class="kt">NSDictionary</span> <span class="o">*</span><span class="n">dic</span> <span class="o">=</span> <span class="p">[</span><span class="kt">NSJSONSerialization</span> <span class="kt">JSONObjectWithData</span><span class="p">:</span><span class="n">data</span>   
@@ -422,25 +406,20 @@
                   
                 <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"%@"</span><span class="p">,</span><span class="n">dic</span><span class="p">);</span>  
                   
-                <span class="kt">NSString</span> <span class="o">*</span><span class="n">openId</span> <span class="o">=</span> <span class="p">[</span><span class="n">dic</span> <span class="nv">objectForKey</span><span class="p">:</span><span class="s">@"openid"</span><span class="p">];</span>  
-                <span class="kt">NSString</span> <span class="o">*</span><span class="n">memNickName</span> <span class="o">=</span> <span class="p">[</span><span class="n">dic</span> <span class="nv">objectForKey</span><span class="p">:</span><span class="s">@"nickname"</span><span class="p">];</span>  
-                <span class="kt">NSString</span> <span class="o">*</span><span class="n">memSex</span> <span class="o">=</span> <span class="p">[</span><span class="n">dic</span> <span class="nv">objectForKey</span><span class="p">:</span><span class="s">@"sex"</span><span class="p">];</span>  
+                <span class="kt">NSString</span> <span class="o">*</span><span class="n">openId</span> <span class="o">=</span> <span class="p">[</span><span class="n">dic</span> <span class="nv">objectForKey</span><span class="p">:</span><span class="s">@"id"</span><span class="p">];</span>  
+                <span class="kt">NSString</span> <span class="o">*</span><span class="n">memNickName</span> <span class="o">=</span> <span class="p">[</span><span class="n">dic</span> <span class="nv">objectForKey</span><span class="p">:</span><span class="s">@"name"</span><span class="p">];</span>  
+                <span class="kt">NSString</span> <span class="o">*</span><span class="n">memSex</span> <span class="o">=</span> <span class="p">[[</span><span class="n">dic</span> <span class="nv">objectForKey</span><span class="p">:</span><span class="s">@"gender"</span><span class="p">]</span> <span class="nv">isEqualToString</span><span class="p">:</span><span class="s">@"m"</span><span class="p">]</span> <span class="p">?</span> <span class="s">@"1"</span> <span class="p">:</span> <span class="s">@"0"</span><span class="p">;</span>  
                   
                 <span class="p">[</span><span class="k">self</span> <span class="nv">loginWithOpenId</span><span class="p">:</span><span class="n">openId</span> <span class="nv">memNickName</span><span class="p">:</span><span class="n">memNickName</span> <span class="nv">memSex</span><span class="p">:</span><span class="n">memSex</span><span class="p">];</span>  
             <span class="p">}</span>  
         <span class="p">});</span>  
           
     <span class="p">});</span>  
-<span class="p">}</span> 
-
+<span class="p">}</span>
 
 </code></pre></div></div>
 
-<p>至此，就实现了简单的微信登录</p>
-
-<p>效果图：</p>
-
-<p><img src="http://upload-images.jianshu.io/upload_images/1269906-7adef59824ff8291.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+<p>至此，已经获取到了用户微博的UserId及用户其他的基本信息，用这些信息就可以进行与自己的服务端进行交互来实现第三方登录了。</p>
 
 
                 <hr style="visibility: hidden;">
@@ -448,17 +427,17 @@
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/2016/04/14/iOS-QQ%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95%E7%9A%84%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="iOS QQ第三方登录的实现">
+                        <a href="/2016/04/18/iOS-%E5%BE%AE%E4%BF%A1%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95%E7%9A%84%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="iOS 微信第三方登录的实现">
                         Previous<br>
-                        <span>iOS QQ第三方登录的实现</span>
+                        <span>iOS 微信第三方登录的实现</span>
                         </a>
                     </li>
                     
                     
                     <li class="next">
-                        <a href="/2016/04/19/iOS-%E5%BE%AE%E5%8D%9A%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95/" data-toggle="tooltip" data-placement="top" title="iOS 微博第三方登录的实现">
+                        <a href="/2016/06/14/delegate-notification-KVO%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9/" data-toggle="tooltip" data-placement="top" title="delegate、notification、KVO如何选择">
                         Next<br>
-                        <span>iOS 微博第三方登录的实现</span>
+                        <span>delegate、notification、KVO如何选择</span>
                         </a>
                     </li>
                     

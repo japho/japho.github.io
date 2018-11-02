@@ -10,7 +10,7 @@
     <meta name="keywords"  content="Japho, Japho Blog, Japho的博客, iOS, Apple, iPhone">
     <meta name="theme-color" content="#000000">
     
-    <title>5分钟带你看完 WWDC 2018 - Japho Blog</title>
+    <title>delegate、notification、KVO如何选择 - Japho Blog</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -22,7 +22,7 @@
     <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
     
     <!-- Canonical URL -->
-    <link rel="canonical" href="http://localhost:4000/2018/06/05/5%E5%88%86%E9%92%9F%E5%B8%A6%E4%BD%A0%E7%9C%8B%E5%AE%8C-WWDC-2018/">
+    <link rel="canonical" href="http://localhost:4000/2016/06/14/delegate-notification-KVO%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -154,13 +154,13 @@
 
     <!-- Image to hack wechat -->
 <!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
-<!-- <img src="/postimage/post-bg-cook.jpg" width="0" height="0"> -->
+<!-- <img src="/postimage/post-bg-re-vs-ng2.jpg" width="0" height="0"> -->
 
 <!-- Post Header -->
 <style type="text/css">
     header.intro-header{
         position: relative;
-        background-image: url('/postimage/post-bg-cook.jpg')
+        background-image: url('/postimage/post-bg-re-vs-ng2.jpg')
     }
 
     
@@ -176,12 +176,12 @@
                         <a class="tag" href="/tags/#iOS" title="iOS">iOS</a>
                         
                     </div>
-                    <h1>5分钟带你看完 WWDC 2018</h1>
+                    <h1>delegate、notification、KVO如何选择</h1>
                     
                     
-                    <h2 class="subheading">WWDC 2018 Keynote 全记录</h2>
+                    <h2 class="subheading"></h2>
                     
-                    <span class="meta">Posted by BY on June 5, 2018</span>
+                    <span class="meta">Posted by Japho on June 14, 2016</span>
                 </div>
             </div>
         </div>
@@ -201,230 +201,139 @@
 
 				<h2 id="前言">前言</h2>
 
-<p>一年一度的 WWDC（苹果全球开发者大会）于北京时间 6月5日 凌晨1点开幕。废话不多说，来看看这次WWDC 都有哪些亮点吧!</p>
-
-<h2 id="ios-12-和-arkit-20">iOS 12 和 ARKit 2.0</h2>
+<p>在开发iOS应用的时候，我们会经常遇到一个常见的问题：在不过分耦合的前提下，controllers间怎么进行通信。在IOS应用不断的出现三种模式来实现这种通信：</p>
 
 <blockquote>
-  <p>关键词：官方防沉迷最为致命</p>
+  <p>1.委托delegation；</p>
+
+  <p>2.通知中心Notification Center；</p>
+
+  <p>3.键值观察key value observing，KVO</p>
 </blockquote>
 
-<h3 id="ios-12">iOS 12</h3>
+<p>因此，那为什么我们需要这些模式以及什么时候用它以及什么时候不用它。</p>
 
-<p>iOS 12 相较于 iOS 11 并没有太多UI上的变动，刚更新完 bate 版本的 iOS 12，完全感觉不到这是个新系统。</p>
+<p>下面来讨论这三种模式。我将讨论为什么我觉得某种模式要好于另外一种模式以及为什么我觉得在一定的环境下某中模式比较好。我给出的这 些原因并不是圣经，而仅仅是个人观点。如果你有什么不同的观点或者还可以进行补充的地方，可以联系我，一起讨论。</p>
 
-<p>iOS 12 主要是对安全和性能的优化，iOS 12 在旧设备上的运行速度比 iOS 11更块，程序加载速度快了一倍。（PS：看来苹果并没有放弃旧设备）</p>
+<h2 id="上面的三种模式是什么">上面的三种模式是什么</h2>
 
-<p><img src="https://cdn.mos.cms.futurecdn.net/RdxhPVv8fAyM6oHsRgF6dH-650-80.png" alt="" /></p>
+<p>三种模式都是一个对象传递事件给另外一个对象，并且不要他们有耦合。三种模式都是对象来通知某个事件发生了的方法，或者更准确的说，是允许其他的对象收到 这种事件的方法。这对于一个对象来说，是非常普通而且必须做的任务，因为没有通信，controllers将不能整合到整个应用中。controller 的另外一个目的是尽可能的自包含。我们希望controllers以自己的方式存在，在controllers层面上不能与其他的controllers 进行耦合。Controllers能够穿件其他的controllers而且他们之间可以自由通信，但是我们不希望controller又回接到创建自己 的controller。如果我们耦合了他们，那么我们将不能复用他们，以及完全失去对应用中一个独立的组件的控制。</p>
 
-<h3 id="arkit-20">ARKit 2.0</h3>
+<p>这三种模式给controllers(也可以是其他的对象）提供通信的方法。下面将描述如何在ios应用中使用这些模式，同样需要注意的他们在其他的地方也会用到，并且确实是存在。</p>
 
-<p>Apple 与 皮克斯 合作开发了一种用于共享AR内容的新文件格式，新的 AR 格式名为 USDZ。</p>
+<h2 id="delegate">Delegate</h2>
 
-<p>作为一个含着金苹果出生的新生儿，USDZ 一开始就得到了 Adobe Creative Cloud （包括 Photoshop CC、InDesign CC、Illustrator CC、Dreamweaver CC、Premiere Pro CC）套件的支持。</p>
+<p>当我们第一次编写iOS应用时，我们注意到不断的在使用“delegate”，并且贯穿于整个SDK。</p>
 
-<p><img src="https://images.ifanr.cn/wp-content/uploads/2018/06/WWDC-10.jpg" alt="" /></p>
+<p>delegation模式不是IOS特有的模式，而是依赖与你过去拥有的编程背景。针对它的优势以及为什么经常使用到，这种模式可能不是很明显的。</p>
 
-<p>同时，面向开发者的开发套件 ARKit 则升级到了二代，主要提升了面部跟踪、渲染能力、3D 探测和共享体验等能力。</p>
+<p>delegation的基本特征是，一个controller定义了一个协议（即一系列的方法定义）。该协议描述了一个delegate对象为了能够响应 一个controller的事件而必须做的事情。协议就是delegator说，“如果你想作为我的delegate，那么你就必须实现这些方法”。实现 这些方法就是允许controller在它的delegate能够调用这些方法，而它的delegate知道什么时候调用哪种方法。delegate可以 是任何一种对象类型，因此controller不会与某种对象进行耦合，但是当该对象尝试告诉委托事情时，该对象能确定delegate将响应。</p>
 
-<p>随后展示了一款名为 Measure 的 App，可使用AR查看物品大小。</p>
-
-<p><img src="https://cdn.mos.cms.futurecdn.net/4tbGCxGUGsH9VwSLsfMDK5-650-80.png" alt="" /></p>
-
-<p>最后为了演示新的 AR 能力和效果，苹果请来了乐高的创意总监来捧场。这是一个真实的乐高积木建筑物为基础，最多四个人可以用苹果 AR 应用进行游戏，可以在真实环境中模拟出各种虚拟的形象和建筑。</p>
-
-<p><img src="https://images.ifanr.cn/wp-content/uploads/2018/06/WWDC-9.jpg" alt="" />
-<img src="https://images.ifanr.cn/wp-content/uploads/2018/06/WWDC-11.jpg" alt="" /></p>
-
-<h3 id="相册优化">相册优化</h3>
-
-<p>iOS 12 的相册将大大提升搜索性能，系统不仅会提出搜索建议，还会帮你按主题整理照片。</p>
-
-<p><img src="https://images.ifanr.cn/wp-content/uploads/2018/06/WWDC-13.jpg" alt="" /></p>
-
-<p><img src="https://images.ifanr.cn/wp-content/uploads/2018/06/WWDC-14.jpg" alt="" /></p>
-
-<h3 id="siri变得更聪明">Siri变得更聪明</h3>
-
-<p>iOS 12 中，苹果为 Siri 提供了更加高效的操作，让它可以操作各个应用内部的功能，并且能在锁屏界面建议用户下一步的行动。</p>
-
-<p>苹果还发布了一款名为「Shortcuts」的应用，它允许用户自定义 Siri 搜索指令，支持通过拖拽来快速编辑指令，同时还提供了一个指令库供用户下载现成的命令，就像是为 Siri 打造的 Workflow 自动化工具。</p>
-
-<p><img src="https://cdn.sspai.com/2018-06-04-Artboard.jpg?imageView2/2/w/1120/q/90/interlace/1/ignore-error/1" alt="" /></p>
-
-<p>看到这里，相比熟悉苹果的朋友大概明白了，Siri 的本次改进，很可能是源于它收购的效率神器 Workflow，堪称一个用 Siri 唤醒的 Workflow。</p>
-
-<h3 id="原生应用大更新">原生应用大更新</h3>
-
-<p>iOS 12 中，不少原生应用都得到了更新。</p>
-
-<ul>
-  <li>iBooks 更名为 <strong>Apple Books</strong>，采用类似 App Store 的新界面设计。</li>
-  <li>新闻应用（News）在 iPad 上新添加了侧边栏，方便浏览，也突出策划内容。</li>
-  <li>语音备忘录现在支持 iCloud 了</li>
-  <li>股市的界面重构，可以看到股票全天走势，并打通 News 应用，方便看财经新闻；</li>
-</ul>
-
-<h3 id="carplay-开放了">CarPlay 开放了</h3>
-
-<p><img src="https://images.ifanr.cn/wp-content/uploads/2018/06/WWDC-21.jpg" alt="" /></p>
-
-<p>CarPlay 变得更加开放了，曾经被苹果狠心抛弃的 Google Maps 和 Google 的干儿子地图 Waze，以及来自东方的神秘力量高德地图成为首批 CarPlay 支持的第三方导航，从此“志玲姐姐为您导航”将可以常伴林肯领航者车主左右，中国梦和美国梦一起实现。</p>
-
-<h3 id="防手机沉迷---划重点">防手机沉迷 - 划重点！</h3>
-
-<p>本次 iOS 12 的重点就是：<strong>防沉迷！</strong></p>
-
-<p><img src="https://images.ifanr.cn/wp-content/uploads/2018/06/WWDC-25.jpg" alt="" /></p>
-
-<p>鉴于手机上瘾成为了一个社会议题，今年 Google 和苹果都不约而同地将“防沉迷”加入到了系统更新当中：</p>
-
-<ul>
-  <li><strong>Do Not Disturb（别吵我）</strong>功能将关掉手机的视觉通知，在夜深人静想起她或梦见她的时候，来了邮件也不会亮屏刺破夜的静谧和黑暗</li>
-  <li>Deliver Quietly（安静通知）则是将消息推送静默化、不显示在锁屏，也不出声，也不会在 app 右上角标红</li>
-  <li><strong>Grouped Notifications（分组通知</strong>）可以将某一类型的通知归组，微信群聊消息不再有轰炸的感觉</li>
-  <li><strong>Reports（应用报告）</strong>可以用周报告的形式，告诉用户用什么应用最多，哪个应用通知最多，每天起床第一个打开的是什么应用等等</li>
-  <li><strong>App Limits（应用限制</strong>）可以给某个应用规定使用时间，当然这不是强制性的，用户可以突破限制继续“吃鸡”</li>
-  <li><strong>Allowances（零用钱？）</strong> 是家长限制孩子使用应用的新特性</li>
-</ul>
-
-<h3 id="imessage-和-feactime">iMessage 和 FeacTime</h3>
-
-<p>Animoji 新增了 4 个新表情（幽灵，考拉，老虎和霸王龙），用户还可以为自己量身定做 Animoji ，并用到各种场景——这就是全新的 Memoji 技术</p>
-
-<p><img src="https://images.ifanr.cn/wp-content/uploads/2018/06/WWDC-26.jpg" alt="" /></p>
-
-<p><img src="https://cdn.sspai.com/2018/06/05/67b6fba3d36bdd7caf09bec94dcb157b.jpg?imageView2/2/w/1120/q/90/interlace/1/ignore-error/1" alt="" /></p>
-
-<p>iOS 版 <strong>FaceTime</strong> 迎来了群聊功能，最多支持 32 人同时聊天，成员可以随时加入或离开聊天。聊天界面用瀑布流的形式呈现，正在说话的成员窗口会自动放大。macOS 版 FaceTime 同样也得到了更新。</p>
-
-<p><img src="https://cdn.sspai.com/2018-06-04-Screen%20Shot%202018-06-05%20at%202.00.58%20AM.png?imageView2/2/w/1120/q/90/interlace/1/ignore-error/1" alt="" /></p>
-
-<h2 id="tvos">tvOS</h2>
+<p><strong>delegate的优势：</strong></p>
 
 <blockquote>
-  <p>关键词：优化试听体验</p>
+  <ul>
+    <li>1.非常严格的语法。所有将听到的事件必须是在delegate协议中有清晰的定义。</li>
+    <li>2.如果delegate中的一个方法没有实现那么就会出现编译警告/错误</li>
+    <li>3.协议必须在controller的作用域范围内定义</li>
+    <li>4.在一个应用中的控制流程是可跟踪的并且是可识别的；</li>
+    <li>5.在一个控制器中可以定义定义多个不同的协议，每个协议有不同的delegates</li>
+    <li>6.没有第三方对象要求保持/监视通信过程。</li>
+    <li>7.能够接收调用的协议方法的返回值。这意味着delegate能够提供反馈信息给controller</li>
+  </ul>
 </blockquote>
 
-<p>tvOS 今年的变化比较小，更新主要集中在了影视资源以及细节优化上。</p>
-
-<p>Apple TV 4K 将支持杜比全景声和杜比视界，让你在家里也能获得电影院般的听觉体验。</p>
-
-<p><img src="https://cdn.sspai.com/2018-06-04-Screen%20Shot%202018-06-05%20at%202.26.21%20AM.png?imageView2/2/w/1120/q/90/interlace/1/ignore-error/1" alt="" /></p>
-
-<h2 id="watchos-5">watchOS 5</h2>
+<p><strong>缺点：</strong></p>
 
 <blockquote>
-  <p>关键词：运动进行到底</p>
+  <p>1.需要定义很多代码：</p>
+
+  <ul>
+    <li>
+      <ol>
+        <li>协议定义；</li>
+      </ol>
+    </li>
+    <li>
+      <ol>
+        <li>controller的delegate属性；</li>
+      </ol>
+    </li>
+    <li>
+      <ol>
+        <li>在delegate本身中实现delegate方法定义</li>
+      </ol>
+    </li>
+  </ul>
+
+  <p>2.在释放代理对象时，需要小心的将delegate改为nil。一旦设定失败，那么调用释放对象的方法将会出现内存crash
+3.在一个controller中有多个delegate对象，并且delegate是遵守同一个协议，但还是很难告诉多个对象同一个事件，不过有可能。</p>
 </blockquote>
 
-<p>随着 Apple Watch 成长的，还有它的操作系统 watchOS，这一次 watchOS 升级到了第五代。</p>
+<h2 id="notification">Notification</h2>
 
-<p><img src="https://images.ifanr.cn/wp-content/uploads/2018/06/WWDC-31.jpg" alt="" /></p>
+<p>在iOS应用开发中有一个<code class="highlighter-rouge">Notification Center</code>的概念。它是一个单例对象，允许当事件发生时通知一些对象。它允许我们在低程度耦合的情况下，满足控制器与一个任意的对象进行通信的目的。 这种模式的基本特征是为了让其他的对象能够接收到在该controller中发生某种事件而产生的消息，controller用一个key（通知名称）。 这样对于controller来说是匿名的，其他的使用同样的key来注册了该通知的对象（即观察者）能够对通知的事件作出反应。</p>
 
-<p>Apple Watch 的功能朝着运动的方向发展，此次 watchOS 5 的更新，也以运动为主。</p>
-
-<p><img src="https://images.ifanr.cn/wp-content/uploads/2018/06/WWDC-35.jpg" alt="" /></p>
-
-<p>watchOS 5 的一个小惊喜是让 Apple Watch 成为了对讲机，这个应用名为 Walkie Talkie（对讲机）。</p>
-
-<p><img src="https://images.ifanr.cn/wp-content/uploads/2018/06/WWDC-38.jpg" alt="" /></p>
-
-<p>Apple Watch 早就支持了 Apple Pay，不过在通知上，Apple Watch 显然可以做得更多，比如值机和给滴滴师傅付款评分，手表不再只是个通知器，也能做些轻交互。</p>
-
-<p><img src="https://images.ifanr.cn/wp-content/uploads/2018/06/WWDC-51.jpg" alt="" /></p>
-
-<p>还有 Apple Watch 可以浏览网页了~</p>
-
-<h2 id="macos-mojave">macOS Mojave</h2>
+<p><strong>优势：</strong></p>
 
 <blockquote>
-  <p>关键词：夜间模式、全新的App Store</p>
+  <ul>
+    <li>1.不需要编写多少代码，实现比较简单；</li>
+    <li>2.对于一个发出的通知，多个对象能够做出反应，即1对多的方式实现简单</li>
+    <li>3.controller能够传递context对象（dictionary），context对象携带了关于发送通知的自定义的信息</li>
+  </ul>
 </blockquote>
 
-<p><img src="https://cdn.sspai.com/2018-06-04-macOS01.png?imageView2/2/w/1120/q/90/interlace/1/ignore-error/1" alt="" /></p>
+<p><strong>缺点：</strong></p>
 
-<p>对于大多数人来说，macOS 更新最大的悬念，是新系统叫什么名字。</p>
+<blockquote>
+  <ul>
+    <li>1.在编译期不会检查通知是否能够被观察者正确的处理； </li>
+    <li>2.在释放注册的对象时，需要在通知中心取消注册；</li>
+    <li>3.在调试的时候应用的工作以及控制过程难跟踪；</li>
+    <li>4.需要第三方对喜爱那个来管理controller与观察者对象之间的联系；</li>
+    <li>5.controller和观察者需要提前知道通知名称、UserInfo dictionary keys。如果这些没有在工作区间定义，那么会出现不同步的情况；</li>
+    <li>6.通知发出后，controller不能从观察者获得任何的反馈信息。</li>
+  </ul>
+</blockquote>
 
-<p>答案是：<strong>macOS Mojave</strong>，Mojave 中译名是莫哈韦沙漠，位于在美国加利福尼亚西南，出于洛杉矶和拉斯维加斯之间。</p>
+<h2 id="kvo">KVO</h2>
 
-<p>在 Mojave 这版系统中，苹果加入了一套适应暗光环境下使用的夜间主题，并对 Mac App Store 的交互界面进行了重塑，整个系统的改变甚至连库克都称为是苹果的一次 “巨大的跨越”。</p>
+<p>KVO是一个对象能够观察另外一个对象的属性的值，并且能够发现值的变化。前面两种模式更加适合一个controller与任何其他的对象进行通信，而 KVO更加适合任何类型的对象侦听另外一个任意对象的改变（这里也可以是controller，但一般不是controller）。这是一个对象与另外一 个对象保持同步的一种方法，即当另外一种对象的状态发生改变时，观察对象马上作出反应。它只能用来对属性作出反应，而不会用来对方法或者动作作出反应。</p>
 
-<p><img src="https://images.ifanr.cn/wp-content/uploads/2018/06/WWDC-89.jpg" alt="" /></p>
+<p><strong>优点：</strong></p>
 
-<h3 id="夜间模式--动态桌面">夜间模式 / 动态桌面</h3>
+<blockquote>
+  <ul>
+    <li>1.能够提供一种简单的方法实现两个对象间的同步。例如：model和view之间同步；</li>
+    <li>2.能够对非我们创建的对象，即内部对象的状态改变作出响应，而且不需要改变内部对象（SKD对象）的实现；</li>
+    <li>3.能够提供观察的属性的最新值以及先前值；</li>
+    <li>4.用key paths来观察属性，因此也可以观察嵌套对象；</li>
+    <li>5.完成了对观察对象的抽象，因为不需要额外的代码来允许观察值能够被观察</li>
+  </ul>
+</blockquote>
 
-<p>不少用户会在暗光环境下使用电脑，即便是将屏幕亮度调到最低，也难免会因为白底色为主的主题而感到刺眼。在这次更新中，macOS Mojave 新增加了一套暗色主题，不同于目前将菜单和程序栏调成暗色的选项，新系统上的是一套全局暗色主题，即便是在文件夹、应用里都是以黑色为主色呈现。</p>
+<p><strong>缺点：</strong></p>
 
-<p><img src="https://images.ifanr.cn/wp-content/uploads/2018/06/WWDC-63.jpg" alt="" /></p>
+<blockquote>
+  <ul>
+    <li>1.我们观察的属性必须使用strings来定义。因此在编译器不会出现警告以及检查；</li>
+    <li>2.对属性重构将导致我们的观察代码不再可用；</li>
+    <li>3.复杂的“IF”语句要求对象正在观察多个值。这是因为所有的观察代码通过一个方法来指向；</li>
+    <li>4.当释放观察者时不需要移除观察者。</li>
+  </ul>
+</blockquote>
 
-<p>另外，系统可根据时间变化对桌面进行自动调整，日间使用时系统为正常主题；夜间使用时系统则自动切换至暗色模式主题。此时，台下的开发者们爆发出了一阵欢呼，大概是这个主题能够提升程序员朋友夜间加班的幸福感吧。</p>
+<h2 id="总结">总结</h2>
 
-<p><img src="https://images.ifanr.cn/wp-content/uploads/2018/06/WWDC-63.jpg" alt="" /></p>
+<p>从上面的分析中可以看出3种设计模式都有各自的优点和缺点。其实任何一种事物都是这样，问题是如何在正确的时间正确的环境下选择正确的事物。下面就讲讲如何发挥他们各自的优势，在哪种情况下使用哪种模式。注意使用任何一种模式都没有对和错，只有更适合或者不适合。 每一种模式都给对象提供一种方法来通知一个事件给其他对象，而且前者不需要知道侦听者。在这三种模式中，我认为KVO有最清晰的使用案例，而且针对某个需 求有清晰的实用性。而另外两种模式有比较相似的用处，并且经常用来给controller间进行通信。那么我们在什么情况使用其中之一呢？</p>
 
-<h3 id="智能分类">智能分类</h3>
+<p>我个人不是很喜欢使用通知中心。我发现用通知中心很难把握应用的执行流程。<code class="highlighter-rouge">UserInfo</code> dictionaries的keys到处传递导致失去了同步，而且在公共空间需要定义太多的常量。对于一个工作于现有的项目的开发者来说，如果过分的使用 通知中心，那么很难理解应用的流程。</p>
 
-<p>macOS 会跟据文件类型和标签对桌面的文件进行自动分类整理，从此再也不用担心满桌面都是文件了。</p>
+<p>我觉得使用命名规则好的协议和协议方法定义对于清晰的理解controllers间的通信是很容易的。努力的定义这些协议方法将增强代码的可读性，以及更 好的跟踪你的app。代理协议发生改变以及实现都可通过编译器检查出来，如果没有将会在开发的过程中至少会出现crash，而不仅仅是让一些事情异常工 作。甚至在同一事件通知多控制器的场景中，只要你的应用在controller层次有着良好的结构，消息将在该层次上传递。该层次能够向后传递直至让所有 需要知道事件的controllers都知道。
+当然会有<code class="highlighter-rouge">delegation</code>模式不适合的例外情况出现，而且notification可能更加有效。例如：应用中所有的controller需要知道一个事件。然而这些类型的场景很少出现。另外一个例子是当你建立了一个架构而且需要通知该事件给正在运行中应用。</p>
 
-<p><img src="https://images.ifanr.cn/wp-content/uploads/2018/06/WWDC-82.jpg" alt="" /></p>
-
-<p><img src="https://cdn.sspai.com/2018-06-04-macOS04.png?imageView2/2/w/1120/q/90/interlace/1/ignore-error/1" alt="" /></p>
-
-<h3 id="快速查看升级">快速查看升级</h3>
-
-<p><img src="https://images.ifanr.cn/wp-content/uploads/2018/06/WWDC-92.jpg" alt="" /></p>
-
-<p>访达在这次系统上的更新并不多，只是针对图片查看增添了 “图库视图” 功能。通过 “图库视图”，用户可更加便捷快速地浏览到访达文件夹内的图片内容，与此同时功能内部也内置了图片元数据显示窗，用户可以借助数据窗口了解到图片的相关详情，并且可对图片进行快速编辑操作。</p>
-
-<h3 id="截图录屏操作---类似ios">截图/录屏操作 - 类似iOS</h3>
-
-<p><img src="https://images.ifanr.cn/wp-content/uploads/2018/06/WWDC-93.jpg" alt="" /></p>
-
-<p>此次 macOS Mojave 加入了 “系统级” 的截屏功能，用户也可以在截屏后对截屏图片进行简单的标记。不过实际上，目前不少社交软件其实都已经具备了截图 + 标记的相关功能，且在体验上也相当不错。</p>
-
-<h3 id="安全权限">安全权限</h3>
-
-<p>当我们在 iOS 系统上打开刚下载的应用程序时，系统会弹出弹窗，提示是否允许程序访问用户信息和手机硬件。而这次苹果也将相关的安全控制策略从 iOS “搬” 到了 macOS 上，当用户打开某个网址或程序时，系统会弹出 “是否允许访问” 的弹窗以获得用户批准。这也可能是为了呼应最近越发严格的隐私政策。</p>
-
-<h3 id="在-macos-上运行的几款-ios-程序">在 macOS 上运行的几款 iOS 程序</h3>
-
-<p><img src="https://images.ifanr.cn/wp-content/uploads/2018/06/WWDC-84.jpg" alt="" /></p>
-
-<p>将 iOS 的应用程序搬到 macOS 上运行是不少玩家曾经有过的想法。此次苹果在新版的 macOS 系统上加入了 iOS 端的新闻、股市、家、语音备忘录四个程序，用户可以在桌面系统上通过这几款应用阅读新闻、控制家庭设备等等。</p>
-
-<p>在发布会的最后，苹果否认了将对 iOS 和 macOS 进行合并的传闻，但考虑到 iOS 平台有非常庞大的应用数量，他们也希望其中的部分应用能来到 macOS。于是苹果在发布会上为大家提前预览了一个准备多年的项目，macOS 将可以使用 iOS 的 UIKit 框架进行开发，以降低开发多平台应用的成本。</p>
-
-<p><img src="https://cdn.sspai.com/2018-06-04-Screen%20Shot%202018-06-05%20at%203.08.05%20AM.png?imageView2/2/w/1120/q/90/interlace/1/ignore-error/1" alt="" /></p>
-
-<p>比如这次 macOS Mojave 中新增的 4 款应用——News、股票、语音备忘录、家庭——均采用了这种新技术。</p>
-
-<h3 id="全新的-mac-app-store">全新的 Mac App Store</h3>
-
-<p><img src="https://cdn.sspai.com/2018-06-04-macOS09.jpg?imageView2/2/w/1120/q/90/interlace/1/ignore-error/1" alt="" /></p>
-
-<p>在 iOS 11 对 Mac App Store 进行了重新设计后，macOS Mojave 也迎来了全新设计的 Mac App Store。新版拥有与 iOS 上 App Store 类似的发现页，里面能看到每日编辑推荐和一些 App 的使用技巧。进入 App 页面后，你可以看到视频预览和与 iOS 类似的评分系统。为了方便用户评分，新版 macOS 还加入了和 iOS 一样的 App 内打分功能。此外，苹果还宣布包括 Office 365 和 Adobe Lightroom CC 在内的一批重量级 App 将在今年稍后登录 Mac App Store。</p>
-
-<h2 id="结语">结语</h2>
-
-<p>是的，这次的 WWDC 只有软件，没有新的电子设备发布，没有新 iPad Pro、没有 iPhone SE2、没有带八代酷睿的新 MacBook，唯一能和“硬件”沾上边的就是一个新的彩虹表带。</p>
-
-<p><img src="https://images.ifanr.cn/wp-content/uploads/2018/06/WWDC-56.jpg" alt="" /></p>
-
-<p>时至今日，苹果生态已经日趋完善了，大概苹果的产品经理们也想不出什么石破天惊的功能让大家 wow 一声了，有的只是细节层面的改进。作为看客和用户，也只能接受这样的现实了。</p>
-
-<p>对了，那个可以四个人一起玩的乐高积木和 AR 应用，倒是可以考虑买来玩一下，不要一边说没有新东西，一边又对新东西视而不见。</p>
-
-<p>对于 iOS 开发者来说，macOS 将可以使用 iOS 的 UIKit 框架进行开发是一个值得关注的点。</p>
-
-<h3 id="参考">参考</h3>
-
-<ul>
-  <li><a href="https://developer.apple.com/videos/play/wwdc2018/101/">WWDC 2018 Keynote</a></li>
-  <li><a href="https://www.techradar.com/news/apple-wwdc-2018-keynote">Apple WWDC 2018: what’s new? All the announcements from the keynote</a></li>
-  <li><a href="http://www.ifanr.com/1043270">iOS 加入「防沉迷」，macOS 有了暗色主题，今年的 WWDC 重点都在系统上</a></li>
-  <li><a href="https://sspai.com/post/44816">苹果 WWDC 2018：最全总结看这里，不错过任何重点</a></li>
-</ul>
-
+<p>根据经验，如果是属性层的时间，不管是在不需要编程的对象还是在紧紧绑定一个view对象的model对象，我只使用观察。对于其他的事件，我都会使用 delegate模式。如果因为某种原因我不能使用<code class="highlighter-rouge">delegate</code>，首先我将估计我的app架构是否出现了严重的错误。如果没有错误，然后才使用 <code class="highlighter-rouge">notification</code>。</p>
 
 
                 <hr style="visibility: hidden;">
@@ -432,12 +341,19 @@
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/2017/04/14/%E5%88%A4%E6%96%AD%E5%BD%93%E5%89%8Dviewcontroller%E6%98%AFpush%E8%BF%98%E6%98%AFpresent%E7%9A%84%E6%96%B9%E5%BC%8F%E6%98%BE%E7%A4%BA/" data-toggle="tooltip" data-placement="top" title="判断当前viewcontroller是push还是present的方式显示">
+                        <a href="/2016/04/19/iOS-%E5%BE%AE%E5%8D%9A%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95/" data-toggle="tooltip" data-placement="top" title="iOS 微博第三方登录的实现">
                         Previous<br>
-                        <span>判断当前viewcontroller是push还是present的方式显示</span>
+                        <span>iOS 微博第三方登录的实现</span>
                         </a>
                     </li>
                     
+                    
+                    <li class="next">
+                        <a href="/2016/07/16/UIButton%E4%BC%A0%E9%80%92%E5%A4%9A%E4%B8%AA%E5%8F%82%E6%95%B0%E7%9A%84%E6%96%B9%E6%B3%95/" data-toggle="tooltip" data-placement="top" title="UIButton传递多个参数的方法">
+                        Next<br>
+                        <span>UIButton传递多个参数的方法</span>
+                        </a>
+                    </li>
                     
                 </ul>
 

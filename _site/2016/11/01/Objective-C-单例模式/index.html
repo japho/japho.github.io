@@ -10,7 +10,7 @@
     <meta name="keywords"  content="Japho, Japho Blog, Japho的博客, iOS, Apple, iPhone">
     <meta name="theme-color" content="#000000">
     
-    <title>About - Japho Blog</title>
+    <title>Objective-C 单例模式 - Japho Blog</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -22,7 +22,7 @@
     <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
     
     <!-- Canonical URL -->
-    <link rel="canonical" href="http://localhost:4000/about/">
+    <link rel="canonical" href="http://localhost:4000/2016/11/01/Objective-C-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -152,242 +152,207 @@
 </script>
 
 
-    <!-- Page Header -->
-<header class="intro-header" style="background-image: url('/img/about-bg.jpg')">
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/postimage/post-bg-unix-linux.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/postimage/post-bg-unix-linux.jpg')
+    }
+
+    
+</style>
+<header class="intro-header" >
+    <div class="header-mask"></div>
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
-                <div class="site-heading">
-                    <h1>About</h1>
-                    <!--<hr class="small">-->
-                    <span class="subheading">You are my dream.</span>
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#iOS" title="iOS">iOS</a>
+                        
+                    </div>
+                    <h1>Objective-C 单例模式</h1>
+                    
+                    
+                    <h2 class="subheading">单例模式，不是说说而已</h2>
+                    
+                    <span class="meta">Posted by Japho on November 1, 2016</span>
                 </div>
             </div>
         </div>
     </div>
 </header>
 
-<!-- Main Content -->
-<div class="container">
-	<div class="row">
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<h2 id="何为单例模式">何为单例模式</h2>
+
+<blockquote>
+  <p>单例模式：保证一个类只有一个实例，并提供一个访问它的全局访问点。</p>
+</blockquote>
+
+<p>单例模式几乎是设计模式的最简单形式了。这一模式的意图是使得类的一个对象成为系统中的唯一实例。要实现这一点，可以从客户端对其进行实例化开始。因此需要用一种只允许生成对象类的唯一实例的机制，“阻止”所有想要生成对象的访问。我们可以用工厂方法来限制实例化过程。这个方法应该是个静态方法(类方法)，因为让类的实例去生成另一个唯一实例毫无意义。下图显示了简单单例模式的类结构。</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1269906-d495ab79932180ab.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<h2 id="何时使用单例模式">何时使用单例模式</h2>
+
+<blockquote>
+  <p><strong>在以下情形，应该考虑使用单例模式：</strong></p>
+
+  <p>1）类只能有一个实例，而且必须从一个为人熟知的访问点对其进行访问，比如工厂方法。</p>
+
+  <p>2）这个唯一的实例只能通过子类化进行扩展，而且扩展的对象不会破坏客户端代码。</p>
+</blockquote>
+
+<p>单例模式提供了一个为人熟知的访问点，供客户类为共享资源生成唯一实例，井通过它对共享资源进行访问。虽然静态的全局对象引用或类方法也可以提供全局访问点，但是全局对象无法防止类被实例化一次以上，而且类方法也缺少消除耦合的灵活性。</p>
+
+<p>静态全局变量保持着对类的实例的唯一引用，那些访问这个全局变量的类或方法，实际上是在和使用这个变量的其他类或方法共享着同一份副本。这听起来好像是我们在单例模式中想要的。如果在整个应用程序中都只使用同一个全局变量，那么似曾万事大吉，好做实际上井不需要单例模式。可是，要是团队中的某位老兄或者哪个顾问也定义了相同类型的静态变量，都会怎么样呢?那样在同一个应用程序中就会有两个相同的全局对象类型——因此全局变量并不真正解决问题。</p>
+
+<p>类方法提供了共享的服务，不用创建其对象就可以访问。资源的唯一实例可在类方法中维护。然而，如果类需要被子类化以提供更好的服务，这一方式就不够灵活。</p>
+
+<p>单例类提供创建与访问类的唯一对象的访问点，井保证它唯一、一致而且为人熟知。这一模式提供了灵活性，使其任何子类可以重载实例方法并且完全控制自身的对象创建，而不必修改客户端的代码。更好的是，父类中的实例实现可以处理动态对象创建。类的实际类型可以在运行时决定，以保证创建正确的对象。</p>
+
+<p>单例模式有个变通版本，其中的一个工厂方法总是返回同一实例，但可以分配并初始化额外的实例。</p>
+
+<p>#在Objective-C中实现单例模式</p>
+
+<p><strong>单例的写法常用的有两种方式：</strong></p>
+
+<ul>
+  <li>方式1、不考虑线程</li>
+</ul>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">static</span> <span class="kt">SingleCase</span> <span class="o">*</span><span class="n">manager</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">;</span>    
+     
+<span class="o">+</span> <span class="p">(</span><span class="kt">SingleCase</span> <span class="o">*</span><span class="p">)</span><span class="n">defaultManager</span> <span class="p">{</span>    
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">manager</span><span class="p">){</span>   
+        <span class="kt">SingleCase</span> <span class="o">=</span> <span class="p">[[</span><span class="k">self</span> <span class="n">alloc</span><span class="p">]</span> <span class="kd">init</span><span class="p">];</span>    
+        <span class="k">return</span> <span class="n">manager</span><span class="p">;</span>   
+        <span class="p">}</span>  
+<span class="p">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>方式2、考虑线程安全</li>
+</ul>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">+</span> <span class="p">(</span><span class="kt">SingleCase</span> <span class="o">*</span><span class="p">)</span><span class="n">sharedManager</span>    
+<span class="p">{</span>    
+        <span class="kd">static</span> <span class="kt">SingleCase</span> <span class="o">*</span><span class="kt">ManagerInstance</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">;</span>    
+        <span class="kd">static</span> <span class="n">dispatch_once_t</span> <span class="n">predicate</span><span class="p">;</span>    
+        <span class="nf">dispatch_once</span><span class="p">(</span><span class="o">&amp;</span><span class="n">predicate</span><span class="p">,</span> <span class="o">^</span><span class="p">{</span>    
+                <span class="kt">ManagerInstance</span> <span class="o">=</span> <span class="p">[[</span><span class="k">self</span> <span class="n">alloc</span><span class="p">]</span> <span class="kd">init</span><span class="p">];</span>     
+        <span class="p">});</span>    
+    <span class="k">return</span> <span class="kt">ManagerInstance</span><span class="p">;</span>    
+<span class="p">}</span>
+</code></pre></div></div>
+
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2016/10/25/UIButton%E4%B8%ADimageView%E5%92%8CtitleLabel%E7%9A%84%E4%BD%8D%E7%BD%AE%E8%B0%83%E6%95%B4/" data-toggle="tooltip" data-placement="top" title="UIButton中imageView和titleLabel的位置调整">
+                        Previous<br>
+                        <span>UIButton中imageView和titleLabel的位置调整</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2016/11/07/iOS-Widget%E7%9A%84%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="iOS Widget的简单实现">
+                        Next<br>
+                        <span>iOS Widget的简单实现</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+
+                <!--Gitalk评论start  -->
+                
+                <!-- 引入Gitalk评论插件  -->
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+                <div id="gitalk-container"></div>
+                <!-- 引入一个生产md5的js，用于对id值进行处理，防止其过长 -->
+                <!-- Thank DF:https://github.com/NSDingFan/NSDingFan.github.io/issues/3#issuecomment-407496538 -->
+                <script src="/js/md5.min.js"></script>
+                <script type="text/javascript">
+                    var gitalk = new Gitalk({
+                    clientID: '440847f85c950402a76b',
+                    clientSecret: '92371c89905e71fe83cfd3815f779358726d9c48',
+                    repo: 'japho.github.io',
+                    owner: 'japho',
+                    admin: ['japho'],
+                    distractionFreeMode: true,
+                    id: md5(location.pathname),
+                    });
+                    gitalk.render('gitalk-container');
+                </script>
+                
+                <!-- Gitalk end -->
+
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
         
 
-<!-- USE SIDEBAR -->
-    <!-- PostList Container -->
-    		<div class="
-                col-lg-8 col-lg-offset-1
-                col-md-8 col-md-offset-1
-                col-sm-12
-                col-xs-12
-                postlist-container
-            ">
-    			<!-- Language Selector -->
-<!-- <select class="sel-lang" onchange= "onLanChange(this.options[this.options.selectedIndex].value)">
-    <option value="0" selected> 中文 Chinese </option>
-    <option value="1"> 英文 English </option>
-</select> -->
-
-<!-- Chinese Version -->
-<div class="zh post-container">
-
-    <!--copied from markdown -->
-    <blockquote><p>Nothing is impossible for a willing heart.<br>
-    心之所愿，无所不成。</p></blockquote>
-
-    <p>Hey，我是<strong> Japho </strong>，一名牧码人。游荡于草原间，寻找牧码人的梦。常出没于<a href="https://japho.top">博客</a>、<a href="https://www.jianshu.com/u/a1d80b6eaa9e">简书</a>、<a href="https://www.zhihu.com/people/japho">知乎</a>、<a href="https://weibo.com/wangjifeng1114">微博</a>、<a href="https://github.com/japho">GitHub</a>等地带，居无定所。</p>
-
-    <p>职业是软件工程师，移动研发方向。擅长，但不精通，正在进化为成熟猿人的路上。来自东北的汉子，喜欢做饭，精通各种乱炖。
-    博客供日常学习和记录，也欢迎大家共同交流。</p>
-
-    
-    <h5>Links</h5>
-
-    <ul>
-        <li><a href="https://www.jianshu.com/u/a1d80b6eaa9e">简书.Japho</a></li>
-        <li><a href="https://github.com/japho">GitHub</a></li>
-        <li><a href="https://analytics.google.com/analytics">Google Analytics</a></li>
-    </ul>
-</div>
-
-<!-- English Version -->
-<!-- <div class="en post-container">
-    <blockquote><p>Yet another iOS Developer. <br>
-    Yet another Life-long Student.</p></blockquote>
-
-    <p>Hi, I am <strong>Baiying Qiu</strong>，you can call me <strong>BY</strong>. I am an iOS software engineer and currently working in Xiamen</p>
-
-    <p>This is my personal blog, through making Github Pages and Jekyll.My GitHub  👉 <a href="http://github.com/qiubaiying">Github·BY</a>.</p>
-    
-    <p>I am a sports enthusiast, I like fitness, running and boxing.</p>
-
-    <h5>Talks</h5>
-
-    <ul>
-    <li><a href="https://github.com">GitHub</a></li>
-    <li><a href="http://jekyll.com.cn/">jekyll</a></li>
-    <li><a href="https://pages.github.com/">GitHub Pages</a></li>
-    <li><a href="https://qiubaiying.github.io">BY</a></li>
-    </ul>
-</div> -->
-
-<!-- Handle Language Change -->
-<script type="text/javascript">
-    // get nodes
-    var $zh = document.querySelector(".zh");
-    var $en = document.querySelector(".en");
-    var $select = document.querySelector("select");
-
-    // bind hashchange event
-    window.addEventListener('hashchange', _render);
-
-    // handle render
-    function _render(){
-        var _hash = window.location.hash;
-        // en
-        if(_hash == "#en"){
-            $select.selectedIndex = 1;
-            $en.style.display = "block";
-            $zh.style.display = "none";
-        // zh by default
-        }else{
-            // not trigger onChange, otherwise cause a loop call.
-            $select.selectedIndex = 0;
-            $zh.style.display = "block";
-            $en.style.display = "none";
-        }
-    }
-
-    // handle select change
-    function onLanChange(index){
-        if(index == 0){
-            window.location.hash = "#zh"
-        }else{
-            window.location.hash = "#en"
-        }
-    }
-
-    // init
-    _render();
-</script>
-
-
-<!-- Gitalk 评论 start  -->
-
-<!-- Gitalk link  -->
-<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
-<script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
-
-<div id="gitalk-container"></div>
-    <script type="text/javascript">
-    var gitalk = new Gitalk({
-    clientID: '440847f85c950402a76b',
-    clientSecret: '92371c89905e71fe83cfd3815f779358726d9c48',
-    repo: 'japho.github.io',
-    owner: 'japho',
-    admin: ['japho'],
-    distractionFreeMode: true,
-    id: 'about',
-    });
-    gitalk.render('gitalk-container');
-</script>
-
-<!-- Gitalk end -->
-
- <!-- disqus 评论框 start  -->
-
-
-
-    		</div>
     <!-- Sidebar Container -->
             <div class="
-                col-lg-3 col-lg-offset-0
-                col-md-3 col-md-offset-0
-                col-sm-12
-                col-xs-12
-                sidebar-container
-            ">
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
                 <!-- Featured Tags -->
                 
                 <section>
                     <hr class="hidden-sm hidden-xs">
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
-                        
+        				
                             
-                                <a href="/tags/#iOS" title="iOS" rel="16">
+                				<a href="/tags/#iOS" title="iOS" rel="16">
                                     iOS
                                 </a>
                             
-                        
-                    </div>
+        				
+        			</div>
                 </section>
                 
 
-                <!-- Short About -->
-                <section class="visible-md visible-lg">
-                    <hr><h5><a href="/about/">ABOUT ME</a></h5>
-                    <div class="short-about">
-                        
-                            <a href="/about">
-                                <img src="/img/about-BY-gentle.jpg"/>
-                            </a>
-                        
-                        
-                            <p>The shortest answer is doing.</p>
-                        
-                        <!-- SNS Link -->
-                        <ul class="list-inline">
-                            
-                            <!-- add jianshu add target = "_blank" to <a> by BY -->
-                            
-                            <li>
-                                <a target="_blank" href="https://www.jianshu.com/u/a1d80b6eaa9e">
-                                    <span class="fa-stack fa-lg">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa  fa-stack-1x fa-inverse">简</i>
-                                    </span>
-                                </a>
-                            </li>
-                            
-                            
-                            
-                            <li>
-                                <a target="_blank" href="https://www.zhihu.com/people/japho">
-                                    <span class="fa-stack fa-lg">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa  fa-stack-1x fa-inverse">知</i>
-                                    </span>
-                                </a>
-                            </li>
-                            
-                            
-                            <li>
-                                <a target="_blank" href="http://weibo.com/wangjifeng1114">
-                                    <span class="fa-stack fa-lg">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
-                                    </span>
-                                </a>
-                            </li>
-                            
-                            
-                            
-                            <li>
-                                <a target="_blank" href="https://github.com/japho">
-                                    <span class="fa-stack fa-lg">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-                                    </span>
-                                </a>
-                            </li>
-                            
-                            
-                        </ul>
-                        
-                            <p>✉️ japhoo@163.com</p>
-                        
-                    </div>
-                </section>
                 <!-- Friends Blog -->
                 
                 <hr>
@@ -404,10 +369,50 @@
                     
                 </ul>
                 
-    		</div>
-        
-	</div>
-</div>
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        // BY Fix:去除标题前的‘#’ issues:<https://github.com/qiubaiying/qiubaiying.github.io/issues/137>
+        // anchors.options = {
+        //   visible: 'always',
+        //   placement: 'right',
+        //   icon: '#'
+        // };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
 
 
     <!-- Footer -->
@@ -584,6 +589,50 @@
 
 
 <!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
 
 
 

@@ -210,6 +210,70 @@ iOS 12 和 ARKit 2.0
 <hr>
 
 <div class="post-preview">
+    <a href="/2017/04/14/%E5%88%A4%E6%96%AD%E5%BD%93%E5%89%8Dviewcontroller%E6%98%AFpush%E8%BF%98%E6%98%AFpresent%E7%9A%84%E6%96%B9%E5%BC%8F%E6%98%BE%E7%A4%BA/">
+        <h2 class="post-title">
+            判断当前viewcontroller是push还是present的方式显示
+        </h2>
+        
+        <h3 class="post-subtitle">
+            妈妈再也不用担心我不会判断了
+        </h3>
+        
+        <div class="post-content-preview">
+            通过presentviewcontroller的方式显示的viewcontroller不会存入self.navigationController.viewControllers数组中。而通过pu...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Japho on April 14, 2017
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2017/02/14/%E5%A6%82%E4%BD%95%E6%9F%A5%E6%89%BE%E5%BD%93%E5%89%8D%E7%9A%84%E7%AC%AC%E4%B8%80%E5%93%8D%E5%BA%94%E8%80%85/">
+        <h2 class="post-title">
+            如何查找当前的第一响应者
+        </h2>
+        
+        <h3 class="post-subtitle">
+            不调用私有API查找第一响应者
+        </h3>
+        
+        <div class="post-content-preview">
+            有时候总是有需求来获取当前的第一响应者，例如让TextField收键盘，隐藏视图等等操作都需要获取当前的第一响应者，那么该如何获取呢？
+
+UIWindow *keyWindow = [[UIAp...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Japho on February 14, 2017
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2016/11/09/Objective-C-%E6%9E%9A%E4%B8%BE-%E4%BD%8D%E7%A7%BB%E6%9E%9A%E4%B8%BE)/">
+        <h2 class="post-title">
+            Objective-C 枚举（位移枚举)
+        </h2>
+        
+        <h3 class="post-subtitle">
+            枚举真的有这么简单？快！上车！
+        </h3>
+        
+        <div class="post-content-preview">
+            什么是枚举
+
+在程序设计语言中，一般用一个数值来代表某一状态，这种处理方法不直观，易读性差。如果能在程序中用自然语言中有相应含义的单词来代表某一状态，则程序就很容易阅读和理解。也就是说，事先考虑...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Japho on November 9, 2016
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
     <a href="/2016/11/07/iOS-Widget%E7%9A%84%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0/">
         <h2 class="post-title">
             iOS Widget的简单实现
@@ -233,64 +297,129 @@ iOS 12 和 ARKit 2.0
 <hr>
 
 <div class="post-preview">
-    <a href="/2016/04/18/iOS-%E5%BE%AE%E4%BF%A1%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95%E7%9A%84%E5%AE%9E%E7%8E%B0/">
+    <a href="/2016/11/01/Objective-C-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">
         <h2 class="post-title">
-            iOS 微信第三方登录的实现
+            Objective-C 单例模式
         </h2>
         
         <h3 class="post-subtitle">
-            原生微信SDK开发
+            单例模式，不是说说而已
         </h3>
         
         <div class="post-content-preview">
-            下载微信SDK
-
-微信开放平台 https://open.weixin.qq.com
+            何为单例模式
 
 
-
-导入SDK
-
-导入SDK，并添加依赖库
+  单例模式：保证一个类只有一个实例，并提供一个访问它的全局访问点。
 
 
-
-配置URL scheme
-
-在Xcode中，选择你的工程...
+单例模式几乎是设计模式的最简单形式了。这一模式的意图是使得类的一个对象成为系统中的唯一实例。要实现这一...
         </div>
     </a>
     <p class="post-meta">
-        Posted by Japho on April 18, 2016
+        Posted by Japho on November 1, 2016
     </p>
 </div>
 <hr>
 
 <div class="post-preview">
-    <a href="/2016/04/14/iOS-QQ%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95%E7%9A%84%E5%AE%9E%E7%8E%B0/">
+    <a href="/2016/10/25/UIButton%E4%B8%ADimageView%E5%92%8CtitleLabel%E7%9A%84%E4%BD%8D%E7%BD%AE%E8%B0%83%E6%95%B4/">
         <h2 class="post-title">
-            iOS QQ第三方登录的实现
+            UIButton中imageView和titleLabel的位置调整
         </h2>
         
         <h3 class="post-subtitle">
-            基于QQ原生SDK开发实现
+            头大的问题终于解决了
         </h3>
         
         <div class="post-content-preview">
             前言
 
-
-  平时我们经常会在一些app的登录界面中见到第三方登录，一些应用中一般会使用一些类似shareSDK的集成平台，他们是将QQ、微信、微博等第三方进行了二次封装，灵活性不太高，其实直接...
+在使用UIButton时，有时候需要调整按钮内部的imageView和titleLabel的位置和尺寸。在默认情况下，按钮内部的imageView和titleLabel的显示效果是图片在...
         </div>
     </a>
     <p class="post-meta">
-        Posted by Japho on April 14, 2016
+        Posted by Japho on October 25, 2016
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2016/09/30/iOS%E8%87%AA%E5%AE%9A%E4%B9%89%E5%B8%B8%E8%A7%81%E7%AC%AC%E4%B8%89%E6%96%B9%E5%88%86%E4%BA%AB/">
+        <h2 class="post-title">
+            iOS 自定义常见第三方分享
+        </h2>
+        
+        <h3 class="post-subtitle">
+            基于原生SDK开发实现
+        </h3>
+        
+        <div class="post-content-preview">
+            前言
+
+平时经常会遇到做第三分享的需求，相信大家好多都使用的集成的分享平台shareSDK、友盟分享等。他们其实是对各种第三方平台进行了二次封装，有时需求只要求做其中一种平台的分享的时候其实像s...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Japho on September 30, 2016
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2016/09/15/iOS-UILabel%E5%9E%82%E7%9B%B4%E5%B1%85%E4%B8%AD/">
+        <h2 class="post-title">
+            iOS UILabel垂直居中
+        </h2>
+        
+        <h3 class="post-subtitle">
+            解决UILabel默认顶格显示问题
+        </h3>
+        
+        <div class="post-content-preview">
+            平时开发的时候可能会遇到这种问题：当一个UILabel的frame的高度设置的过大时，发现UILabel是垂直居中的，有的需求是需要将这个Label垂直向上显示，之前的办法是计算出label.t...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Japho on September 15, 2016
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2016/08/23/runtime-OC%E7%B1%BB%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F/">
+        <h2 class="post-title">
+            runtime OC类执行顺序
+        </h2>
+        
+        <h3 class="post-subtitle">
+            Runtime,了解一下？
+        </h3>
+        
+        <div class="post-content-preview">
+            runtime如何实现？
+
+OC这个语言尽可能的将一些决定从编译器推迟到运行时，他会尽可能的动态处理事情，这意味着这个语言不仅需要一个编译器，还需要一个运行时系统，使得这个语言得以运行。
+Run...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Japho on August 23, 2016
     </p>
 </div>
 <hr>
 
 
 <!-- Pager -->
+
+<ul class="pager">
+    
+    
+    <li class="next">
+        <a href="/page2">Older Posts &rarr;</a>
+    </li>
+    
+</ul>
 
 
     		</div>
@@ -310,7 +439,7 @@ iOS 12 和 ARKit 2.0
                     <div class="tags">
                         
                             
-                                <a href="/tags/#iOS" title="iOS" rel="4">
+                                <a href="/tags/#iOS" title="iOS" rel="16">
                                     iOS
                                 </a>
                             

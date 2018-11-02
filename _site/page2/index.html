@@ -10,7 +10,7 @@
     <meta name="keywords"  content="Japho, Japho Blog, Japho的博客, iOS, Apple, iPhone">
     <meta name="theme-color" content="#000000">
     
-    <title>About - Japho Blog</title>
+    <title>Japho Blog</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -22,7 +22,7 @@
     <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
     
     <!-- Canonical URL -->
-    <link rel="canonical" href="http://localhost:4000/about/">
+    <link rel="canonical" href="http://localhost:4000/page2/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -153,14 +153,14 @@
 
 
     <!-- Page Header -->
-<header class="intro-header" style="background-image: url('/img/about-bg.jpg')">
+<header class="intro-header" style="background-image: url('/img/home-bg.jpg')">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
                 <div class="site-heading">
-                    <h1>About</h1>
+                    <h1>Japho Blog</h1>
                     <!--<hr class="small">-->
-                    <span class="subheading">You are my dream.</span>
+                    <span class="subheading">Hang on to your dreams.</span>
                 </div>
             </div>
         </div>
@@ -181,120 +181,167 @@
                 col-xs-12
                 postlist-container
             ">
-    			<!-- Language Selector -->
-<!-- <select class="sel-lang" onchange= "onLanChange(this.options[this.options.selectedIndex].value)">
-    <option value="0" selected> 中文 Chinese </option>
-    <option value="1"> 英文 English </option>
-</select> -->
+    			
+<div class="post-preview">
+    <a href="/2016/08/18/%E4%BD%BF%E7%94%A8Block%E9%9C%80%E6%B3%A8%E6%84%8F%E7%9A%84%E9%97%AE%E9%A2%98/">
+        <h2 class="post-title">
+            使用Block需注意的问题
+        </h2>
+        
+        <h3 class="post-subtitle">
+            Block,了解一下？
+        </h3>
+        
+        <div class="post-content-preview">
+            1、block中引用外部变量
 
-<!-- Chinese Version -->
-<div class="zh post-container">
-
-    <!--copied from markdown -->
-    <blockquote><p>Nothing is impossible for a willing heart.<br>
-    心之所愿，无所不成。</p></blockquote>
-
-    <p>Hey，我是<strong> Japho </strong>，一名牧码人。游荡于草原间，寻找牧码人的梦。常出没于<a href="https://japho.top">博客</a>、<a href="https://www.jianshu.com/u/a1d80b6eaa9e">简书</a>、<a href="https://www.zhihu.com/people/japho">知乎</a>、<a href="https://weibo.com/wangjifeng1114">微博</a>、<a href="https://github.com/japho">GitHub</a>等地带，居无定所。</p>
-
-    <p>职业是软件工程师，移动研发方向。擅长，但不精通，正在进化为成熟猿人的路上。来自东北的汉子，喜欢做饭，精通各种乱炖。
-    博客供日常学习和记录，也欢迎大家共同交流。</p>
-
-    
-    <h5>Links</h5>
-
-    <ul>
-        <li><a href="https://www.jianshu.com/u/a1d80b6eaa9e">简书.Japho</a></li>
-        <li><a href="https://github.com/japho">GitHub</a></li>
-        <li><a href="https://analytics.google.com/analytics">Google Analytics</a></li>
-    </ul>
+block中引用外部变量时，通常会把对象当做常量变量编码到block中，并且在block中尝试改变外部变量的值会报错，解决办法是引入__block标识符，需要在b...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Japho on August 18, 2016
+    </p>
 </div>
+<hr>
 
-<!-- English Version -->
-<!-- <div class="en post-container">
-    <blockquote><p>Yet another iOS Developer. <br>
-    Yet another Life-long Student.</p></blockquote>
+<div class="post-preview">
+    <a href="/2016/07/16/UIButton%E4%BC%A0%E9%80%92%E5%A4%9A%E4%B8%AA%E5%8F%82%E6%95%B0%E7%9A%84%E6%96%B9%E6%B3%95/">
+        <h2 class="post-title">
+            UIButton传递多个参数的方法
+        </h2>
+        
+        <h3 class="post-subtitle">
+            使用关联函数来解决这个问题
+        </h3>
+        
+        <div class="post-content-preview">
+            前言
 
-    <p>Hi, I am <strong>Baiying Qiu</strong>，you can call me <strong>BY</strong>. I am an iOS software engineer and currently working in Xiamen</p>
+在平时开发时经常会要遇到通过button的绑定值来做逻辑处理以区分不同的button，通常使用tag来区分，但是当需要传多个值的时候这就比较麻烦了，通常考虑用全局变量来传值，今天来介绍另...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Japho on July 16, 2016
+    </p>
+</div>
+<hr>
 
-    <p>This is my personal blog, through making Github Pages and Jekyll.My GitHub  👉 <a href="http://github.com/qiubaiying">Github·BY</a>.</p>
+<div class="post-preview">
+    <a href="/2016/06/14/delegate-notification-KVO%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9/">
+        <h2 class="post-title">
+            delegate、notification、KVO如何选择
+        </h2>
+        
+        <div class="post-content-preview">
+            前言
+
+在开发iOS应用的时候，我们会经常遇到一个常见的问题：在不过分耦合的前提下，controllers间怎么进行通信。在IOS应用不断的出现三种模式来实现这种通信：
+
+
+  1.委托dele...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Japho on June 14, 2016
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2016/04/19/iOS-%E5%BE%AE%E5%8D%9A%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95/">
+        <h2 class="post-title">
+            iOS 微博第三方登录的实现
+        </h2>
+        
+        <h3 class="post-subtitle">
+            基于微博原生SDK开发实现
+        </h3>
+        
+        <div class="post-content-preview">
+            下载微博SDK
+
+微博SDK的官方github：https://github.com/sinaweibosdk/weibo_ios_sdk
+下载所需要的SDK
+
+集成SDK
+
+下载后的SDK文件...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Japho on April 19, 2016
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2016/04/18/iOS-%E5%BE%AE%E4%BF%A1%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95%E7%9A%84%E5%AE%9E%E7%8E%B0/">
+        <h2 class="post-title">
+            iOS 微信第三方登录的实现
+        </h2>
+        
+        <h3 class="post-subtitle">
+            原生微信SDK开发
+        </h3>
+        
+        <div class="post-content-preview">
+            下载微信SDK
+
+微信开放平台 https://open.weixin.qq.com
+
+
+
+导入SDK
+
+导入SDK，并添加依赖库
+
+
+
+配置URL scheme
+
+在Xcode中，选择你的工程...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Japho on April 18, 2016
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2016/04/14/iOS-QQ%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95%E7%9A%84%E5%AE%9E%E7%8E%B0/">
+        <h2 class="post-title">
+            iOS QQ第三方登录的实现
+        </h2>
+        
+        <h3 class="post-subtitle">
+            基于QQ原生SDK开发实现
+        </h3>
+        
+        <div class="post-content-preview">
+            前言
+
+
+  平时我们经常会在一些app的登录界面中见到第三方登录，一些应用中一般会使用一些类似shareSDK的集成平台，他们是将QQ、微信、微博等第三方进行了二次封装，灵活性不太高，其实直接...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Japho on April 14, 2016
+    </p>
+</div>
+<hr>
+
+
+<!-- Pager -->
+
+<ul class="pager">
     
-    <p>I am a sports enthusiast, I like fitness, running and boxing.</p>
-
-    <h5>Talks</h5>
-
-    <ul>
-    <li><a href="https://github.com">GitHub</a></li>
-    <li><a href="http://jekyll.com.cn/">jekyll</a></li>
-    <li><a href="https://pages.github.com/">GitHub Pages</a></li>
-    <li><a href="https://qiubaiying.github.io">BY</a></li>
-    </ul>
-</div> -->
-
-<!-- Handle Language Change -->
-<script type="text/javascript">
-    // get nodes
-    var $zh = document.querySelector(".zh");
-    var $en = document.querySelector(".en");
-    var $select = document.querySelector("select");
-
-    // bind hashchange event
-    window.addEventListener('hashchange', _render);
-
-    // handle render
-    function _render(){
-        var _hash = window.location.hash;
-        // en
-        if(_hash == "#en"){
-            $select.selectedIndex = 1;
-            $en.style.display = "block";
-            $zh.style.display = "none";
-        // zh by default
-        }else{
-            // not trigger onChange, otherwise cause a loop call.
-            $select.selectedIndex = 0;
-            $zh.style.display = "block";
-            $en.style.display = "none";
-        }
-    }
-
-    // handle select change
-    function onLanChange(index){
-        if(index == 0){
-            window.location.hash = "#zh"
-        }else{
-            window.location.hash = "#en"
-        }
-    }
-
-    // init
-    _render();
-</script>
-
-
-<!-- Gitalk 评论 start  -->
-
-<!-- Gitalk link  -->
-<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
-<script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
-
-<div id="gitalk-container"></div>
-    <script type="text/javascript">
-    var gitalk = new Gitalk({
-    clientID: '440847f85c950402a76b',
-    clientSecret: '92371c89905e71fe83cfd3815f779358726d9c48',
-    repo: 'japho.github.io',
-    owner: 'japho',
-    admin: ['japho'],
-    distractionFreeMode: true,
-    id: 'about',
-    });
-    gitalk.render('gitalk-container');
-</script>
-
-<!-- Gitalk end -->
-
- <!-- disqus 评论框 start  -->
-
+    <li class="previous">
+        <a href="/">&larr; Newer Posts</a>
+    </li>
+    
+    
+</ul>
 
 
     		</div>
