@@ -5,9 +5,208 @@
     <description>The shortest answer is doing.</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Fri, 02 Nov 2018 20:54:26 +0800</pubDate>
-    <lastBuildDate>Fri, 02 Nov 2018 20:54:26 +0800</lastBuildDate>
+    <pubDate>Sat, 03 Nov 2018 17:00:08 +0800</pubDate>
+    <lastBuildDate>Sat, 03 Nov 2018 17:00:08 +0800</lastBuildDate>
     <generator>Jekyll v3.8.4</generator>
+    
+      <item>
+        <title>理解Objective-C错误类型</title>
+        <description>&lt;p&gt;ARC下默认情况非“异常安全”，如果抛出异常，本应在作用域末尾释放的对象将不会进行自动释放了。若想生成“异常安全”代码，通过设置编译器的标志来实现，不过将引入一些额外代码，在不抛出异常时，也会照样执行这部分代码。这里需要打开的标志叫做  &lt;code class=&quot;highlighter-rouge&quot;&gt;-fobjc-arc-exceptions&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Objective-C现在所采用的方法是：在极其罕见的情况下抛出异常，异常抛出之后，无需考虑回复问题，而此时应用程序退出。异常只应该应用于极其严重的错误上。在处理“不那么严重的错误”时，Objective-C使用的编程范式为：令方法返回0/nil，或者使用&lt;code class=&quot;highlighter-rouge&quot;&gt;NSError&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;NSError&lt;/code&gt;更加灵活，因为经由此对象，可以把导致错误的原因回报给调用者。&lt;code class=&quot;highlighter-rouge&quot;&gt;NSError&lt;/code&gt;主要封装了三条信息&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Error domain（错误范围，字符串类型）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;错误发生的范围，也就是错误产生的根源，通常是由全局变量来定义，&lt;/p&gt;
+
+  &lt;p&gt;例如：NSURLErrorDomain&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Error  Code（错误码，整型数）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;独有的错误代码，用于指明在某个范围内发生的错误，通常采用enum&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;User Info（用户信息，字典类型）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;有关于该错误的额外信息&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;设计API时，&lt;code class=&quot;highlighter-rouge&quot;&gt;NSError&lt;/code&gt;一般是通过委托模式来传递错误，例如：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;-  (void)connection:(NSURLConnection  *)connection didFailWithError:(NSError  *)error
+{
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;当发生错误时，会调用此方法进行处理，委托方法不一定需要实现，交给开发人员进行判断。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;NSError&lt;/code&gt;另一种常用方法：经由“输出参数”返回给调用者，&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;-  (BOOL)doSomething:(NSError  **)error
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;传递给方法的参数是一个指针，二该指针又指向另外一个指针，这个指针指向&lt;code class=&quot;highlighter-rouge&quot;&gt;NSError&lt;/code&gt;对象，也可以把它当成&lt;code class=&quot;highlighter-rouge&quot;&gt;NSError&lt;/code&gt;对象的指针，如此，该方法不仅能有普通的返回值，还可以经由“输出参数”把&lt;code class=&quot;highlighter-rouge&quot;&gt;NSError&lt;/code&gt;对象回传给调用者。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSError  *error =  nil;
+BOOl  rect =  [obj doSomething:&amp;amp;error];
+if (error) 
+{
+//处理error
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;方法会返回布尔值，若关注具体错误，处理经由“输出参数”所返回的错误对象；若不关注，则可以给&lt;code class=&quot;highlighter-rouge&quot;&gt;error&lt;/code&gt;传入&lt;code class=&quot;highlighter-rouge&quot;&gt;nil&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;BOOl  rect =  [obj doSomething:nil];
+if (rect)
+{
+//存在错误，但不获取错误对象
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;实际上，在使用ARC时，编译器会把&lt;code class=&quot;highlighter-rouge&quot;&gt;NSError ** &lt;/code&gt;转换成&lt;code class=&quot;highlighter-rouge&quot;&gt;NSError *__autoreleasing *&lt;/code&gt;，指针所指向的对象在方法执行完毕之后就会释放掉，所以这个对象必须是自动释放，因为&lt;code class=&quot;highlighter-rouge&quot;&gt;doSomething:&lt;/code&gt;方法不能保证调用者在方法中创建的&lt;code class=&quot;highlighter-rouge&quot;&gt;NSError&lt;/code&gt;释放掉，所以这里要加上&lt;code class=&quot;highlighter-rouge&quot;&gt;autorelease&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;传递“输出参数”&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;-  (BOOL)doSomething:(NSError  **)error
+{
+if (/* there was an error*/)
+{
+if (error)
+{
+*error = [NSError errorWithDomain:domain code:code userInfo:userInfo];
+}
+return NO;
+}
+else
+{
+return YES;
+}
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;*error&lt;/code&gt;为&lt;code class=&quot;highlighter-rouge&quot;&gt;error&lt;/code&gt;参数“解引用”，使&lt;code class=&quot;highlighter-rouge&quot;&gt;error&lt;/code&gt;的指针指向新的&lt;code class=&quot;highlighter-rouge&quot;&gt;NSError&lt;/code&gt;对象，注意：在解引用之前需保证&lt;code class=&quot;highlighter-rouge&quot;&gt;error&lt;/code&gt;参数不能为&lt;code class=&quot;highlighter-rouge&quot;&gt;nil&lt;/code&gt;，会因为空指针解引用会导致段错误，使应用崩溃。&lt;/p&gt;
+
+&lt;p&gt;错误码一般使用枚举类型。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;要点：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;只有发生了可使整个应用程序崩溃的严重错误时，才使用异常。&lt;/li&gt;
+  &lt;li&gt;在错误不那么严重的情况下，可以指派委托方法（&lt;code class=&quot;highlighter-rouge&quot;&gt;delegate&lt;/code&gt;）来处理错误。也可以把错误信息放在&lt;code class=&quot;highlighter-rouge&quot;&gt;NSError&lt;/code&gt;对象里，经由“输出参数”返回给调用者。&lt;/li&gt;
+&lt;/ul&gt;
+
+</description>
+        <pubDate>Thu, 28 Jun 2018 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2018/06/28/%E7%90%86%E8%A7%A3Objective-C%E9%94%99%E8%AF%AF%E7%B1%BB%E5%9E%8B/</link>
+        <guid isPermaLink="true">http://localhost:4000/2018/06/28/%E7%90%86%E8%A7%A3Objective-C%E9%94%99%E8%AF%AF%E7%B1%BB%E5%9E%8B/</guid>
+        
+        <category>iOS</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>理解NSCopying协议</title>
+        <description>&lt;p&gt;在需要拷贝对象时，要通过copy方法来完成，如果想令自己创建的类支持拷贝操作，那就需要实现NSCopying协议，次协议只有一个方法：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (id)copyWithZone:(NSZone *)zone;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;关于zone&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;开发时，会根据&lt;code class=&quot;highlighter-rouge&quot;&gt;zone&lt;/code&gt;把内存分成不同的“区”，不过现在默认程序只有一个区：“默认区”，尽管必须实现此方法，不必担心&lt;code class=&quot;highlighter-rouge&quot;&gt;zone&lt;/code&gt;参数。注意，这里的&lt;code class=&quot;highlighter-rouge&quot;&gt;copy&lt;/code&gt;是由&lt;code class=&quot;highlighter-rouge&quot;&gt;NSObject&lt;/code&gt;实现的，会以“默认区”为参数调用&lt;code class=&quot;highlighter-rouge&quot;&gt;copyWithZone:&lt;/code&gt;，所以需要实现的是&lt;code class=&quot;highlighter-rouge&quot;&gt;copyWithZone:&lt;/code&gt;方法，而非覆写&lt;code class=&quot;highlighter-rouge&quot;&gt;copy&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;一般的：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//特殊需要
+@implentation Person
+{
+NSMutableSet *_friends;
+}
+
+- (id)copyWithZone:(NSZone *)zone
+{
+Person *copy = [[[self class] allocWithZone:zone] initWithFirstName:first andLastName:last];
+
+/* 如果有特殊需要，例如保存特定的数据结构 */
+copy-&amp;gt;_friends = [_friends mutableCopy];
+
+return copy;
+}
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;使用“-&amp;gt;”语法，因为这里&lt;code class=&quot;highlighter-rouge&quot;&gt;friends&lt;/code&gt;变量并非属性，只是内部存在的一个成员变量。&lt;/p&gt;
+
+&lt;p&gt;这里拷贝了&lt;code class=&quot;highlighter-rouge&quot;&gt;friends&lt;/code&gt;变量是防止原始数据修改后，导致新的复制过去的数据也会变化。若set对象是不可变的，这里则无需进行复制。&lt;/p&gt;
+
+&lt;p&gt;若要实现&lt;code class=&quot;highlighter-rouge&quot;&gt;mutableCopy&lt;/code&gt;方法，同样的，遵守&lt;code class=&quot;highlighter-rouge&quot;&gt;NSMutableCopying&lt;/code&gt;协议，实现&lt;code class=&quot;highlighter-rouge&quot;&gt;mutableCopyWithZone:&lt;/code&gt;，
+无论当前实例是否可变，若需要可变版本的拷贝，则调用&lt;code class=&quot;highlighter-rouge&quot;&gt;mutableCopy&lt;/code&gt;，同理，需要不可变的拷贝，调用&lt;code class=&quot;highlighter-rouge&quot;&gt;copy&lt;/code&gt;来获取。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;对于NSArry &amp;amp;&amp;amp; NSMutableArray&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[NSMutableArray copy] =&amp;gt; NSArray
+[NSArray mutableCopy] =&amp;gt; NSMutableArray
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;编写拷贝时，需考虑一个问题：应该执行“深拷贝”还是“浅拷贝”？&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;深拷贝：&lt;/strong&gt;在拷贝对象自身时，将其底层数据也一并的复制过来。&lt;code class=&quot;highlighter-rouge&quot;&gt;Foundation&lt;/code&gt;框架中所有的&lt;code class=&quot;highlighter-rouge&quot;&gt;collection&lt;/code&gt;类在默认的情况下都执行浅拷贝，也就是说，只拷贝其容器本身，而不复制其中的数据。原因在于：容器内的对象未必都能拷贝，而调用者也未必想在拷贝容器时一并拷贝其中的每一个对象。&lt;/p&gt;
+
+&lt;p&gt;一般情况下，遵循系统框架的模式，对于自定义的类，以浅拷贝的方式实现&lt;code class=&quot;highlighter-rouge&quot;&gt;copyWithZone:&lt;/code&gt;方法，必要的话，也可以增加一个深拷贝的方法。&lt;/p&gt;
+
+&lt;p&gt;例如&lt;code class=&quot;highlighter-rouge&quot;&gt;NSSet&lt;/code&gt;类：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (id)initWithSet:(NSArray *)array copyItems:(BOOL)copyItems;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;若&lt;code class=&quot;highlighter-rouge&quot;&gt;copyItems&lt;/code&gt;为&lt;code class=&quot;highlighter-rouge&quot;&gt;YES&lt;/code&gt;执行深拷贝。&lt;/p&gt;
+
+&lt;p&gt;例如刚才的例子：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (id)deepCopy
+{
+Person *copy = [[[self class] allocWithZone:zone] initWithFirstName:first andLastName:last];
+
+/* 如果有特殊需要，例如保存特定的数据结构 */
+copy-&amp;gt;_friends = [[NSMutableSet alloc] initWithSet:_friends copyItems:YES];
+
+return copy;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;因为没有专门的深拷贝协议，所以具体执行方式有每个类来确定。只需决定自己缩写的类是有需要提供深拷贝方法就可以了。不要假定遵从了&lt;code class=&quot;highlighter-rouge&quot;&gt;NSCopying&lt;/code&gt;协议的对象都会深拷贝。在绝大多数的情况下，都是执行浅拷贝的。如果需要在某个对象上执行深拷贝，那么除非另有说明，否则，要么找到能够找到执行深拷贝的相关方法，要么自己实现相关拷贝方法。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;要点&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;若想令自己所写的类具有拷贝功能，则需实现&lt;code class=&quot;highlighter-rouge&quot;&gt;NSCopying&lt;/code&gt;协议。&lt;/li&gt;
+  &lt;li&gt;如果自定义的对象分为可变版本与不可变版本，那么就要同时实现&lt;code class=&quot;highlighter-rouge&quot;&gt;NSCopying&lt;/code&gt; &amp;amp;&amp;amp; &lt;code class=&quot;highlighter-rouge&quot;&gt;NSMutableCopying&lt;/code&gt;协议。&lt;/li&gt;
+  &lt;li&gt;复制对象时需决定采用深拷贝还是浅拷贝，一般情况下尽量执行浅拷贝。&lt;/li&gt;
+  &lt;li&gt;如果所写的对象需要深拷贝，那么可以考虑新增一个专门执行深拷贝的方法。&lt;/li&gt;
+&lt;/ul&gt;
+
+</description>
+        <pubDate>Tue, 26 Jun 2018 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2018/06/26/%E7%90%86%E8%A7%A3NSCopying%E5%8D%8F%E8%AE%AE/</link>
+        <guid isPermaLink="true">http://localhost:4000/2018/06/26/%E7%90%86%E8%A7%A3NSCopying%E5%8D%8F%E8%AE%AE/</guid>
+        
+        <category>iOS</category>
+        
+        
+      </item>
     
       <item>
         <title>5分钟带你看完 WWDC 2018</title>
@@ -1366,159 +1565,6 @@ titleLabel.x=97.250000, titleLabel.y=150.000000, titleLabel.width=180.500000,�
         <pubDate>Fri, 30 Sep 2016 00:00:00 +0800</pubDate>
         <link>http://localhost:4000/2016/09/30/iOS%E8%87%AA%E5%AE%9A%E4%B9%89%E5%B8%B8%E8%A7%81%E7%AC%AC%E4%B8%89%E6%96%B9%E5%88%86%E4%BA%AB/</link>
         <guid isPermaLink="true">http://localhost:4000/2016/09/30/iOS%E8%87%AA%E5%AE%9A%E4%B9%89%E5%B8%B8%E8%A7%81%E7%AC%AC%E4%B8%89%E6%96%B9%E5%88%86%E4%BA%AB/</guid>
-        
-        <category>iOS</category>
-        
-        
-      </item>
-    
-      <item>
-        <title>iOS UILabel垂直居中</title>
-        <description>&lt;p&gt;平时开发的时候可能会遇到这种问题：当一个UILabel的frame的高度设置的过大时，发现UILabel是垂直居中的，有的需求是需要将这个Label垂直向上显示，之前的办法是计算出label.text的字体所占用的frame大小，根据这个大小再重新设置label的frame值，未免有些麻烦，前阵子封装了个自定义label实现的垂直居中的设置。废话不多说，上代码。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;JFLabel.h&lt;/code&gt;&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;//  &lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;//  JFLabel.h  &lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;//  BobcareDoctorApp  &lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;//  &lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;//  Created by Japho on 16/2/25.  &lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;//  Copyright © 2016年 com.01wisdom. All rights reserved.  &lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;//  &lt;/span&gt;
-  
-&lt;span class=&quot;cp&quot;&gt;#import &amp;lt;UIKit/UIKit.h&amp;gt;  &lt;/span&gt;
-  
-&lt;span class=&quot;n&quot;&gt;typedef&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;enum&lt;/span&gt;  
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;  
-    &lt;span class=&quot;kt&quot;&gt;VerticalAlignmentTop&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// default  &lt;/span&gt;
-    &lt;span class=&quot;kt&quot;&gt;VerticalAlignmentMiddle&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  
-    &lt;span class=&quot;kt&quot;&gt;VerticalAlignmentBottom&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;VerticalAlignment&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;  
-  
-&lt;span class=&quot;kd&quot;&gt;@interface&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;JFLabel&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UILabel&lt;/span&gt;  
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;  
-      
-&lt;span class=&quot;kd&quot;&gt;@private&lt;/span&gt;  
-      
-    &lt;span class=&quot;kt&quot;&gt;VerticalAlignment&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_verticalAlignment&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;  
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;  
-  
-&lt;span class=&quot;kd&quot;&gt;@property&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nonatomic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;VerticalAlignment&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;verticalAlignment&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;  
-  
-&lt;span class=&quot;kd&quot;&gt;@end&lt;/span&gt;  
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;JFLabel.m&lt;/code&gt;&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;//  &lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;//  JFLabel.m  &lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;//  BobcareDoctorApp  &lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;//  &lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;//  Created by Japho on 16/2/25.  &lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;//  Copyright © 2016年 com.01wisdom. All rights reserved.  &lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;//  &lt;/span&gt;
-  
-&lt;span class=&quot;cp&quot;&gt;#import &quot;JFLabel.h&quot;  &lt;/span&gt;
-  
-&lt;span class=&quot;kd&quot;&gt;@implementation&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;JFLabel&lt;/span&gt;  
-  
-&lt;span class=&quot;kd&quot;&gt;@synthesize&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;verticalAlignment&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;verticalAlignment_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;   
-  
-&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;initWithFrame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;CGRect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;  
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;self&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;super&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;initWithFrame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;  
-        &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;verticalAlignment&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;VerticalAlignmentMiddle&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;  
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;  
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;  
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;  
-  
-&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;setVerticalAlignment&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;VerticalAlignment&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;verticalAlignment&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;  
-    &lt;span class=&quot;n&quot;&gt;verticalAlignment_&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;verticalAlignment&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;  
-    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;self&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;setNeedsDisplay&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;  
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;  
-  
-&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;CGRect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;textRectForBounds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;CGRect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bounds&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;limitedToNumberOfLines&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;NSInteger&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numberOfLines&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;  
-    &lt;span class=&quot;kt&quot;&gt;CGRect&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;textRect&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;super&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;textRectForBounds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bounds&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;limitedToNumberOfLines&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numberOfLines&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;  
-    &lt;span class=&quot;k&quot;&gt;switch&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;verticalAlignment&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;  
-        &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;VerticalAlignmentTop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;  
-            &lt;span class=&quot;n&quot;&gt;textRect&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;origin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bounds&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;origin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;  
-            &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;  
-        &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;VerticalAlignmentBottom&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;  
-            &lt;span class=&quot;n&quot;&gt;textRect&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;origin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bounds&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;origin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bounds&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;height&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;textRect&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;height&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;  
-            &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;  
-        &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;VerticalAlignmentMiddle&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;  
-            &lt;span class=&quot;c1&quot;&gt;// Fall through.  &lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;default&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;  
-            &lt;span class=&quot;n&quot;&gt;textRect&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;origin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bounds&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;origin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bounds&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;height&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;textRect&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;height&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;2.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;  
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;  
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;textRect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;  
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;  
-  
-&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;drawTextInRect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;CGRect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;requestedRect&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;  
-    &lt;span class=&quot;kt&quot;&gt;CGRect&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;actualRect&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;self&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;textRectForBounds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;requestedRect&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;limitedToNumberOfLines&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numberOfLines&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;  
-    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;super&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;drawTextInRect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;actualRect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;  
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;  
-  
-&lt;span class=&quot;kd&quot;&gt;@end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;封装的类继承自UILabel，需要设置垂直居中时直接设置属性就可以了。
-调用示例代码：&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;JFLabel&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;titleLabel&lt;/span&gt;  
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;  
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_titleLabel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;  
-    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;  
-        &lt;span class=&quot;n&quot;&gt;_titleLabel&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;JFLabel&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;initWithFrame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;CGRectMake&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;15&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;15&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;SCREEN_WIDTH&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;CASE_IMAGE_VIEW_WIDTH&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;15&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;40&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)];&lt;/span&gt;  
-        &lt;span class=&quot;n&quot;&gt;_titleLabel&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;@&quot;测试垂直居中文字&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;  
-        &lt;span class=&quot;n&quot;&gt;_titleLabel&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;font&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;UIFont&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;systemFontOfSize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;16&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;  
-        &lt;span class=&quot;n&quot;&gt;_titleLabel&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numberOfLines&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;  
-        &lt;span class=&quot;n&quot;&gt;_titleLabel&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;textColor&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;UIColor&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;blackColor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;  
-        &lt;span class=&quot;n&quot;&gt;_titleLabel&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;verticalAlignment&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;VerticalAlignmentTop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//垂直居中  &lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;  
-      
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_titleLabel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;  
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-</description>
-        <pubDate>Thu, 15 Sep 2016 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2016/09/15/iOS-UILabel%E5%9E%82%E7%9B%B4%E5%B1%85%E4%B8%AD/</link>
-        <guid isPermaLink="true">http://localhost:4000/2016/09/15/iOS-UILabel%E5%9E%82%E7%9B%B4%E5%B1%85%E4%B8%AD/</guid>
-        
-        <category>iOS</category>
-        
-        
-      </item>
-    
-      <item>
-        <title>runtime OC类执行顺序</title>
-        <description>&lt;h2 id=&quot;runtime如何实现&quot;&gt;runtime如何实现？&lt;/h2&gt;
-
-&lt;p&gt;OC这个语言尽可能的将一些决定从编译器推迟到运行时，他会尽可能的动态处理事情，这意味着这个语言不仅需要一个编译器，还需要一个运行时系统，使得这个语言得以运行。
-RunTime简称运行时。就是系统在运行的时候的一些机制，其中最主要的是消息机制。对于C语言，函数的调用在编译的时候会决定调用哪个函数（ C语言的函数调用请看这里 ）。编译完成之后直接顺序执行，无任何二义性。OC的函数调用成为消息发送。属于动态调用过程。在编译的时候并不能决定真正调用哪个函数（事实证明，在编 译阶段，OC可以调用任何函数，即使这个函数并未实现，只要申明过就不会报错。而C语言在编译阶段就会报错）。只有在真正运行的时候才会根据函数的名称找 到对应的函数来调用。&lt;/p&gt;
-
-&lt;h2 id=&quot;runloop&quot;&gt;Runloop&lt;/h2&gt;
-
-&lt;p&gt;一般来讲，一个线程一次只能执行一个任务，执行完成后线程就会退出。runloop就是一种机制，让线程能随时处理事件但并不退出，
-一个run loop就是一个事件处理循环，用来不停的监听和处理输入事件并将其分配到对应的目标上进行处理。相对于普通循环，NSRunLoop是一种更加高明的消息处理模式，他对消息处理过程进行了更好的抽象和封装，把消息打包成input source或者是timer source。
-其次，也是很重要的一点，使用runloop可以使你的线程在有工作的时候工作，没有工作的时候休眠，这可以大大节省系统资源。&lt;/p&gt;
-
-&lt;h2 id=&quot;oc类怎么执行&quot;&gt;OC类怎么执行？&lt;/h2&gt;
-&lt;ol&gt;
-  &lt;li&gt;当程序启动时，就会加载项目中所有的类，而且加载后会调用每个类的&lt;code class=&quot;highlighter-rouge&quot;&gt;+load&lt;/code&gt;方法，只会调用一次；&lt;/li&gt;
-  &lt;li&gt;当第一次使用某个类时，就会调用当前类的&lt;code class=&quot;highlighter-rouge&quot;&gt;+initialize&lt;/code&gt;方法；&lt;/li&gt;
-  &lt;li&gt;先加载父类，再加载子类（先调用父类的&lt;code class=&quot;highlighter-rouge&quot;&gt;+load&lt;/code&gt;方法，再调用子类的&lt;code class=&quot;highlighter-rouge&quot;&gt;+load&lt;/code&gt;方法，最后调用分类的&lt;code class=&quot;highlighter-rouge&quot;&gt;+load&lt;/code&gt;方法），先初始化父类，再初始化子类（先调用父类的&lt;code class=&quot;highlighter-rouge&quot;&gt;+initialize&lt;/code&gt;方法，再调用子类的&lt;code class=&quot;highlighter-rouge&quot;&gt;+initialize&lt;/code&gt;方法）。&lt;/li&gt;
-  &lt;li&gt;注意：在初始化的时候，如果在分类中重写了&lt;code class=&quot;highlighter-rouge&quot;&gt;+initialize&lt;/code&gt;方法，则会覆盖掉父类的。&lt;/li&gt;
-  &lt;li&gt;重写&lt;code class=&quot;highlighter-rouge&quot;&gt;+initialize&lt;/code&gt;方法可以监听类的使用情况。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;首先从硬盘load程序代码到内存。
-其次操作系统找到程序入口开始执行。&lt;/p&gt;
-
-&lt;p&gt;再次在程序执行过程中进行内存的管理。主要需要四部分内存空间：堆区用来存放创建的对象；栈区用来存放局部变量；数据区用来存放静态变量和字符串常量；代码区用来存放程序代码。&lt;/p&gt;
-</description>
-        <pubDate>Tue, 23 Aug 2016 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2016/08/23/runtime-OC%E7%B1%BB%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F/</link>
-        <guid isPermaLink="true">http://localhost:4000/2016/08/23/runtime-OC%E7%B1%BB%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F/</guid>
         
         <category>iOS</category>
         

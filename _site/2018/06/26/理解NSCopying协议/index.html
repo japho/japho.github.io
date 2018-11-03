@@ -10,7 +10,7 @@
     <meta name="keywords"  content="Japho, Japho Blog, Japho的博客, iOS, Apple, iPhone">
     <meta name="theme-color" content="#000000">
     
-    <title>runtime OC类执行顺序 - Japho Blog</title>
+    <title>理解NSCopying协议 - Japho Blog</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -22,7 +22,7 @@
     <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
     
     <!-- Canonical URL -->
-    <link rel="canonical" href="http://localhost:4000/2016/08/23/runtime-OC%E7%B1%BB%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F/">
+    <link rel="canonical" href="http://localhost:4000/2018/06/26/%E7%90%86%E8%A7%A3NSCopying%E5%8D%8F%E8%AE%AE/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -154,13 +154,13 @@
 
     <!-- Image to hack wechat -->
 <!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
-<!-- <img src="/postimage/post-bg-os-metro.jpg" width="0" height="0"> -->
+<!-- <img src="/postimage/post-bg-ioses.jpg" width="0" height="0"> -->
 
 <!-- Post Header -->
 <style type="text/css">
     header.intro-header{
         position: relative;
-        background-image: url('/postimage/post-bg-os-metro.jpg')
+        background-image: url('/postimage/post-bg-ioses.jpg')
     }
 
     
@@ -176,12 +176,12 @@
                         <a class="tag" href="/tags/#iOS" title="iOS">iOS</a>
                         
                     </div>
-                    <h1>runtime OC类执行顺序</h1>
+                    <h1>理解NSCopying协议</h1>
                     
                     
-                    <h2 class="subheading">Runtime,了解一下？</h2>
+                    <h2 class="subheading">《Effective Objective-C 2.0》读书笔记</h2>
                     
-                    <span class="meta">Posted by Japho on August 23, 2016</span>
+                    <span class="meta">Posted by Japho on June 26, 2018</span>
                 </div>
             </div>
         </div>
@@ -199,30 +199,84 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-				<h2 id="runtime如何实现">runtime如何实现？</h2>
+				<p>在需要拷贝对象时，要通过copy方法来完成，如果想令自己创建的类支持拷贝操作，那就需要实现NSCopying协议，次协议只有一个方法：</p>
 
-<p>OC这个语言尽可能的将一些决定从编译器推迟到运行时，他会尽可能的动态处理事情，这意味着这个语言不仅需要一个编译器，还需要一个运行时系统，使得这个语言得以运行。
-RunTime简称运行时。就是系统在运行的时候的一些机制，其中最主要的是消息机制。对于C语言，函数的调用在编译的时候会决定调用哪个函数（ C语言的函数调用请看这里 ）。编译完成之后直接顺序执行，无任何二义性。OC的函数调用成为消息发送。属于动态调用过程。在编译的时候并不能决定真正调用哪个函数（事实证明，在编 译阶段，OC可以调用任何函数，即使这个函数并未实现，只要申明过就不会报错。而C语言在编译阶段就会报错）。只有在真正运行的时候才会根据函数的名称找 到对应的函数来调用。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (id)copyWithZone:(NSZone *)zone;
+</code></pre></div></div>
 
-<h2 id="runloop">Runloop</h2>
+<p><strong>关于zone</strong></p>
 
-<p>一般来讲，一个线程一次只能执行一个任务，执行完成后线程就会退出。runloop就是一种机制，让线程能随时处理事件但并不退出，
-一个run loop就是一个事件处理循环，用来不停的监听和处理输入事件并将其分配到对应的目标上进行处理。相对于普通循环，NSRunLoop是一种更加高明的消息处理模式，他对消息处理过程进行了更好的抽象和封装，把消息打包成input source或者是timer source。
-其次，也是很重要的一点，使用runloop可以使你的线程在有工作的时候工作，没有工作的时候休眠，这可以大大节省系统资源。</p>
+<p>开发时，会根据<code class="highlighter-rouge">zone</code>把内存分成不同的“区”，不过现在默认程序只有一个区：“默认区”，尽管必须实现此方法，不必担心<code class="highlighter-rouge">zone</code>参数。注意，这里的<code class="highlighter-rouge">copy</code>是由<code class="highlighter-rouge">NSObject</code>实现的，会以“默认区”为参数调用<code class="highlighter-rouge">copyWithZone:</code>，所以需要实现的是<code class="highlighter-rouge">copyWithZone:</code>方法，而非覆写<code class="highlighter-rouge">copy</code>。</p>
 
-<h2 id="oc类怎么执行">OC类怎么执行？</h2>
-<ol>
-  <li>当程序启动时，就会加载项目中所有的类，而且加载后会调用每个类的<code class="highlighter-rouge">+load</code>方法，只会调用一次；</li>
-  <li>当第一次使用某个类时，就会调用当前类的<code class="highlighter-rouge">+initialize</code>方法；</li>
-  <li>先加载父类，再加载子类（先调用父类的<code class="highlighter-rouge">+load</code>方法，再调用子类的<code class="highlighter-rouge">+load</code>方法，最后调用分类的<code class="highlighter-rouge">+load</code>方法），先初始化父类，再初始化子类（先调用父类的<code class="highlighter-rouge">+initialize</code>方法，再调用子类的<code class="highlighter-rouge">+initialize</code>方法）。</li>
-  <li>注意：在初始化的时候，如果在分类中重写了<code class="highlighter-rouge">+initialize</code>方法，则会覆盖掉父类的。</li>
-  <li>重写<code class="highlighter-rouge">+initialize</code>方法可以监听类的使用情况。</li>
-</ol>
+<p><strong>一般的：</strong></p>
 
-<p>首先从硬盘load程序代码到内存。
-其次操作系统找到程序入口开始执行。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//特殊需要
+@implentation Person
+{
+NSMutableSet *_friends;
+}
 
-<p>再次在程序执行过程中进行内存的管理。主要需要四部分内存空间：堆区用来存放创建的对象；栈区用来存放局部变量；数据区用来存放静态变量和字符串常量；代码区用来存放程序代码。</p>
+- (id)copyWithZone:(NSZone *)zone
+{
+Person *copy = [[[self class] allocWithZone:zone] initWithFirstName:first andLastName:last];
+
+/* 如果有特殊需要，例如保存特定的数据结构 */
+copy-&gt;_friends = [_friends mutableCopy];
+
+return copy;
+}
+
+</code></pre></div></div>
+
+<p>使用“-&gt;”语法，因为这里<code class="highlighter-rouge">friends</code>变量并非属性，只是内部存在的一个成员变量。</p>
+
+<p>这里拷贝了<code class="highlighter-rouge">friends</code>变量是防止原始数据修改后，导致新的复制过去的数据也会变化。若set对象是不可变的，这里则无需进行复制。</p>
+
+<p>若要实现<code class="highlighter-rouge">mutableCopy</code>方法，同样的，遵守<code class="highlighter-rouge">NSMutableCopying</code>协议，实现<code class="highlighter-rouge">mutableCopyWithZone:</code>，
+无论当前实例是否可变，若需要可变版本的拷贝，则调用<code class="highlighter-rouge">mutableCopy</code>，同理，需要不可变的拷贝，调用<code class="highlighter-rouge">copy</code>来获取。</p>
+
+<p><strong>对于NSArry &amp;&amp; NSMutableArray</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[NSMutableArray copy] =&gt; NSArray
+[NSArray mutableCopy] =&gt; NSMutableArray
+</code></pre></div></div>
+
+<p><strong>编写拷贝时，需考虑一个问题：应该执行“深拷贝”还是“浅拷贝”？</strong></p>
+
+<p><strong>深拷贝：</strong>在拷贝对象自身时，将其底层数据也一并的复制过来。<code class="highlighter-rouge">Foundation</code>框架中所有的<code class="highlighter-rouge">collection</code>类在默认的情况下都执行浅拷贝，也就是说，只拷贝其容器本身，而不复制其中的数据。原因在于：容器内的对象未必都能拷贝，而调用者也未必想在拷贝容器时一并拷贝其中的每一个对象。</p>
+
+<p>一般情况下，遵循系统框架的模式，对于自定义的类，以浅拷贝的方式实现<code class="highlighter-rouge">copyWithZone:</code>方法，必要的话，也可以增加一个深拷贝的方法。</p>
+
+<p>例如<code class="highlighter-rouge">NSSet</code>类：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (id)initWithSet:(NSArray *)array copyItems:(BOOL)copyItems;
+</code></pre></div></div>
+<p>若<code class="highlighter-rouge">copyItems</code>为<code class="highlighter-rouge">YES</code>执行深拷贝。</p>
+
+<p>例如刚才的例子：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (id)deepCopy
+{
+Person *copy = [[[self class] allocWithZone:zone] initWithFirstName:first andLastName:last];
+
+/* 如果有特殊需要，例如保存特定的数据结构 */
+copy-&gt;_friends = [[NSMutableSet alloc] initWithSet:_friends copyItems:YES];
+
+return copy;
+}
+</code></pre></div></div>
+
+<p>因为没有专门的深拷贝协议，所以具体执行方式有每个类来确定。只需决定自己缩写的类是有需要提供深拷贝方法就可以了。不要假定遵从了<code class="highlighter-rouge">NSCopying</code>协议的对象都会深拷贝。在绝大多数的情况下，都是执行浅拷贝的。如果需要在某个对象上执行深拷贝，那么除非另有说明，否则，要么找到能够找到执行深拷贝的相关方法，要么自己实现相关拷贝方法。</p>
+
+<p><strong>要点</strong></p>
+
+<ul>
+  <li>若想令自己所写的类具有拷贝功能，则需实现<code class="highlighter-rouge">NSCopying</code>协议。</li>
+  <li>如果自定义的对象分为可变版本与不可变版本，那么就要同时实现<code class="highlighter-rouge">NSCopying</code> &amp;&amp; <code class="highlighter-rouge">NSMutableCopying</code>协议。</li>
+  <li>复制对象时需决定采用深拷贝还是浅拷贝，一般情况下尽量执行浅拷贝。</li>
+  <li>如果所写的对象需要深拷贝，那么可以考虑新增一个专门执行深拷贝的方法。</li>
+</ul>
+
 
 
                 <hr style="visibility: hidden;">
@@ -230,17 +284,17 @@ RunTime简称运行时。就是系统在运行的时候的一些机制，其中�
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/2016/08/18/%E4%BD%BF%E7%94%A8Block%E9%9C%80%E6%B3%A8%E6%84%8F%E7%9A%84%E9%97%AE%E9%A2%98/" data-toggle="tooltip" data-placement="top" title="使用Block需注意的问题">
+                        <a href="/2018/06/05/5%E5%88%86%E9%92%9F%E5%B8%A6%E4%BD%A0%E7%9C%8B%E5%AE%8C-WWDC-2018/" data-toggle="tooltip" data-placement="top" title="5分钟带你看完 WWDC 2018">
                         Previous<br>
-                        <span>使用Block需注意的问题</span>
+                        <span>5分钟带你看完 WWDC 2018</span>
                         </a>
                     </li>
                     
                     
                     <li class="next">
-                        <a href="/2016/09/15/iOS-UILabel%E5%9E%82%E7%9B%B4%E5%B1%85%E4%B8%AD/" data-toggle="tooltip" data-placement="top" title="iOS UILabel垂直居中">
+                        <a href="/2018/06/28/%E7%90%86%E8%A7%A3Objective-C%E9%94%99%E8%AF%AF%E7%B1%BB%E5%9E%8B/" data-toggle="tooltip" data-placement="top" title="理解Objective-C错误类型">
                         Next<br>
-                        <span>iOS UILabel垂直居中</span>
+                        <span>理解Objective-C错误类型</span>
                         </a>
                     </li>
                     
