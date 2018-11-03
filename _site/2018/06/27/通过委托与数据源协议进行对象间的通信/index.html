@@ -10,7 +10,7 @@
     <meta name="keywords"  content="Japho, Japho Blog, Japho的博客, iOS, Apple, iPhone">
     <meta name="theme-color" content="#000000">
     
-    <title>iOS UILabel垂直居中 - Japho Blog</title>
+    <title>通过委托与数据源协议进行对象间的通信 - Japho Blog</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -22,7 +22,7 @@
     <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
     
     <!-- Canonical URL -->
-    <link rel="canonical" href="http://localhost:4000/2016/09/15/iOS-UILabel%E5%9E%82%E7%9B%B4%E5%B1%85%E4%B8%AD/">
+    <link rel="canonical" href="http://localhost:4000/2018/06/27/%E9%80%9A%E8%BF%87%E5%A7%94%E6%89%98%E4%B8%8E%E6%95%B0%E6%8D%AE%E6%BA%90%E5%8D%8F%E8%AE%AE%E8%BF%9B%E8%A1%8C%E5%AF%B9%E8%B1%A1%E9%97%B4%E7%9A%84%E9%80%9A%E4%BF%A1/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -154,13 +154,13 @@
 
     <!-- Image to hack wechat -->
 <!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
-<!-- <img src="/postimage/post-bg-universe.jpg" width="0" height="0"> -->
+<!-- <img src="/postimage/post-bg-e2e-ux.jpg" width="0" height="0"> -->
 
 <!-- Post Header -->
 <style type="text/css">
     header.intro-header{
         position: relative;
-        background-image: url('/postimage/post-bg-universe.jpg')
+        background-image: url('/postimage/post-bg-e2e-ux.jpg')
     }
 
     
@@ -175,13 +175,15 @@
                         
                         <a class="tag" href="/tags/#iOS" title="iOS">iOS</a>
                         
+                        <a class="tag" href="/tags/#读书笔记" title="读书笔记">读书笔记</a>
+                        
                     </div>
-                    <h1>iOS UILabel垂直居中</h1>
+                    <h1>通过委托与数据源协议进行对象间的通信</h1>
                     
                     
-                    <h2 class="subheading">解决UILabel默认顶格显示问题</h2>
+                    <h2 class="subheading">《Effective Objective-C 2.0》读书笔记</h2>
                     
-                    <span class="meta">Posted by Japho on September 15, 2016</span>
+                    <span class="meta">Posted by Japho on June 27, 2018</span>
                 </div>
             </div>
         </div>
@@ -199,111 +201,34 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-				<p>平时开发的时候可能会遇到这种问题：当一个UILabel的frame的高度设置的过大时，发现UILabel是垂直居中的，有的需求是需要将这个Label垂直向上显示，之前的办法是计算出label.text的字体所占用的frame大小，根据这个大小再重新设置label的frame值，未免有些麻烦，前阵子封装了个自定义label实现的垂直居中的设置。废话不多说，上代码。</p>
+				<p>Objective-C不支持多继承，因此我们把某个类应该实现的一系列方法定义在协议里面。协议最常见的用途就是委托模式（<code class="highlighter-rouge">delegate</code>），“分类”（<code class="highlighter-rouge">category</code>），也是Objective-C的一种重要语言特性，利用分类机制，我们无需继承子类即可直接为当前类添加方法。</p>
 
-<p><code class="highlighter-rouge">JFLabel.h</code></p>
+<p><strong>委托模式的主旨：</strong></p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  </span>
-<span class="c1">//  JFLabel.h  </span>
-<span class="c1">//  BobcareDoctorApp  </span>
-<span class="c1">//  </span>
-<span class="c1">//  Created by Japho on 16/2/25.  </span>
-<span class="c1">//  Copyright © 2016年 com.01wisdom. All rights reserved.  </span>
-<span class="c1">//  </span>
-  
-<span class="cp">#import &lt;UIKit/UIKit.h&gt;  </span>
-  
-<span class="n">typedef</span> <span class="kd">enum</span>  
-<span class="p">{</span>  
-    <span class="kt">VerticalAlignmentTop</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="c1">// default  </span>
-    <span class="kt">VerticalAlignmentMiddle</span><span class="p">,</span>  
-    <span class="kt">VerticalAlignmentBottom</span><span class="p">,</span>  
-<span class="p">}</span> <span class="kt">VerticalAlignment</span><span class="p">;</span>  
-  
-<span class="kd">@interface</span> <span class="kt">JFLabel</span> <span class="p">:</span> <span class="kt">UILabel</span>  
-<span class="p">{</span>  
-      
-<span class="kd">@private</span>  
-      
-    <span class="kt">VerticalAlignment</span> <span class="n">_verticalAlignment</span><span class="p">;</span>  
-<span class="p">}</span>  
-  
-<span class="kd">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="kt">VerticalAlignment</span> <span class="n">verticalAlignment</span><span class="p">;</span>  
-  
-<span class="kd">@end</span>  
+<p>定义一套接口，某对象若想接受另一个对象的委托，则需遵从此接口。以便成为其“委托对象”。这里“另一个对象”则可以给其委托对象回传一些信息，也可以在发生相关事件时通知委托对象。</p>
+
+<p>这个模式可将数据与业务逻辑解耦。视图中知应包含显示数据所需的逻辑代码，而不应决定要显示何种数据以及数据之间如何交互等问题。</p>
+
+<p><code class="highlighter-rouge">delegate</code>这个属性应该定义成<code class="highlighter-rouge">weak</code>，而非<code class="highlighter-rouge">strong</code>。因为两者之间必须为“费用有关系”。通常情况下，扮演<code class="highlighter-rouge">delegate</code>的对象也要持有本对象，直到对象用完之后才会被释放。假如这里声明的时候用的是<code class="highlighter-rouge">strong</code>，这里就会造成“循环引用”，对象无法被释放掉。所以<code class="highlighter-rouge">delegate</code>对象应该被声明为<code class="highlighter-rouge">weak</code>，或者<code class="highlighter-rouge">unsafe_unretained</code>，（区别在于<code class="highlighter-rouge">weak</code>可在相关对象销毁时自动清空设置成<code class="highlighter-rouge">nil</code>，不会造成野指针）。</p>
+
+<p>实现委托对象的办法是声明某个类遵从委托协议，然后把协议中想要实现的那些方法在类里实现出来。委托协议一般来说都是可选的（optional），因为委托者未必关心其中的所有方法，这里需要注意，如果在委托对象上调用了可选方法，则必须提前使用类型信息查询方法来判断这个委托对象能否响应相关选择子。
+例如</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if ([_delegate respondsToSelecto: @selector(networkFetcher:didReceiveData:)])
+{
+[_delegate networkFetcher:self didReceiveData:data];
+}
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">JFLabel.m</code></p>
+<p><strong>要点：</strong></p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  </span>
-<span class="c1">//  JFLabel.m  </span>
-<span class="c1">//  BobcareDoctorApp  </span>
-<span class="c1">//  </span>
-<span class="c1">//  Created by Japho on 16/2/25.  </span>
-<span class="c1">//  Copyright © 2016年 com.01wisdom. All rights reserved.  </span>
-<span class="c1">//  </span>
-  
-<span class="cp">#import "JFLabel.h"  </span>
-  
-<span class="kd">@implementation</span> <span class="kt">JFLabel</span>  
-  
-<span class="kd">@synthesize</span> <span class="n">verticalAlignment</span> <span class="o">=</span> <span class="n">verticalAlignment_</span><span class="p">;</span>   
-  
-<span class="o">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="nv">initWithFrame</span><span class="p">:(</span><span class="kt">CGRect</span><span class="p">)</span><span class="n">frame</span> <span class="p">{</span>  
-    <span class="k">if</span> <span class="p">(</span><span class="k">self</span> <span class="o">=</span> <span class="p">[</span><span class="k">super</span> <span class="nv">initWithFrame</span><span class="p">:</span><span class="n">frame</span><span class="p">])</span> <span class="p">{</span>  
-        <span class="k">self</span><span class="o">.</span><span class="n">verticalAlignment</span> <span class="o">=</span> <span class="kt">VerticalAlignmentMiddle</span><span class="p">;</span>  
-    <span class="p">}</span>  
-    <span class="k">return</span> <span class="k">self</span><span class="p">;</span>  
-<span class="p">}</span>  
-  
-<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">setVerticalAlignment</span><span class="p">:(</span><span class="kt">VerticalAlignment</span><span class="p">)</span><span class="n">verticalAlignment</span> <span class="p">{</span>  
-    <span class="n">verticalAlignment_</span> <span class="o">=</span> <span class="n">verticalAlignment</span><span class="p">;</span>  
-    <span class="p">[</span><span class="k">self</span> <span class="n">setNeedsDisplay</span><span class="p">];</span>  
-<span class="p">}</span>  
-  
-<span class="o">-</span> <span class="p">(</span><span class="kt">CGRect</span><span class="p">)</span><span class="nv">textRectForBounds</span><span class="p">:(</span><span class="kt">CGRect</span><span class="p">)</span><span class="n">bounds</span> <span class="nv">limitedToNumberOfLines</span><span class="p">:(</span><span class="kt">NSInteger</span><span class="p">)</span><span class="n">numberOfLines</span> <span class="p">{</span>  
-    <span class="kt">CGRect</span> <span class="n">textRect</span> <span class="o">=</span> <span class="p">[</span><span class="k">super</span> <span class="nv">textRectForBounds</span><span class="p">:</span><span class="n">bounds</span> <span class="nv">limitedToNumberOfLines</span><span class="p">:</span><span class="n">numberOfLines</span><span class="p">];</span>  
-    <span class="k">switch</span> <span class="p">(</span><span class="k">self</span><span class="o">.</span><span class="n">verticalAlignment</span><span class="p">)</span> <span class="p">{</span>  
-        <span class="k">case</span> <span class="kt">VerticalAlignmentTop</span><span class="p">:</span>  
-            <span class="n">textRect</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">bounds</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">y</span><span class="p">;</span>  
-            <span class="k">break</span><span class="p">;</span>  
-        <span class="k">case</span> <span class="kt">VerticalAlignmentBottom</span><span class="p">:</span>  
-            <span class="n">textRect</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">bounds</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span> <span class="o">-</span> <span class="n">textRect</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span><span class="p">;</span>  
-            <span class="k">break</span><span class="p">;</span>  
-        <span class="k">case</span> <span class="kt">VerticalAlignmentMiddle</span><span class="p">:</span>  
-            <span class="c1">// Fall through.  </span>
-        <span class="k">default</span><span class="p">:</span>  
-            <span class="n">textRect</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">bounds</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="p">(</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span> <span class="o">-</span> <span class="n">textRect</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">;</span>  
-    <span class="p">}</span>  
-    <span class="k">return</span> <span class="n">textRect</span><span class="p">;</span>  
-<span class="p">}</span>  
-  
-<span class="o">-</span><span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">drawTextInRect</span><span class="p">:(</span><span class="kt">CGRect</span><span class="p">)</span><span class="n">requestedRect</span> <span class="p">{</span>  
-    <span class="kt">CGRect</span> <span class="n">actualRect</span> <span class="o">=</span> <span class="p">[</span><span class="k">self</span> <span class="nv">textRectForBounds</span><span class="p">:</span><span class="n">requestedRect</span> <span class="nv">limitedToNumberOfLines</span><span class="p">:</span><span class="k">self</span><span class="o">.</span><span class="n">numberOfLines</span><span class="p">];</span>  
-    <span class="p">[</span><span class="k">super</span> <span class="nv">drawTextInRect</span><span class="p">:</span><span class="n">actualRect</span><span class="p">];</span>  
-<span class="p">}</span>  
-  
-<span class="kd">@end</span>
-</code></pre></div></div>
+<ul>
+  <li>委托模式为对象提供了一套接口，使其可由此将相关事件告知其他对象。</li>
+  <li>将委托对象应该支持的接口定义成协议，在协议中把可能需要处理的事件定义成方法。</li>
+  <li>当某对象要从另外一个对象中获取数据时，可以使用委托模式。这种模式下，该模式也叫做“数据源协议”。</li>
+  <li>如果有必要，可实现含有段位的结构体，将委托对象是否能响应相关协议方法这一信息缓存至其中（delegate多次调用，后续检测多余，如果委托对象本身没有变化，不太可能会突然响应某个原来不能响应的选择子，这时可以考虑这种问题）。</li>
+</ul>
 
-<p>封装的类继承自UILabel，需要设置垂直居中时直接设置属性就可以了。
-调用示例代码：</p>
-
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">-</span> <span class="p">(</span><span class="kt">JFLabel</span> <span class="o">*</span><span class="p">)</span><span class="n">titleLabel</span>  
-<span class="p">{</span>  
-    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">_titleLabel</span><span class="p">)</span>  
-    <span class="p">{</span>  
-        <span class="n">_titleLabel</span> <span class="o">=</span> <span class="p">[[</span><span class="kt">JFLabel</span> <span class="n">alloc</span><span class="p">]</span> <span class="nv">initWithFrame</span><span class="p">:</span><span class="kt">CGRectMake</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="kt">SCREEN_WIDTH</span> <span class="o">-</span> <span class="kt">CASE_IMAGE_VIEW_WIDTH</span> <span class="o">-</span> <span class="mi">15</span> <span class="o">-</span> <span class="mi">20</span> <span class="o">-</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">40</span><span class="p">)];</span>  
-        <span class="n">_titleLabel</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s">@"测试垂直居中文字"</span><span class="p">;</span>  
-        <span class="n">_titleLabel</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="p">[</span><span class="kt">UIFont</span> <span class="nv">systemFontOfSize</span><span class="p">:</span><span class="mi">16</span><span class="p">];</span>  
-        <span class="n">_titleLabel</span><span class="o">.</span><span class="n">numberOfLines</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>  
-        <span class="n">_titleLabel</span><span class="o">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="p">[</span><span class="kt">UIColor</span> <span class="n">blackColor</span><span class="p">];</span>  
-        <span class="n">_titleLabel</span><span class="o">.</span><span class="n">verticalAlignment</span> <span class="o">=</span> <span class="kt">VerticalAlignmentTop</span><span class="p">;</span><span class="c1">//垂直居中  </span>
-    <span class="p">}</span>  
-      
-    <span class="k">return</span> <span class="n">_titleLabel</span><span class="p">;</span>  
-<span class="p">}</span>
-</code></pre></div></div>
 
 
                 <hr style="visibility: hidden;">
@@ -311,17 +236,17 @@
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/2016/08/23/runtime-OC%E7%B1%BB%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F/" data-toggle="tooltip" data-placement="top" title="runtime OC类执行顺序">
+                        <a href="/2018/06/26/%E7%90%86%E8%A7%A3NSCopying%E5%8D%8F%E8%AE%AE/" data-toggle="tooltip" data-placement="top" title="理解NSCopying协议">
                         Previous<br>
-                        <span>runtime OC类执行顺序</span>
+                        <span>理解NSCopying协议</span>
                         </a>
                     </li>
                     
                     
                     <li class="next">
-                        <a href="/2016/09/30/iOS%E8%87%AA%E5%AE%9A%E4%B9%89%E5%B8%B8%E8%A7%81%E7%AC%AC%E4%B8%89%E6%96%B9%E5%88%86%E4%BA%AB/" data-toggle="tooltip" data-placement="top" title="iOS 自定义常见第三方分享">
+                        <a href="/2018/06/28/%E7%90%86%E8%A7%A3Objective-C%E9%94%99%E8%AF%AF%E7%B1%BB%E5%9E%8B/" data-toggle="tooltip" data-placement="top" title="理解Objective-C错误类型">
                         Next<br>
-                        <span>iOS 自定义常见第三方分享</span>
+                        <span>理解Objective-C错误类型</span>
                         </a>
                     </li>
                     

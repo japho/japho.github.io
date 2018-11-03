@@ -10,7 +10,7 @@
     <meta name="keywords"  content="Japho, Japho Blog, Japho的博客, iOS, Apple, iPhone">
     <meta name="theme-color" content="#000000">
     
-    <title>iOS UILabel垂直居中 - Japho Blog</title>
+    <title>以ARC简化引用计数 - Japho Blog</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -22,7 +22,7 @@
     <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
     
     <!-- Canonical URL -->
-    <link rel="canonical" href="http://localhost:4000/2016/09/15/iOS-UILabel%E5%9E%82%E7%9B%B4%E5%B1%85%E4%B8%AD/">
+    <link rel="canonical" href="http://localhost:4000/2018/07/10/%E4%BB%A5ARC%E7%AE%80%E5%8C%96%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -154,13 +154,13 @@
 
     <!-- Image to hack wechat -->
 <!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
-<!-- <img src="/postimage/post-bg-universe.jpg" width="0" height="0"> -->
+<!-- <img src="/postimage/post-bg-alibaba.jpg" width="0" height="0"> -->
 
 <!-- Post Header -->
 <style type="text/css">
     header.intro-header{
         position: relative;
-        background-image: url('/postimage/post-bg-universe.jpg')
+        background-image: url('/postimage/post-bg-alibaba.jpg')
     }
 
     
@@ -175,13 +175,15 @@
                         
                         <a class="tag" href="/tags/#iOS" title="iOS">iOS</a>
                         
+                        <a class="tag" href="/tags/#读书笔记" title="读书笔记">读书笔记</a>
+                        
                     </div>
-                    <h1>iOS UILabel垂直居中</h1>
+                    <h1>以ARC简化引用计数</h1>
                     
                     
-                    <h2 class="subheading">解决UILabel默认顶格显示问题</h2>
+                    <h2 class="subheading">《Effective Objective-C 2.0》读书笔记</h2>
                     
-                    <span class="meta">Posted by Japho on September 15, 2016</span>
+                    <span class="meta">Posted by Japho on July 10, 2018</span>
                 </div>
             </div>
         </div>
@@ -199,111 +201,83 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-				<p>平时开发的时候可能会遇到这种问题：当一个UILabel的frame的高度设置的过大时，发现UILabel是垂直居中的，有的需求是需要将这个Label垂直向上显示，之前的办法是计算出label.text的字体所占用的frame大小，根据这个大小再重新设置label的frame值，未免有些麻烦，前阵子封装了个自定义label实现的垂直居中的设置。废话不多说，上代码。</p>
+				<p>使用ARC时，引用计数实际上还是要执行的，只不过保留与释放操作现在是由ARC自动添加的。由于ARC会自动执行<code class="highlighter-rouge">retain</code>，<code class="highlighter-rouge">release</code>，<code class="highlighter-rouge">autorelease</code>等操作，所以直接在ARC下调用这些内存管理方法是非法的。</p>
 
-<p><code class="highlighter-rouge">JFLabel.h</code></p>
+<p><strong>例如以下方法：</strong></p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  </span>
-<span class="c1">//  JFLabel.h  </span>
-<span class="c1">//  BobcareDoctorApp  </span>
-<span class="c1">//  </span>
-<span class="c1">//  Created by Japho on 16/2/25.  </span>
-<span class="c1">//  Copyright © 2016年 com.01wisdom. All rights reserved.  </span>
-<span class="c1">//  </span>
-  
-<span class="cp">#import &lt;UIKit/UIKit.h&gt;  </span>
-  
-<span class="n">typedef</span> <span class="kd">enum</span>  
-<span class="p">{</span>  
-    <span class="kt">VerticalAlignmentTop</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="c1">// default  </span>
-    <span class="kt">VerticalAlignmentMiddle</span><span class="p">,</span>  
-    <span class="kt">VerticalAlignmentBottom</span><span class="p">,</span>  
-<span class="p">}</span> <span class="kt">VerticalAlignment</span><span class="p">;</span>  
-  
-<span class="kd">@interface</span> <span class="kt">JFLabel</span> <span class="p">:</span> <span class="kt">UILabel</span>  
-<span class="p">{</span>  
-      
-<span class="kd">@private</span>  
-      
-    <span class="kt">VerticalAlignment</span> <span class="n">_verticalAlignment</span><span class="p">;</span>  
-<span class="p">}</span>  
-  
-<span class="kd">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="kt">VerticalAlignment</span> <span class="n">verticalAlignment</span><span class="p">;</span>  
-  
-<span class="kd">@end</span>  
+<ul>
+  <li>retain</li>
+  <li>release</li>
+  <li>autorelease</li>
+  <li>dealloc</li>
+</ul>
+
+<p>直接调用这些方法会产生编译错误。</p>
+
+<h3 id="使用arc时必须遵循的方法命名规则">使用ARC时必须遵循的方法命名规则</h3>
+
+<p>若以以下词语开头，其返回的对象归调用者所有：</p>
+
+<ul>
+  <li>alloc</li>
+  <li>new</li>
+  <li>copy</li>
+  <li>mutableCopy</li>
+</ul>
+
+<p><strong>归调用者所有的意思是：</strong></p>
+
+<blockquote>
+  <p>调用上述四种方法的那段代码要负责释放方法所返回的对象。也就是说，这些对象的保留计数是正值，而调用了这四种方法的那段代码要将其中一次保留操作抵消掉。</p>
+
+  <p>除了自动调用“保留”与“释放”的方法之外，使用ARC时，他可以在编译期把能够相互抵消的<code class="highlighter-rouge">retain</code>、<code class="highlighter-rouge">release</code>、<code class="highlighter-rouge">auitorelease</code>操作约简。如果发现在同一个对象上执行了多次“保留”与“释放”操作，那么ARC有时也可以成对的移除这两个操作。</p>
+</blockquote>
+
+<h3 id="变量的内存管理语义">变量的内存管理语义</h3>
+
+<p>ARC会用一种安全的方式来设置：先保留新值，再释放旧值，最后设置实例变量。使用ARC之后，无需考虑这种“边界情况”。</p>
+
+<p>在应用程序中，可用下列修饰符来改变局部变量与实例变量的语义：</p>
+
+<ul>
+  <li><code class="highlighter-rouge">__strong</code>：默认语义，保留这个值</li>
+  <li><code class="highlighter-rouge">__unsafe_unretained</code>：不保留这个值，（可能不安全，下次使用变量时，其对象可能已经被回收）</li>
+  <li><code class="highlighter-rouge">__weak</code>：不保留这个值，但是变量可以安全使用，因为如果系统把这个对象回收了，那么变量也会被自动清空。</li>
+  <li><code class="highlighter-rouge">__autoreleasing</code>：把对象“按引用传递”给方法时，使用这个特殊的修饰符，这个值在方法返回时自动释放。</li>
+</ul>
+
+<p>例如：想令实力变脸的语义与不使用ARC时相同，可以运用<code class="highlighter-rouge">__weak</code>或<code class="highlighter-rouge">__unsafe_unretained</code>修饰符。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@interface EOCClass  :  NSObject
+{
+id __weak _weakObject;
+id __unsafe_unretained  _unsafeUnretainedObject;
+}
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">JFLabel.m</code></p>
+<h3 id="arc如何清理实例变量">ARC如何清理实例变量</h3>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  </span>
-<span class="c1">//  JFLabel.m  </span>
-<span class="c1">//  BobcareDoctorApp  </span>
-<span class="c1">//  </span>
-<span class="c1">//  Created by Japho on 16/2/25.  </span>
-<span class="c1">//  Copyright © 2016年 com.01wisdom. All rights reserved.  </span>
-<span class="c1">//  </span>
-  
-<span class="cp">#import "JFLabel.h"  </span>
-  
-<span class="kd">@implementation</span> <span class="kt">JFLabel</span>  
-  
-<span class="kd">@synthesize</span> <span class="n">verticalAlignment</span> <span class="o">=</span> <span class="n">verticalAlignment_</span><span class="p">;</span>   
-  
-<span class="o">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="nv">initWithFrame</span><span class="p">:(</span><span class="kt">CGRect</span><span class="p">)</span><span class="n">frame</span> <span class="p">{</span>  
-    <span class="k">if</span> <span class="p">(</span><span class="k">self</span> <span class="o">=</span> <span class="p">[</span><span class="k">super</span> <span class="nv">initWithFrame</span><span class="p">:</span><span class="n">frame</span><span class="p">])</span> <span class="p">{</span>  
-        <span class="k">self</span><span class="o">.</span><span class="n">verticalAlignment</span> <span class="o">=</span> <span class="kt">VerticalAlignmentMiddle</span><span class="p">;</span>  
-    <span class="p">}</span>  
-    <span class="k">return</span> <span class="k">self</span><span class="p">;</span>  
-<span class="p">}</span>  
-  
-<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">setVerticalAlignment</span><span class="p">:(</span><span class="kt">VerticalAlignment</span><span class="p">)</span><span class="n">verticalAlignment</span> <span class="p">{</span>  
-    <span class="n">verticalAlignment_</span> <span class="o">=</span> <span class="n">verticalAlignment</span><span class="p">;</span>  
-    <span class="p">[</span><span class="k">self</span> <span class="n">setNeedsDisplay</span><span class="p">];</span>  
-<span class="p">}</span>  
-  
-<span class="o">-</span> <span class="p">(</span><span class="kt">CGRect</span><span class="p">)</span><span class="nv">textRectForBounds</span><span class="p">:(</span><span class="kt">CGRect</span><span class="p">)</span><span class="n">bounds</span> <span class="nv">limitedToNumberOfLines</span><span class="p">:(</span><span class="kt">NSInteger</span><span class="p">)</span><span class="n">numberOfLines</span> <span class="p">{</span>  
-    <span class="kt">CGRect</span> <span class="n">textRect</span> <span class="o">=</span> <span class="p">[</span><span class="k">super</span> <span class="nv">textRectForBounds</span><span class="p">:</span><span class="n">bounds</span> <span class="nv">limitedToNumberOfLines</span><span class="p">:</span><span class="n">numberOfLines</span><span class="p">];</span>  
-    <span class="k">switch</span> <span class="p">(</span><span class="k">self</span><span class="o">.</span><span class="n">verticalAlignment</span><span class="p">)</span> <span class="p">{</span>  
-        <span class="k">case</span> <span class="kt">VerticalAlignmentTop</span><span class="p">:</span>  
-            <span class="n">textRect</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">bounds</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">y</span><span class="p">;</span>  
-            <span class="k">break</span><span class="p">;</span>  
-        <span class="k">case</span> <span class="kt">VerticalAlignmentBottom</span><span class="p">:</span>  
-            <span class="n">textRect</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">bounds</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span> <span class="o">-</span> <span class="n">textRect</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span><span class="p">;</span>  
-            <span class="k">break</span><span class="p">;</span>  
-        <span class="k">case</span> <span class="kt">VerticalAlignmentMiddle</span><span class="p">:</span>  
-            <span class="c1">// Fall through.  </span>
-        <span class="k">default</span><span class="p">:</span>  
-            <span class="n">textRect</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">bounds</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="p">(</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span> <span class="o">-</span> <span class="n">textRect</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">;</span>  
-    <span class="p">}</span>  
-    <span class="k">return</span> <span class="n">textRect</span><span class="p">;</span>  
-<span class="p">}</span>  
-  
-<span class="o">-</span><span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">drawTextInRect</span><span class="p">:(</span><span class="kt">CGRect</span><span class="p">)</span><span class="n">requestedRect</span> <span class="p">{</span>  
-    <span class="kt">CGRect</span> <span class="n">actualRect</span> <span class="o">=</span> <span class="p">[</span><span class="k">self</span> <span class="nv">textRectForBounds</span><span class="p">:</span><span class="n">requestedRect</span> <span class="nv">limitedToNumberOfLines</span><span class="p">:</span><span class="k">self</span><span class="o">.</span><span class="n">numberOfLines</span><span class="p">];</span>  
-    <span class="p">[</span><span class="k">super</span> <span class="nv">drawTextInRect</span><span class="p">:</span><span class="n">actualRect</span><span class="p">];</span>  
-<span class="p">}</span>  
-  
-<span class="kd">@end</span>
+<p>非Objective-C的对象，比如<code class="highlighter-rouge">CoreFoundation</code>框架中的对象，或是由<code class="highlighter-rouge">malloc()</code>分配在堆中的内存，这时仍然需要手动清理。这里调用<code class="highlighter-rouge">dealloc</code>方法时，并不需要调用超类的<code class="highlighter-rouge">dealloc</code>，在ARC下不能直接调用<code class="highlighter-rouge">dealloc</code>。ARC会自动生成代码并运行此方法，生成的代码中会自动调用超类的<code class="highlighter-rouge">dealloc()</code>方法。可以这么写：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-  (void)dealloc
+{
+CFRelease(_coreFoundationObject);
+free(_heapAllocatedMemoryBlob);
+}
 </code></pre></div></div>
 
-<p>封装的类继承自UILabel，需要设置垂直居中时直接设置属性就可以了。
-调用示例代码：</p>
+<h3 id="覆写内存管理方法">覆写内存管理方法</h3>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">-</span> <span class="p">(</span><span class="kt">JFLabel</span> <span class="o">*</span><span class="p">)</span><span class="n">titleLabel</span>  
-<span class="p">{</span>  
-    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">_titleLabel</span><span class="p">)</span>  
-    <span class="p">{</span>  
-        <span class="n">_titleLabel</span> <span class="o">=</span> <span class="p">[[</span><span class="kt">JFLabel</span> <span class="n">alloc</span><span class="p">]</span> <span class="nv">initWithFrame</span><span class="p">:</span><span class="kt">CGRectMake</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="kt">SCREEN_WIDTH</span> <span class="o">-</span> <span class="kt">CASE_IMAGE_VIEW_WIDTH</span> <span class="o">-</span> <span class="mi">15</span> <span class="o">-</span> <span class="mi">20</span> <span class="o">-</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">40</span><span class="p">)];</span>  
-        <span class="n">_titleLabel</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s">@"测试垂直居中文字"</span><span class="p">;</span>  
-        <span class="n">_titleLabel</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="p">[</span><span class="kt">UIFont</span> <span class="nv">systemFontOfSize</span><span class="p">:</span><span class="mi">16</span><span class="p">];</span>  
-        <span class="n">_titleLabel</span><span class="o">.</span><span class="n">numberOfLines</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>  
-        <span class="n">_titleLabel</span><span class="o">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="p">[</span><span class="kt">UIColor</span> <span class="n">blackColor</span><span class="p">];</span>  
-        <span class="n">_titleLabel</span><span class="o">.</span><span class="n">verticalAlignment</span> <span class="o">=</span> <span class="kt">VerticalAlignmentTop</span><span class="p">;</span><span class="c1">//垂直居中  </span>
-    <span class="p">}</span>  
-      
-    <span class="k">return</span> <span class="n">_titleLabel</span><span class="p">;</span>  
-<span class="p">}</span>
-</code></pre></div></div>
+<p>不使用ARC时，可以覆写内存管理方法，但是在ARC环境下，不能这么做，因为会干扰ARC分析对象生命周期的工作。</p>
+
+<p><strong>要点：</strong></p>
+
+<ul>
+  <li>有ARC之后，程序员就无须担心内存管理问题了。使用ARC来编程，可省去勒种的许多“样板代码”。</li>
+  <li>ARC管理对象生命周期的办法基本上就是：在合适的地方插入“保留”及“释放”操作。在ARC环境下，变量的内存管理语义可以通过修饰符指明，而原来则需要手动执行“保留”及“释放”操作。</li>
+  <li>由方法所返回的对象，其内存管理语义总是通过方法名来体现。ARC将此确定为开发者必须遵守的规定。
+ARC只负责管理Objective-C对象的内存。<code class="highlighter-rouge">CoreFoundation</code>对象不归ARC管理，开发者需要在合适的时间调用<code class="highlighter-rouge">CFRetain</code>/<code class="highlighter-rouge">CFRelease</code>。</li>
+</ul>
 
 
                 <hr style="visibility: hidden;">
@@ -311,17 +285,17 @@
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/2016/08/23/runtime-OC%E7%B1%BB%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F/" data-toggle="tooltip" data-placement="top" title="runtime OC类执行顺序">
+                        <a href="/2018/07/02/%E5%9C%A8dealloc%E6%96%B9%E6%B3%95%E4%B8%AD%E5%8F%AA%E9%87%8A%E6%94%BE%E5%BC%95%E7%94%A8%E5%B9%B6%E8%A7%A3%E9%99%A4%E7%9B%91%E5%90%AC/" data-toggle="tooltip" data-placement="top" title="在dealloc方法中只释放引用并解除监听">
                         Previous<br>
-                        <span>runtime OC类执行顺序</span>
+                        <span>在dealloc方法中只释放引用并解除监听</span>
                         </a>
                     </li>
                     
                     
                     <li class="next">
-                        <a href="/2016/09/30/iOS%E8%87%AA%E5%AE%9A%E4%B9%89%E5%B8%B8%E8%A7%81%E7%AC%AC%E4%B8%89%E6%96%B9%E5%88%86%E4%BA%AB/" data-toggle="tooltip" data-placement="top" title="iOS 自定义常见第三方分享">
+                        <a href="/2018/07/15/%E7%90%86%E8%A7%A3%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0/" data-toggle="tooltip" data-placement="top" title="理解引用计数">
                         Next<br>
-                        <span>iOS 自定义常见第三方分享</span>
+                        <span>理解引用计数</span>
                         </a>
                     </li>
                     

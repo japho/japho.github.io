@@ -8,6 +8,7 @@ header-img: postimage/post-bg-e2e-ux.jpg
 catalog:    true
 tags:
     - iOS
+    - 读书笔记
 ---
 
 ARC下默认情况非“异常安全”，如果抛出异常，本应在作用域末尾释放的对象将不会进行自动释放了。若想生成“异常安全”代码，通过设置编译器的标志来实现，不过将引入一些额外代码，在不抛出异常时，也会照样执行这部分代码。这里需要打开的标志叫做  `-fobjc-arc-exceptions`

@@ -8,6 +8,7 @@ header-img: postimage/post-bg-ioses.jpg
 catalog:    true
 tags:
     - iOS
+    - 读书笔记
 ---
 
 在需要拷贝对象时，要通过copy方法来完成，如果想令自己创建的类支持拷贝操作，那就需要实现NSCopying协议，次协议只有一个方法：

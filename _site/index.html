@@ -183,6 +183,108 @@
             ">
     			
 <div class="post-preview">
+    <a href="/2018/07/15/%E7%90%86%E8%A7%A3%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0/">
+        <h2 class="post-title">
+            理解引用计数
+        </h2>
+        
+        <h3 class="post-subtitle">
+            《Effective Objective-C 2.0》读书笔记
+        </h3>
+        
+        <div class="post-content-preview">
+            Objective-C语言使用引用技术来管理内存，也就是说，每个对象都有可以递增或递减的计数器。如果想使某个对象继续存活，就递增其引用计数；用完之后，就递减其引用计数，计数变为0时，表示没有人关...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Japho on July 15, 2018
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2018/07/10/%E4%BB%A5ARC%E7%AE%80%E5%8C%96%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0/">
+        <h2 class="post-title">
+            以ARC简化引用计数
+        </h2>
+        
+        <h3 class="post-subtitle">
+            《Effective Objective-C 2.0》读书笔记
+        </h3>
+        
+        <div class="post-content-preview">
+            使用ARC时，引用计数实际上还是要执行的，只不过保留与释放操作现在是由ARC自动添加的。由于ARC会自动执行retain，release，autorelease等操作，所以直接在ARC下调用这些...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Japho on July 10, 2018
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2018/07/02/%E5%9C%A8dealloc%E6%96%B9%E6%B3%95%E4%B8%AD%E5%8F%AA%E9%87%8A%E6%94%BE%E5%BC%95%E7%94%A8%E5%B9%B6%E8%A7%A3%E9%99%A4%E7%9B%91%E5%90%AC/">
+        <h2 class="post-title">
+            在dealloc方法中只释放引用并解除监听
+        </h2>
+        
+        <h3 class="post-subtitle">
+            《Effective Objective-C 2.0》读书笔记
+        </h3>
+        
+        <div class="post-content-preview">
+            对象经历生命周期后，就会被系统回收，这时就会执行dealloc方法。在每个对象的生命周期内，此方法只执行一次。不应该自己调用dealloc方法，运行期系统会在适当的时候调用他，而且一旦调用dea...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Japho on July 2, 2018
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2018/07/01/%E5%8B%BF%E5%9C%A8%E5%88%86%E7%B1%BB%E4%B8%AD%E5%A3%B0%E6%98%8E%E5%B1%9E%E6%80%A7/">
+        <h2 class="post-title">
+            勿在分类中声明属性
+        </h2>
+        
+        <h3 class="post-subtitle">
+            《Effective Objective-C 2.0》读书笔记
+        </h3>
+        
+        <div class="post-content-preview">
+            尽管在技术上说，分类中可以声明属性，但是还是要尽量避免这种做法。因为，分类无法向类中新增实例变量，因此，他们无法把实现属性所需的实例变量合成出来。这时，需要在分类中为该属性实现setter  &...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Japho on July 1, 2018
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2018/06/29/%E5%B0%86%E7%B1%BB%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%BB%A3%E7%A0%81%E5%88%86%E6%95%A3%E5%88%B0%E4%BE%BF%E4%BA%8E%E7%AE%A1%E7%90%86%E7%9A%84%E6%95%B0%E4%B8%AA%E5%88%86%E7%B1%BB%E4%B8%AD/">
+        <h2 class="post-title">
+            编码习惯问题
+        </h2>
+        
+        <h3 class="post-subtitle">
+            《Effective Objective-C 2.0》读书笔记
+        </h3>
+        
+        <div class="post-content-preview">
+            将类的实现代码分散到便于管理的数个分类中
+
+当类中方法及实现过多的时候，可以考虑用Objective-C的“分类”机制，把代码按逻辑划分到几个分区中。通过分类机制，可以把类代码分成很多个易于管理...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Japho on June 29, 2018
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
     <a href="/2018/06/28/%E7%90%86%E8%A7%A3Objective-C%E9%94%99%E8%AF%AF%E7%B1%BB%E5%9E%8B/">
         <h2 class="post-title">
             理解Objective-C错误类型
@@ -198,6 +300,26 @@
     </a>
     <p class="post-meta">
         Posted by Japho on June 28, 2018
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2018/06/27/%E9%80%9A%E8%BF%87%E5%A7%94%E6%89%98%E4%B8%8E%E6%95%B0%E6%8D%AE%E6%BA%90%E5%8D%8F%E8%AE%AE%E8%BF%9B%E8%A1%8C%E5%AF%B9%E8%B1%A1%E9%97%B4%E7%9A%84%E9%80%9A%E4%BF%A1/">
+        <h2 class="post-title">
+            通过委托与数据源协议进行对象间的通信
+        </h2>
+        
+        <h3 class="post-subtitle">
+            《Effective Objective-C 2.0》读书笔记
+        </h3>
+        
+        <div class="post-content-preview">
+            Objective-C不支持多继承，因此我们把某个类应该实现的一系列方法定义在协议里面。协议最常见的用途就是委托模式（delegate），“分类”（category），也是Objective-C...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Japho on June 27, 2018
     </p>
 </div>
 <hr>
@@ -271,143 +393,6 @@ iOS 12 和 ARKit 2.0
 </div>
 <hr>
 
-<div class="post-preview">
-    <a href="/2017/02/14/%E5%A6%82%E4%BD%95%E6%9F%A5%E6%89%BE%E5%BD%93%E5%89%8D%E7%9A%84%E7%AC%AC%E4%B8%80%E5%93%8D%E5%BA%94%E8%80%85/">
-        <h2 class="post-title">
-            如何查找当前的第一响应者
-        </h2>
-        
-        <h3 class="post-subtitle">
-            不调用私有API查找第一响应者
-        </h3>
-        
-        <div class="post-content-preview">
-            有时候总是有需求来获取当前的第一响应者，例如让TextField收键盘，隐藏视图等等操作都需要获取当前的第一响应者，那么该如何获取呢？
-
-UIWindow *keyWindow = [[UIAp...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on February 14, 2017
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2016/11/09/Objective-C-%E6%9E%9A%E4%B8%BE-%E4%BD%8D%E7%A7%BB%E6%9E%9A%E4%B8%BE)/">
-        <h2 class="post-title">
-            Objective-C 枚举（位移枚举)
-        </h2>
-        
-        <h3 class="post-subtitle">
-            枚举真的有这么简单？快！上车！
-        </h3>
-        
-        <div class="post-content-preview">
-            什么是枚举
-
-在程序设计语言中，一般用一个数值来代表某一状态，这种处理方法不直观，易读性差。如果能在程序中用自然语言中有相应含义的单词来代表某一状态，则程序就很容易阅读和理解。也就是说，事先考虑...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on November 9, 2016
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2016/11/07/iOS-Widget%E7%9A%84%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0/">
-        <h2 class="post-title">
-            iOS Widget的简单实现
-        </h2>
-        
-        <h3 class="post-subtitle">
-            基于iOS10的插件开发
-        </h3>
-        
-        <div class="post-content-preview">
-            前言
-
-
-  自iOS8之后，苹果支持了扩展（Extension）的开发，开发者可以通过系统提供给我们的扩展接入点 (Extension point) 来为系统特定的服务提供某些附加的功能。今年...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on November 7, 2016
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2016/11/01/Objective-C-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">
-        <h2 class="post-title">
-            Objective-C 单例模式
-        </h2>
-        
-        <h3 class="post-subtitle">
-            单例模式，不是说说而已
-        </h3>
-        
-        <div class="post-content-preview">
-            何为单例模式
-
-
-  单例模式：保证一个类只有一个实例，并提供一个访问它的全局访问点。
-
-
-单例模式几乎是设计模式的最简单形式了。这一模式的意图是使得类的一个对象成为系统中的唯一实例。要实现这一...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on November 1, 2016
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2016/10/25/UIButton%E4%B8%ADimageView%E5%92%8CtitleLabel%E7%9A%84%E4%BD%8D%E7%BD%AE%E8%B0%83%E6%95%B4/">
-        <h2 class="post-title">
-            UIButton中imageView和titleLabel的位置调整
-        </h2>
-        
-        <h3 class="post-subtitle">
-            头大的问题终于解决了
-        </h3>
-        
-        <div class="post-content-preview">
-            前言
-
-在使用UIButton时，有时候需要调整按钮内部的imageView和titleLabel的位置和尺寸。在默认情况下，按钮内部的imageView和titleLabel的显示效果是图片在...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on October 25, 2016
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2016/09/30/iOS%E8%87%AA%E5%AE%9A%E4%B9%89%E5%B8%B8%E8%A7%81%E7%AC%AC%E4%B8%89%E6%96%B9%E5%88%86%E4%BA%AB/">
-        <h2 class="post-title">
-            iOS 自定义常见第三方分享
-        </h2>
-        
-        <h3 class="post-subtitle">
-            基于原生SDK开发实现
-        </h3>
-        
-        <div class="post-content-preview">
-            前言
-
-平时经常会遇到做第三分享的需求，相信大家好多都使用的集成的分享平台shareSDK、友盟分享等。他们其实是对各种第三方平台进行了二次封装，有时需求只要求做其中一种平台的分享的时候其实像s...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on September 30, 2016
-    </p>
-</div>
-<hr>
-
 
 <!-- Pager -->
 
@@ -438,8 +423,14 @@ UIWindow *keyWindow = [[UIAp...
                     <div class="tags">
                         
                             
-                                <a href="/tags/#iOS" title="iOS" rel="18">
+                                <a href="/tags/#iOS" title="iOS" rel="24">
                                     iOS
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#读书笔记" title="读书笔记" rel="8">
+                                    读书笔记
                                 </a>
                             
                         
