@@ -183,6 +183,113 @@
             ">
     			
 <div class="post-preview">
+    <a href="/2018/08/12/%E7%90%86%E8%A7%A3-%E5%9D%97-%E8%BF%99%E4%B8%80%E6%A6%82%E5%BF%B5/">
+        <h2 class="post-title">
+            理解“块”这一概念
+        </h2>
+        
+        <h3 class="post-subtitle">
+            《Effective Objective-C 2.0》读书笔记
+        </h3>
+        
+        <div class="post-content-preview">
+            块的基础知识
+
+块与函数类似，只不过是直接定义在另一个函数里的，和定义它的那个函数共享同一个范围内的东西。用“^”符号表示。简单的块：
+
+^{
+//Block implementation he...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Japho on August 12, 2018
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2018/08/10/%E4%BB%A5-%E8%87%AA%E5%8A%A8%E9%87%8A%E6%94%BE%E6%B1%A0%E5%9D%97-%E9%99%8D%E4%BD%8E%E5%86%85%E5%AD%98%E5%B3%B0%E5%80%BC/">
+        <h2 class="post-title">
+            以“自动释放池块”降低内存峰值
+        </h2>
+        
+        <h3 class="post-subtitle">
+            《Effective Objective-C 2.0》读书笔记
+        </h3>
+        
+        <div class="post-content-preview">
+            释放对象有两种方式：一种是调用release方法，使其保留计数立即递减；另一种是调用autorelease方法，将其加入到“自动释放池”中。自动释放池用于存放那些需要稍后再某个时刻释放的对象。清...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Japho on August 10, 2018
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2018/08/06/%E4%BB%A5%E5%BC%B1%E5%BC%95%E7%94%A8%E9%81%BF%E5%85%8D%E4%BF%9D%E7%95%99%E7%8E%AF/">
+        <h2 class="post-title">
+            以弱引用避免保留环
+        </h2>
+        
+        <h3 class="post-subtitle">
+            《Effective Objective-C 2.0》读书笔记
+        </h3>
+        
+        <div class="post-content-preview">
+            对象中经常出现一种情况，就是几个对象都以某种方式互相引用，从而形成了“环”。这种情况通常会造成内存泄漏，因为最后没有别的东西会引用环中的对象。这样的话，环里的对象就无法为外界所访问了，但对象间尚...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Japho on August 6, 2018
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2018/08/05/%E7%BC%96%E5%86%99-%E5%BC%82%E5%B8%B8%E5%AE%89%E5%85%A8%E4%BB%A3%E7%A0%81-%E6%97%B6%E7%95%99%E6%84%8F%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E9%97%AE%E9%A2%98/">
+        <h2 class="post-title">
+            编写“异常安全代码”时留意内存管理问题
+        </h2>
+        
+        <h3 class="post-subtitle">
+            《Effective Objective-C 2.0》读书笔记
+        </h3>
+        
+        <div class="post-content-preview">
+            在try块中，如果保留了某个对象，然后在释放之前抛出了异常，那么，除非catch块能够处理此问题，否则对象所占内存将泄露。
+
+虽说默认情况下不开启，但是ARC依然能生成这种安全处理异常所用的附加...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Japho on August 5, 2018
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2018/07/16/%E9%80%9A%E8%BF%87%E5%8D%8F%E8%AE%AE%E6%8F%90%E4%BE%9B%E5%8C%BF%E5%90%8D%E5%AF%B9%E8%B1%A1/">
+        <h2 class="post-title">
+            通过协议提供匿名对象
+        </h2>
+        
+        <h3 class="post-subtitle">
+            《Effective Objective-C 2.0》读书笔记
+        </h3>
+        
+        <div class="post-content-preview">
+            协议定义了一系列方法，遵从此协议的对象应该实现他们。于是，我们可以用协议把自己所写的API中的实现细节隐藏起来，将返回对象设计为遵从此协议的纯id类型。这样，想要隐藏的类名就不会出现在API之中...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Japho on July 16, 2018
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
     <a href="/2018/07/15/%E7%90%86%E8%A7%A3%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0/">
         <h2 class="post-title">
             理解引用计数
@@ -284,115 +391,6 @@
 </div>
 <hr>
 
-<div class="post-preview">
-    <a href="/2018/06/28/%E7%90%86%E8%A7%A3Objective-C%E9%94%99%E8%AF%AF%E7%B1%BB%E5%9E%8B/">
-        <h2 class="post-title">
-            理解Objective-C错误类型
-        </h2>
-        
-        <h3 class="post-subtitle">
-            《Effective Objective-C 2.0》读书笔记
-        </h3>
-        
-        <div class="post-content-preview">
-            ARC下默认情况非“异常安全”，如果抛出异常，本应在作用域末尾释放的对象将不会进行自动释放了。若想生成“异常安全”代码，通过设置编译器的标志来实现，不过将引入一些额外代码，在不抛出异常时，也会照...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on June 28, 2018
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2018/06/27/%E9%80%9A%E8%BF%87%E5%A7%94%E6%89%98%E4%B8%8E%E6%95%B0%E6%8D%AE%E6%BA%90%E5%8D%8F%E8%AE%AE%E8%BF%9B%E8%A1%8C%E5%AF%B9%E8%B1%A1%E9%97%B4%E7%9A%84%E9%80%9A%E4%BF%A1/">
-        <h2 class="post-title">
-            通过委托与数据源协议进行对象间的通信
-        </h2>
-        
-        <h3 class="post-subtitle">
-            《Effective Objective-C 2.0》读书笔记
-        </h3>
-        
-        <div class="post-content-preview">
-            Objective-C不支持多继承，因此我们把某个类应该实现的一系列方法定义在协议里面。协议最常见的用途就是委托模式（delegate），“分类”（category），也是Objective-C...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on June 27, 2018
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2018/06/26/%E7%90%86%E8%A7%A3NSCopying%E5%8D%8F%E8%AE%AE/">
-        <h2 class="post-title">
-            理解NSCopying协议
-        </h2>
-        
-        <h3 class="post-subtitle">
-            《Effective Objective-C 2.0》读书笔记
-        </h3>
-        
-        <div class="post-content-preview">
-            在需要拷贝对象时，要通过copy方法来完成，如果想令自己创建的类支持拷贝操作，那就需要实现NSCopying协议，次协议只有一个方法：
-
-- (id)copyWithZone:(NSZone *...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on June 26, 2018
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2018/06/05/5%E5%88%86%E9%92%9F%E5%B8%A6%E4%BD%A0%E7%9C%8B%E5%AE%8C-WWDC-2018/">
-        <h2 class="post-title">
-            5分钟带你看完 WWDC 2018
-        </h2>
-        
-        <h3 class="post-subtitle">
-            WWDC 2018 Keynote 全记录
-        </h3>
-        
-        <div class="post-content-preview">
-            前言
-
-一年一度的 WWDC（苹果全球开发者大会）于北京时间 6月5日 凌晨1点开幕。废话不多说，来看看这次WWDC 都有哪些亮点吧!
-
-iOS 12 和 ARKit 2.0
-
-
-  关键词：官...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on June 5, 2018
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2017/04/14/%E5%88%A4%E6%96%AD%E5%BD%93%E5%89%8Dviewcontroller%E6%98%AFpush%E8%BF%98%E6%98%AFpresent%E7%9A%84%E6%96%B9%E5%BC%8F%E6%98%BE%E7%A4%BA/">
-        <h2 class="post-title">
-            判断当前viewcontroller是push还是present的方式显示
-        </h2>
-        
-        <h3 class="post-subtitle">
-            妈妈再也不用担心我不会判断了
-        </h3>
-        
-        <div class="post-content-preview">
-            通过presentviewcontroller的方式显示的viewcontroller不会存入self.navigationController.viewControllers数组中。而通过pu...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on April 14, 2017
-    </p>
-</div>
-<hr>
-
 
 <!-- Pager -->
 
@@ -423,13 +421,13 @@ iOS 12 和 ARKit 2.0
                     <div class="tags">
                         
                             
-                                <a href="/tags/#iOS" title="iOS" rel="24">
+                                <a href="/tags/#iOS" title="iOS" rel="29">
                                     iOS
                                 </a>
                             
                         
                             
-                                <a href="/tags/#读书笔记" title="读书笔记" rel="8">
+                                <a href="/tags/#读书笔记" title="读书笔记" rel="13">
                                     读书笔记
                                 </a>
                             
