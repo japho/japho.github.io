@@ -10,7 +10,7 @@
     <meta name="keywords"  content="Japho, Japho Blog, Japho的博客, iOS, Apple, iPhone">
     <meta name="theme-color" content="#000000">
     
-    <title>Japho Blog</title>
+    <title>通过委托与数据源协议进行对象间的通信 - Japho Blog</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -22,7 +22,7 @@
     <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
     
     <!-- Canonical URL -->
-    <link rel="canonical" href="http://localhost:4000/page2/">
+    <link rel="canonical" href="http://localhost:4000/2018/06/27/communication-between-obj-delegate-data-source/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -152,374 +152,181 @@
 </script>
 
 
-    <!-- Page Header -->
-<header class="intro-header" style="background-image: url('/img/home-bg.jpg')">
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/postimage/post-bg-e2e-ux.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/postimage/post-bg-e2e-ux.jpg')
+    }
+
+    
+</style>
+<header class="intro-header" >
+    <div class="header-mask"></div>
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
-                <div class="site-heading">
-                    <h1>Japho Blog</h1>
-                    <!--<hr class="small">-->
-                    <span class="subheading">Hang on to your dreams.</span>
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#iOS" title="iOS">iOS</a>
+                        
+                        <a class="tag" href="/tags/#读书笔记" title="读书笔记">读书笔记</a>
+                        
+                    </div>
+                    <h1>通过委托与数据源协议进行对象间的通信</h1>
+                    
+                    
+                    <h2 class="subheading">《Effective Objective-C 2.0》读书笔记</h2>
+                    
+                    <span class="meta">Posted by Japho on June 27, 2018</span>
                 </div>
             </div>
         </div>
     </div>
 </header>
 
-<!-- Main Content -->
-<div class="container">
-	<div class="row">
-        
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
 
-<!-- USE SIDEBAR -->
-    <!-- PostList Container -->
-    		<div class="
-                col-lg-8 col-lg-offset-1
-                col-md-8 col-md-offset-1
-                col-sm-12
-                col-xs-12
-                postlist-container
-            ">
-    			
-<div class="post-preview">
-    <a href="/2018/06/29/coding-in-the-catergory/">
-        <h2 class="post-title">
-            编码习惯问题
-        </h2>
-        
-        <h3 class="post-subtitle">
-            《Effective Objective-C 2.0》读书笔记
-        </h3>
-        
-        <div class="post-content-preview">
-            将类的实现代码分散到便于管理的数个分类中
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
 
-当类中方法及实现过多的时候，可以考虑用Objective-C的“分类”机制，把代码按逻辑划分到几个分区中。通过分类机制，可以把类代码分成很多个易于管理...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on June 29, 2018
-    </p>
-</div>
-<hr>
+				<p>Objective-C不支持多继承，因此我们把某个类应该实现的一系列方法定义在协议里面。协议最常见的用途就是委托模式（<code class="highlighter-rouge">delegate</code>），“分类”（<code class="highlighter-rouge">category</code>），也是Objective-C的一种重要语言特性，利用分类机制，我们无需继承子类即可直接为当前类添加方法。</p>
 
-<div class="post-preview">
-    <a href="/2018/06/28/comprehend-Objective-C-error-type/">
-        <h2 class="post-title">
-            理解Objective-C错误类型
-        </h2>
-        
-        <h3 class="post-subtitle">
-            《Effective Objective-C 2.0》读书笔记
-        </h3>
-        
-        <div class="post-content-preview">
-            ARC下默认情况非“异常安全”，如果抛出异常，本应在作用域末尾释放的对象将不会进行自动释放了。若想生成“异常安全”代码，通过设置编译器的标志来实现，不过将引入一些额外代码，在不抛出异常时，也会照...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on June 28, 2018
-    </p>
-</div>
-<hr>
+<p><strong>委托模式的主旨：</strong></p>
 
-<div class="post-preview">
-    <a href="/2018/06/27/communication-between-obj-delegate-data-source/">
-        <h2 class="post-title">
-            通过委托与数据源协议进行对象间的通信
-        </h2>
-        
-        <h3 class="post-subtitle">
-            《Effective Objective-C 2.0》读书笔记
-        </h3>
-        
-        <div class="post-content-preview">
-            Objective-C不支持多继承，因此我们把某个类应该实现的一系列方法定义在协议里面。协议最常见的用途就是委托模式（delegate），“分类”（category），也是Objective-C...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on June 27, 2018
-    </p>
-</div>
-<hr>
+<p>定义一套接口，某对象若想接受另一个对象的委托，则需遵从此接口。以便成为其“委托对象”。这里“另一个对象”则可以给其委托对象回传一些信息，也可以在发生相关事件时通知委托对象。</p>
 
-<div class="post-preview">
-    <a href="/2018/06/26/comprehend-NSCopying-protocol/">
-        <h2 class="post-title">
-            理解NSCopying协议
-        </h2>
-        
-        <h3 class="post-subtitle">
-            《Effective Objective-C 2.0》读书笔记
-        </h3>
-        
-        <div class="post-content-preview">
-            在需要拷贝对象时，要通过copy方法来完成，如果想令自己创建的类支持拷贝操作，那就需要实现NSCopying协议，次协议只有一个方法：
+<p>这个模式可将数据与业务逻辑解耦。视图中知应包含显示数据所需的逻辑代码，而不应决定要显示何种数据以及数据之间如何交互等问题。</p>
 
-- (id)copyWithZone:(NSZone *...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on June 26, 2018
-    </p>
-</div>
-<hr>
+<p><code class="highlighter-rouge">delegate</code>这个属性应该定义成<code class="highlighter-rouge">weak</code>，而非<code class="highlighter-rouge">strong</code>。因为两者之间必须为“费用有关系”。通常情况下，扮演<code class="highlighter-rouge">delegate</code>的对象也要持有本对象，直到对象用完之后才会被释放。假如这里声明的时候用的是<code class="highlighter-rouge">strong</code>，这里就会造成“循环引用”，对象无法被释放掉。所以<code class="highlighter-rouge">delegate</code>对象应该被声明为<code class="highlighter-rouge">weak</code>，或者<code class="highlighter-rouge">unsafe_unretained</code>，（区别在于<code class="highlighter-rouge">weak</code>可在相关对象销毁时自动清空设置成<code class="highlighter-rouge">nil</code>，不会造成野指针）。</p>
 
-<div class="post-preview">
-    <a href="/2018/06/05/WWDC-2018/">
-        <h2 class="post-title">
-            5分钟带你看完 WWDC 2018
-        </h2>
-        
-        <h3 class="post-subtitle">
-            WWDC 2018 Keynote 全记录
-        </h3>
-        
-        <div class="post-content-preview">
-            前言
+<p>实现委托对象的办法是声明某个类遵从委托协议，然后把协议中想要实现的那些方法在类里实现出来。委托协议一般来说都是可选的（optional），因为委托者未必关心其中的所有方法，这里需要注意，如果在委托对象上调用了可选方法，则必须提前使用类型信息查询方法来判断这个委托对象能否响应相关选择子。
+例如</p>
 
-一年一度的 WWDC（苹果全球开发者大会）于北京时间 6月5日 凌晨1点开幕。废话不多说，来看看这次WWDC 都有哪些亮点吧!
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if ([_delegate respondsToSelecto: @selector(networkFetcher:didReceiveData:)])
+{
+[_delegate networkFetcher:self didReceiveData:data];
+}
+</code></pre></div></div>
 
-iOS 12 和 ARKit 2.0
+<p><strong>要点：</strong></p>
 
-
-  关键词：官...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on June 5, 2018
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2017/04/14/viewcontroller-push-or-present/">
-        <h2 class="post-title">
-            判断当前viewcontroller是push还是present的方式显示
-        </h2>
-        
-        <h3 class="post-subtitle">
-            妈妈再也不用担心我不会判断了
-        </h3>
-        
-        <div class="post-content-preview">
-            通过presentviewcontroller的方式显示的viewcontroller不会存入self.navigationController.viewControllers数组中。而通过pu...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on April 14, 2017
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2017/02/14/find-first-responder/">
-        <h2 class="post-title">
-            如何查找当前的第一响应者
-        </h2>
-        
-        <h3 class="post-subtitle">
-            不调用私有API查找第一响应者
-        </h3>
-        
-        <div class="post-content-preview">
-            有时候总是有需求来获取当前的第一响应者，例如让TextField收键盘，隐藏视图等等操作都需要获取当前的第一响应者，那么该如何获取呢？
-
-UIWindow *keyWindow = [[UIAp...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on February 14, 2017
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2016/11/09/Objective-C-enum/">
-        <h2 class="post-title">
-            Objective-C 枚举（位移枚举)
-        </h2>
-        
-        <h3 class="post-subtitle">
-            枚举真的有这么简单？快！上车！
-        </h3>
-        
-        <div class="post-content-preview">
-            什么是枚举
-
-在程序设计语言中，一般用一个数值来代表某一状态，这种处理方法不直观，易读性差。如果能在程序中用自然语言中有相应含义的单词来代表某一状态，则程序就很容易阅读和理解。也就是说，事先考虑...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on November 9, 2016
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2016/11/07/iOS-Widget-realiziton/">
-        <h2 class="post-title">
-            iOS Widget的简单实现
-        </h2>
-        
-        <h3 class="post-subtitle">
-            基于iOS10的插件开发
-        </h3>
-        
-        <div class="post-content-preview">
-            前言
-
-
-  自iOS8之后，苹果支持了扩展（Extension）的开发，开发者可以通过系统提供给我们的扩展接入点 (Extension point) 来为系统特定的服务提供某些附加的功能。今年...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on November 7, 2016
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2016/11/01/Objective-C-singleton/">
-        <h2 class="post-title">
-            Objective-C 单例模式
-        </h2>
-        
-        <h3 class="post-subtitle">
-            单例模式，不是说说而已
-        </h3>
-        
-        <div class="post-content-preview">
-            何为单例模式
-
-
-  单例模式：保证一个类只有一个实例，并提供一个访问它的全局访问点。
-
-
-单例模式几乎是设计模式的最简单形式了。这一模式的意图是使得类的一个对象成为系统中的唯一实例。要实现这一...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on November 1, 2016
-    </p>
-</div>
-<hr>
-
-
-<!-- Pager -->
-
-<ul class="pager">
-    
-    <li class="previous">
-        <a href="/">&larr; Newer Posts</a>
-    </li>
-    
-    
-    <li class="next">
-        <a href="/page3">Older Posts &rarr;</a>
-    </li>
-    
+<ul>
+  <li>委托模式为对象提供了一套接口，使其可由此将相关事件告知其他对象。</li>
+  <li>将委托对象应该支持的接口定义成协议，在协议中把可能需要处理的事件定义成方法。</li>
+  <li>当某对象要从另外一个对象中获取数据时，可以使用委托模式。这种模式下，该模式也叫做“数据源协议”。</li>
+  <li>如果有必要，可实现含有段位的结构体，将委托对象是否能响应相关协议方法这一信息缓存至其中（delegate多次调用，后续检测多余，如果委托对象本身没有变化，不太可能会突然响应某个原来不能响应的选择子，这时可以考虑这种问题）。</li>
 </ul>
 
 
-    		</div>
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2018/06/26/comprehend-NSCopying-protocol/" data-toggle="tooltip" data-placement="top" title="理解NSCopying协议">
+                        Previous<br>
+                        <span>理解NSCopying协议</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2018/06/28/comprehend-Objective-C-error-type/" data-toggle="tooltip" data-placement="top" title="理解Objective-C错误类型">
+                        Next<br>
+                        <span>理解Objective-C错误类型</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+
+                <!--Gitalk评论start  -->
+                
+                <!-- 引入Gitalk评论插件  -->
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+                <div id="gitalk-container"></div>
+                <!-- 引入一个生产md5的js，用于对id值进行处理，防止其过长 -->
+                <!-- Thank DF:https://github.com/NSDingFan/NSDingFan.github.io/issues/3#issuecomment-407496538 -->
+                <script src="/js/md5.min.js"></script>
+                <script type="text/javascript">
+                    var gitalk = new Gitalk({
+                    clientID: '440847f85c950402a76b',
+                    clientSecret: '92371c89905e71fe83cfd3815f779358726d9c48',
+                    repo: 'japho.github.io',
+                    owner: 'japho',
+                    admin: ['japho'],
+                    distractionFreeMode: true,
+                    id: md5(location.pathname),
+                    });
+                    gitalk.render('gitalk-container');
+                </script>
+                
+                <!-- Gitalk end -->
+
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
     <!-- Sidebar Container -->
             <div class="
-                col-lg-3 col-lg-offset-0
-                col-md-3 col-md-offset-0
-                col-sm-12
-                col-xs-12
-                sidebar-container
-            ">
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
                 <!-- Featured Tags -->
                 
                 <section>
                     <hr class="hidden-sm hidden-xs">
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
-                        
+        				
                             
-                                <a href="/tags/#iOS" title="iOS" rel="30">
+                				<a href="/tags/#iOS" title="iOS" rel="30">
                                     iOS
                                 </a>
                             
-                        
+        				
                             
-                                <a href="/tags/#读书笔记" title="读书笔记" rel="13">
+                				<a href="/tags/#读书笔记" title="读书笔记" rel="13">
                                     读书笔记
                                 </a>
                             
-                        
-                    </div>
+        				
+        			</div>
                 </section>
                 
 
-                <!-- Short About -->
-                <section class="visible-md visible-lg">
-                    <hr><h5><a href="/about/">ABOUT ME</a></h5>
-                    <div class="short-about">
-                        
-                            <a href="/about">
-                                <img src="/img/about-BY-gentle.jpg"/>
-                            </a>
-                        
-                        
-                            <p>The shortest answer is doing.</p>
-                        
-                        <!-- SNS Link -->
-                        <ul class="list-inline">
-                            
-                            <!-- add jianshu add target = "_blank" to <a> by BY -->
-                            
-                            <li>
-                                <a target="_blank" href="https://www.jianshu.com/u/a1d80b6eaa9e">
-                                    <span class="fa-stack fa-lg">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa  fa-stack-1x fa-inverse">简</i>
-                                    </span>
-                                </a>
-                            </li>
-                            
-                            
-                            
-                            <li>
-                                <a target="_blank" href="https://www.zhihu.com/people/japho">
-                                    <span class="fa-stack fa-lg">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa  fa-stack-1x fa-inverse">知</i>
-                                    </span>
-                                </a>
-                            </li>
-                            
-                            
-                            <li>
-                                <a target="_blank" href="http://weibo.com/wangjifeng1114">
-                                    <span class="fa-stack fa-lg">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
-                                    </span>
-                                </a>
-                            </li>
-                            
-                            
-                            
-                            <li>
-                                <a target="_blank" href="https://github.com/japho">
-                                    <span class="fa-stack fa-lg">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-                                    </span>
-                                </a>
-                            </li>
-                            
-                            
-                        </ul>
-                        
-                            <p>✉️ japhoo@163.com</p>
-                        
-                    </div>
-                </section>
                 <!-- Friends Blog -->
                 
                 <hr>
@@ -536,10 +343,50 @@ UIWindow *keyWindow = [[UIAp...
                     
                 </ul>
                 
-    		</div>
-        
-	</div>
-</div>
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        // BY Fix:去除标题前的‘#’ issues:<https://github.com/qiubaiying/qiubaiying.github.io/issues/137>
+        // anchors.options = {
+        //   visible: 'always',
+        //   placement: 'right',
+        //   icon: '#'
+        // };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
 
 
     <!-- Footer -->
@@ -716,6 +563,50 @@ UIWindow *keyWindow = [[UIAp...
 
 
 <!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
 
 
 

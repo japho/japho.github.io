@@ -10,7 +10,7 @@
     <meta name="keywords"  content="Japho, Japho Blog, Japho的博客, iOS, Apple, iPhone">
     <meta name="theme-color" content="#000000">
     
-    <title>Japho Blog</title>
+    <title>以ARC简化引用计数 - Japho Blog</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -22,7 +22,7 @@
     <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
     
     <!-- Canonical URL -->
-    <link rel="canonical" href="http://localhost:4000/page2/">
+    <link rel="canonical" href="http://localhost:4000/2018/07/10/simplify-retaincount-with-arc/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -152,374 +152,230 @@
 </script>
 
 
-    <!-- Page Header -->
-<header class="intro-header" style="background-image: url('/img/home-bg.jpg')">
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/postimage/post-bg-alibaba.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/postimage/post-bg-alibaba.jpg')
+    }
+
+    
+</style>
+<header class="intro-header" >
+    <div class="header-mask"></div>
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
-                <div class="site-heading">
-                    <h1>Japho Blog</h1>
-                    <!--<hr class="small">-->
-                    <span class="subheading">Hang on to your dreams.</span>
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#iOS" title="iOS">iOS</a>
+                        
+                        <a class="tag" href="/tags/#读书笔记" title="读书笔记">读书笔记</a>
+                        
+                    </div>
+                    <h1>以ARC简化引用计数</h1>
+                    
+                    
+                    <h2 class="subheading">《Effective Objective-C 2.0》读书笔记</h2>
+                    
+                    <span class="meta">Posted by Japho on July 10, 2018</span>
                 </div>
             </div>
         </div>
     </div>
 </header>
 
-<!-- Main Content -->
-<div class="container">
-	<div class="row">
-        
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
 
-<!-- USE SIDEBAR -->
-    <!-- PostList Container -->
-    		<div class="
-                col-lg-8 col-lg-offset-1
-                col-md-8 col-md-offset-1
-                col-sm-12
-                col-xs-12
-                postlist-container
-            ">
-    			
-<div class="post-preview">
-    <a href="/2018/06/29/coding-in-the-catergory/">
-        <h2 class="post-title">
-            编码习惯问题
-        </h2>
-        
-        <h3 class="post-subtitle">
-            《Effective Objective-C 2.0》读书笔记
-        </h3>
-        
-        <div class="post-content-preview">
-            将类的实现代码分散到便于管理的数个分类中
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
 
-当类中方法及实现过多的时候，可以考虑用Objective-C的“分类”机制，把代码按逻辑划分到几个分区中。通过分类机制，可以把类代码分成很多个易于管理...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on June 29, 2018
-    </p>
-</div>
-<hr>
+				<p>使用ARC时，引用计数实际上还是要执行的，只不过保留与释放操作现在是由ARC自动添加的。由于ARC会自动执行<code class="highlighter-rouge">retain</code>，<code class="highlighter-rouge">release</code>，<code class="highlighter-rouge">autorelease</code>等操作，所以直接在ARC下调用这些内存管理方法是非法的。</p>
 
-<div class="post-preview">
-    <a href="/2018/06/28/comprehend-Objective-C-error-type/">
-        <h2 class="post-title">
-            理解Objective-C错误类型
-        </h2>
-        
-        <h3 class="post-subtitle">
-            《Effective Objective-C 2.0》读书笔记
-        </h3>
-        
-        <div class="post-content-preview">
-            ARC下默认情况非“异常安全”，如果抛出异常，本应在作用域末尾释放的对象将不会进行自动释放了。若想生成“异常安全”代码，通过设置编译器的标志来实现，不过将引入一些额外代码，在不抛出异常时，也会照...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on June 28, 2018
-    </p>
-</div>
-<hr>
+<p><strong>例如以下方法：</strong></p>
 
-<div class="post-preview">
-    <a href="/2018/06/27/communication-between-obj-delegate-data-source/">
-        <h2 class="post-title">
-            通过委托与数据源协议进行对象间的通信
-        </h2>
-        
-        <h3 class="post-subtitle">
-            《Effective Objective-C 2.0》读书笔记
-        </h3>
-        
-        <div class="post-content-preview">
-            Objective-C不支持多继承，因此我们把某个类应该实现的一系列方法定义在协议里面。协议最常见的用途就是委托模式（delegate），“分类”（category），也是Objective-C...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on June 27, 2018
-    </p>
-</div>
-<hr>
+<ul>
+  <li>retain</li>
+  <li>release</li>
+  <li>autorelease</li>
+  <li>dealloc</li>
+</ul>
 
-<div class="post-preview">
-    <a href="/2018/06/26/comprehend-NSCopying-protocol/">
-        <h2 class="post-title">
-            理解NSCopying协议
-        </h2>
-        
-        <h3 class="post-subtitle">
-            《Effective Objective-C 2.0》读书笔记
-        </h3>
-        
-        <div class="post-content-preview">
-            在需要拷贝对象时，要通过copy方法来完成，如果想令自己创建的类支持拷贝操作，那就需要实现NSCopying协议，次协议只有一个方法：
+<p>直接调用这些方法会产生编译错误。</p>
 
-- (id)copyWithZone:(NSZone *...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on June 26, 2018
-    </p>
-</div>
-<hr>
+<h3 id="使用arc时必须遵循的方法命名规则">使用ARC时必须遵循的方法命名规则</h3>
 
-<div class="post-preview">
-    <a href="/2018/06/05/WWDC-2018/">
-        <h2 class="post-title">
-            5分钟带你看完 WWDC 2018
-        </h2>
-        
-        <h3 class="post-subtitle">
-            WWDC 2018 Keynote 全记录
-        </h3>
-        
-        <div class="post-content-preview">
-            前言
+<p>若以以下词语开头，其返回的对象归调用者所有：</p>
 
-一年一度的 WWDC（苹果全球开发者大会）于北京时间 6月5日 凌晨1点开幕。废话不多说，来看看这次WWDC 都有哪些亮点吧!
+<ul>
+  <li>alloc</li>
+  <li>new</li>
+  <li>copy</li>
+  <li>mutableCopy</li>
+</ul>
 
-iOS 12 和 ARKit 2.0
+<p><strong>归调用者所有的意思是：</strong></p>
 
+<blockquote>
+  <p>调用上述四种方法的那段代码要负责释放方法所返回的对象。也就是说，这些对象的保留计数是正值，而调用了这四种方法的那段代码要将其中一次保留操作抵消掉。</p>
 
-  关键词：官...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on June 5, 2018
-    </p>
-</div>
-<hr>
+  <p>除了自动调用“保留”与“释放”的方法之外，使用ARC时，他可以在编译期把能够相互抵消的<code class="highlighter-rouge">retain</code>、<code class="highlighter-rouge">release</code>、<code class="highlighter-rouge">auitorelease</code>操作约简。如果发现在同一个对象上执行了多次“保留”与“释放”操作，那么ARC有时也可以成对的移除这两个操作。</p>
+</blockquote>
 
-<div class="post-preview">
-    <a href="/2017/04/14/viewcontroller-push-or-present/">
-        <h2 class="post-title">
-            判断当前viewcontroller是push还是present的方式显示
-        </h2>
-        
-        <h3 class="post-subtitle">
-            妈妈再也不用担心我不会判断了
-        </h3>
-        
-        <div class="post-content-preview">
-            通过presentviewcontroller的方式显示的viewcontroller不会存入self.navigationController.viewControllers数组中。而通过pu...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on April 14, 2017
-    </p>
-</div>
-<hr>
+<h3 id="变量的内存管理语义">变量的内存管理语义</h3>
 
-<div class="post-preview">
-    <a href="/2017/02/14/find-first-responder/">
-        <h2 class="post-title">
-            如何查找当前的第一响应者
-        </h2>
-        
-        <h3 class="post-subtitle">
-            不调用私有API查找第一响应者
-        </h3>
-        
-        <div class="post-content-preview">
-            有时候总是有需求来获取当前的第一响应者，例如让TextField收键盘，隐藏视图等等操作都需要获取当前的第一响应者，那么该如何获取呢？
+<p>ARC会用一种安全的方式来设置：先保留新值，再释放旧值，最后设置实例变量。使用ARC之后，无需考虑这种“边界情况”。</p>
 
-UIWindow *keyWindow = [[UIAp...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on February 14, 2017
-    </p>
-</div>
-<hr>
+<p>在应用程序中，可用下列修饰符来改变局部变量与实例变量的语义：</p>
 
-<div class="post-preview">
-    <a href="/2016/11/09/Objective-C-enum/">
-        <h2 class="post-title">
-            Objective-C 枚举（位移枚举)
-        </h2>
-        
-        <h3 class="post-subtitle">
-            枚举真的有这么简单？快！上车！
-        </h3>
-        
-        <div class="post-content-preview">
-            什么是枚举
+<ul>
+  <li><code class="highlighter-rouge">__strong</code>：默认语义，保留这个值</li>
+  <li><code class="highlighter-rouge">__unsafe_unretained</code>：不保留这个值，（可能不安全，下次使用变量时，其对象可能已经被回收）</li>
+  <li><code class="highlighter-rouge">__weak</code>：不保留这个值，但是变量可以安全使用，因为如果系统把这个对象回收了，那么变量也会被自动清空。</li>
+  <li><code class="highlighter-rouge">__autoreleasing</code>：把对象“按引用传递”给方法时，使用这个特殊的修饰符，这个值在方法返回时自动释放。</li>
+</ul>
 
-在程序设计语言中，一般用一个数值来代表某一状态，这种处理方法不直观，易读性差。如果能在程序中用自然语言中有相应含义的单词来代表某一状态，则程序就很容易阅读和理解。也就是说，事先考虑...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on November 9, 2016
-    </p>
-</div>
-<hr>
+<p>例如：想令实力变脸的语义与不使用ARC时相同，可以运用<code class="highlighter-rouge">__weak</code>或<code class="highlighter-rouge">__unsafe_unretained</code>修饰符。</p>
 
-<div class="post-preview">
-    <a href="/2016/11/07/iOS-Widget-realiziton/">
-        <h2 class="post-title">
-            iOS Widget的简单实现
-        </h2>
-        
-        <h3 class="post-subtitle">
-            基于iOS10的插件开发
-        </h3>
-        
-        <div class="post-content-preview">
-            前言
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@interface EOCClass  :  NSObject
+{
+id __weak _weakObject;
+id __unsafe_unretained  _unsafeUnretainedObject;
+}
+</code></pre></div></div>
 
+<h3 id="arc如何清理实例变量">ARC如何清理实例变量</h3>
 
-  自iOS8之后，苹果支持了扩展（Extension）的开发，开发者可以通过系统提供给我们的扩展接入点 (Extension point) 来为系统特定的服务提供某些附加的功能。今年...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on November 7, 2016
-    </p>
-</div>
-<hr>
+<p>非Objective-C的对象，比如<code class="highlighter-rouge">CoreFoundation</code>框架中的对象，或是由<code class="highlighter-rouge">malloc()</code>分配在堆中的内存，这时仍然需要手动清理。这里调用<code class="highlighter-rouge">dealloc</code>方法时，并不需要调用超类的<code class="highlighter-rouge">dealloc</code>，在ARC下不能直接调用<code class="highlighter-rouge">dealloc</code>。ARC会自动生成代码并运行此方法，生成的代码中会自动调用超类的<code class="highlighter-rouge">dealloc()</code>方法。可以这么写：</p>
 
-<div class="post-preview">
-    <a href="/2016/11/01/Objective-C-singleton/">
-        <h2 class="post-title">
-            Objective-C 单例模式
-        </h2>
-        
-        <h3 class="post-subtitle">
-            单例模式，不是说说而已
-        </h3>
-        
-        <div class="post-content-preview">
-            何为单例模式
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-  (void)dealloc
+{
+CFRelease(_coreFoundationObject);
+free(_heapAllocatedMemoryBlob);
+}
+</code></pre></div></div>
 
+<h3 id="覆写内存管理方法">覆写内存管理方法</h3>
 
-  单例模式：保证一个类只有一个实例，并提供一个访问它的全局访问点。
+<p>不使用ARC时，可以覆写内存管理方法，但是在ARC环境下，不能这么做，因为会干扰ARC分析对象生命周期的工作。</p>
 
+<p><strong>要点：</strong></p>
 
-单例模式几乎是设计模式的最简单形式了。这一模式的意图是使得类的一个对象成为系统中的唯一实例。要实现这一...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on November 1, 2016
-    </p>
-</div>
-<hr>
-
-
-<!-- Pager -->
-
-<ul class="pager">
-    
-    <li class="previous">
-        <a href="/">&larr; Newer Posts</a>
-    </li>
-    
-    
-    <li class="next">
-        <a href="/page3">Older Posts &rarr;</a>
-    </li>
-    
+<ul>
+  <li>有ARC之后，程序员就无须担心内存管理问题了。使用ARC来编程，可省去勒种的许多“样板代码”。</li>
+  <li>ARC管理对象生命周期的办法基本上就是：在合适的地方插入“保留”及“释放”操作。在ARC环境下，变量的内存管理语义可以通过修饰符指明，而原来则需要手动执行“保留”及“释放”操作。</li>
+  <li>由方法所返回的对象，其内存管理语义总是通过方法名来体现。ARC将此确定为开发者必须遵守的规定。
+ARC只负责管理Objective-C对象的内存。<code class="highlighter-rouge">CoreFoundation</code>对象不归ARC管理，开发者需要在合适的时间调用<code class="highlighter-rouge">CFRetain</code>/<code class="highlighter-rouge">CFRelease</code>。</li>
 </ul>
 
 
-    		</div>
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2018/07/02/only-dealloc-notification-in-dealloc-methods/" data-toggle="tooltip" data-placement="top" title="在dealloc方法中只释放引用并解除监听">
+                        Previous<br>
+                        <span>在dealloc方法中只释放引用并解除监听</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2018/07/15/comprehend-retaincount/" data-toggle="tooltip" data-placement="top" title="理解引用计数">
+                        Next<br>
+                        <span>理解引用计数</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+
+                <!--Gitalk评论start  -->
+                
+                <!-- 引入Gitalk评论插件  -->
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+                <div id="gitalk-container"></div>
+                <!-- 引入一个生产md5的js，用于对id值进行处理，防止其过长 -->
+                <!-- Thank DF:https://github.com/NSDingFan/NSDingFan.github.io/issues/3#issuecomment-407496538 -->
+                <script src="/js/md5.min.js"></script>
+                <script type="text/javascript">
+                    var gitalk = new Gitalk({
+                    clientID: '440847f85c950402a76b',
+                    clientSecret: '92371c89905e71fe83cfd3815f779358726d9c48',
+                    repo: 'japho.github.io',
+                    owner: 'japho',
+                    admin: ['japho'],
+                    distractionFreeMode: true,
+                    id: md5(location.pathname),
+                    });
+                    gitalk.render('gitalk-container');
+                </script>
+                
+                <!-- Gitalk end -->
+
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
     <!-- Sidebar Container -->
             <div class="
-                col-lg-3 col-lg-offset-0
-                col-md-3 col-md-offset-0
-                col-sm-12
-                col-xs-12
-                sidebar-container
-            ">
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
                 <!-- Featured Tags -->
                 
                 <section>
                     <hr class="hidden-sm hidden-xs">
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
-                        
+        				
                             
-                                <a href="/tags/#iOS" title="iOS" rel="30">
+                				<a href="/tags/#iOS" title="iOS" rel="30">
                                     iOS
                                 </a>
                             
-                        
+        				
                             
-                                <a href="/tags/#读书笔记" title="读书笔记" rel="13">
+                				<a href="/tags/#读书笔记" title="读书笔记" rel="13">
                                     读书笔记
                                 </a>
                             
-                        
-                    </div>
+        				
+        			</div>
                 </section>
                 
 
-                <!-- Short About -->
-                <section class="visible-md visible-lg">
-                    <hr><h5><a href="/about/">ABOUT ME</a></h5>
-                    <div class="short-about">
-                        
-                            <a href="/about">
-                                <img src="/img/about-BY-gentle.jpg"/>
-                            </a>
-                        
-                        
-                            <p>The shortest answer is doing.</p>
-                        
-                        <!-- SNS Link -->
-                        <ul class="list-inline">
-                            
-                            <!-- add jianshu add target = "_blank" to <a> by BY -->
-                            
-                            <li>
-                                <a target="_blank" href="https://www.jianshu.com/u/a1d80b6eaa9e">
-                                    <span class="fa-stack fa-lg">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa  fa-stack-1x fa-inverse">简</i>
-                                    </span>
-                                </a>
-                            </li>
-                            
-                            
-                            
-                            <li>
-                                <a target="_blank" href="https://www.zhihu.com/people/japho">
-                                    <span class="fa-stack fa-lg">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa  fa-stack-1x fa-inverse">知</i>
-                                    </span>
-                                </a>
-                            </li>
-                            
-                            
-                            <li>
-                                <a target="_blank" href="http://weibo.com/wangjifeng1114">
-                                    <span class="fa-stack fa-lg">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
-                                    </span>
-                                </a>
-                            </li>
-                            
-                            
-                            
-                            <li>
-                                <a target="_blank" href="https://github.com/japho">
-                                    <span class="fa-stack fa-lg">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-                                    </span>
-                                </a>
-                            </li>
-                            
-                            
-                        </ul>
-                        
-                            <p>✉️ japhoo@163.com</p>
-                        
-                    </div>
-                </section>
                 <!-- Friends Blog -->
                 
                 <hr>
@@ -536,10 +392,50 @@ UIWindow *keyWindow = [[UIAp...
                     
                 </ul>
                 
-    		</div>
-        
-	</div>
-</div>
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        // BY Fix:去除标题前的‘#’ issues:<https://github.com/qiubaiying/qiubaiying.github.io/issues/137>
+        // anchors.options = {
+        //   visible: 'always',
+        //   placement: 'right',
+        //   icon: '#'
+        // };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
 
 
     <!-- Footer -->
@@ -716,6 +612,50 @@ UIWindow *keyWindow = [[UIAp...
 
 
 <!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
 
 
 

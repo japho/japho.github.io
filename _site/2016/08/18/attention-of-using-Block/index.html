@@ -10,7 +10,7 @@
     <meta name="keywords"  content="Japho, Japho Blog, Japho的博客, iOS, Apple, iPhone">
     <meta name="theme-color" content="#000000">
     
-    <title>Japho Blog</title>
+    <title>使用Block需注意的问题 - Japho Blog</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -22,7 +22,7 @@
     <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
     
     <!-- Canonical URL -->
-    <link rel="canonical" href="http://localhost:4000/page2/">
+    <link rel="canonical" href="http://localhost:4000/2016/08/18/attention-of-using-Block/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -152,374 +152,172 @@
 </script>
 
 
-    <!-- Page Header -->
-<header class="intro-header" style="background-image: url('/img/home-bg.jpg')">
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/postimage/post-bg-swift.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/postimage/post-bg-swift.jpg')
+    }
+
+    
+</style>
+<header class="intro-header" >
+    <div class="header-mask"></div>
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
-                <div class="site-heading">
-                    <h1>Japho Blog</h1>
-                    <!--<hr class="small">-->
-                    <span class="subheading">Hang on to your dreams.</span>
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#iOS" title="iOS">iOS</a>
+                        
+                    </div>
+                    <h1>使用Block需注意的问题</h1>
+                    
+                    
+                    <h2 class="subheading">Block,了解一下？</h2>
+                    
+                    <span class="meta">Posted by Japho on August 18, 2016</span>
                 </div>
             </div>
         </div>
     </div>
 </header>
 
-<!-- Main Content -->
-<div class="container">
-	<div class="row">
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<p><strong>1、block中引用外部变量</strong></p>
+
+<p>block中引用外部变量时，通常会把对象当做常量变量编码到block中，并且在block中尝试改变外部变量的值会报错，解决办法是引入<code class="highlighter-rouge">__block</code>标识符，需要在block内部修改的变量标识为<code class="highlighter-rouge">__block scope</code></p>
+
+<p><strong>2、block自身的内存管理</strong></p>
+
+<p>block本身是像对象一样可以retain，和release。但是，block在创建的时候，它的内存是分配在栈(stack)上，而不是在堆(heap)上。他本身的作于域是属于创建时候的作用域，一旦在创建时候的作用域外面调用block将导致程序崩溃。解决的方法就是在创建完block的时候需要调用copy的方法。copy会把block从栈上移动到堆上，那么就可以在其他地方使用这个block了:<code class="highlighter-rouge">_block = [_block copy];</code></p>
+
+<p><strong>3、循环引用</strong></p>
+
+<p>在block创建中：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>_block = ^( ) { NSLog:(@“string %@“,_string ) }; 
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">_string</code>是成员变量
+这里的<code class="highlighter-rouge">_string</code>相当于是<code class="highlighter-rouge">self-&gt;_string</code>；那么block是会对内部的对象进行一次retain。也就是说，self会被retain一次。当self释放的时候，需要block释放后才会对self进行释放，但是block的释放又需要等self的dealloc中才会释放。如此一来变形成了循环引用，导致内存泄露。修改方案是新建一个<code class="highlighter-rouge">__block scope</code>的局部变量，并把self赋值给它，而在block内部则使用这个局部变量来进行取值。因为<code class="highlighter-rouge">__block</code>标记的变量是不会被自动retain的。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>__block ViewController *controller = self;
+_block = ^(){NSLog(@"string %@", controller-&gt;_string); };
+</code></pre></div></div>
+
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2016/07/16/UIButton-passes-multiple-parameters/" data-toggle="tooltip" data-placement="top" title="UIButton传递多个参数的方法">
+                        Previous<br>
+                        <span>UIButton传递多个参数的方法</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2016/08/23/runtime-OC-execution-order/" data-toggle="tooltip" data-placement="top" title="runtime OC类执行顺序">
+                        Next<br>
+                        <span>runtime OC类执行顺序</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+
+                <!--Gitalk评论start  -->
+                
+                <!-- 引入Gitalk评论插件  -->
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+                <div id="gitalk-container"></div>
+                <!-- 引入一个生产md5的js，用于对id值进行处理，防止其过长 -->
+                <!-- Thank DF:https://github.com/NSDingFan/NSDingFan.github.io/issues/3#issuecomment-407496538 -->
+                <script src="/js/md5.min.js"></script>
+                <script type="text/javascript">
+                    var gitalk = new Gitalk({
+                    clientID: '440847f85c950402a76b',
+                    clientSecret: '92371c89905e71fe83cfd3815f779358726d9c48',
+                    repo: 'japho.github.io',
+                    owner: 'japho',
+                    admin: ['japho'],
+                    distractionFreeMode: true,
+                    id: md5(location.pathname),
+                    });
+                    gitalk.render('gitalk-container');
+                </script>
+                
+                <!-- Gitalk end -->
+
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
         
 
-<!-- USE SIDEBAR -->
-    <!-- PostList Container -->
-    		<div class="
-                col-lg-8 col-lg-offset-1
-                col-md-8 col-md-offset-1
-                col-sm-12
-                col-xs-12
-                postlist-container
-            ">
-    			
-<div class="post-preview">
-    <a href="/2018/06/29/coding-in-the-catergory/">
-        <h2 class="post-title">
-            编码习惯问题
-        </h2>
-        
-        <h3 class="post-subtitle">
-            《Effective Objective-C 2.0》读书笔记
-        </h3>
-        
-        <div class="post-content-preview">
-            将类的实现代码分散到便于管理的数个分类中
-
-当类中方法及实现过多的时候，可以考虑用Objective-C的“分类”机制，把代码按逻辑划分到几个分区中。通过分类机制，可以把类代码分成很多个易于管理...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on June 29, 2018
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2018/06/28/comprehend-Objective-C-error-type/">
-        <h2 class="post-title">
-            理解Objective-C错误类型
-        </h2>
-        
-        <h3 class="post-subtitle">
-            《Effective Objective-C 2.0》读书笔记
-        </h3>
-        
-        <div class="post-content-preview">
-            ARC下默认情况非“异常安全”，如果抛出异常，本应在作用域末尾释放的对象将不会进行自动释放了。若想生成“异常安全”代码，通过设置编译器的标志来实现，不过将引入一些额外代码，在不抛出异常时，也会照...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on June 28, 2018
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2018/06/27/communication-between-obj-delegate-data-source/">
-        <h2 class="post-title">
-            通过委托与数据源协议进行对象间的通信
-        </h2>
-        
-        <h3 class="post-subtitle">
-            《Effective Objective-C 2.0》读书笔记
-        </h3>
-        
-        <div class="post-content-preview">
-            Objective-C不支持多继承，因此我们把某个类应该实现的一系列方法定义在协议里面。协议最常见的用途就是委托模式（delegate），“分类”（category），也是Objective-C...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on June 27, 2018
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2018/06/26/comprehend-NSCopying-protocol/">
-        <h2 class="post-title">
-            理解NSCopying协议
-        </h2>
-        
-        <h3 class="post-subtitle">
-            《Effective Objective-C 2.0》读书笔记
-        </h3>
-        
-        <div class="post-content-preview">
-            在需要拷贝对象时，要通过copy方法来完成，如果想令自己创建的类支持拷贝操作，那就需要实现NSCopying协议，次协议只有一个方法：
-
-- (id)copyWithZone:(NSZone *...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on June 26, 2018
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2018/06/05/WWDC-2018/">
-        <h2 class="post-title">
-            5分钟带你看完 WWDC 2018
-        </h2>
-        
-        <h3 class="post-subtitle">
-            WWDC 2018 Keynote 全记录
-        </h3>
-        
-        <div class="post-content-preview">
-            前言
-
-一年一度的 WWDC（苹果全球开发者大会）于北京时间 6月5日 凌晨1点开幕。废话不多说，来看看这次WWDC 都有哪些亮点吧!
-
-iOS 12 和 ARKit 2.0
-
-
-  关键词：官...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on June 5, 2018
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2017/04/14/viewcontroller-push-or-present/">
-        <h2 class="post-title">
-            判断当前viewcontroller是push还是present的方式显示
-        </h2>
-        
-        <h3 class="post-subtitle">
-            妈妈再也不用担心我不会判断了
-        </h3>
-        
-        <div class="post-content-preview">
-            通过presentviewcontroller的方式显示的viewcontroller不会存入self.navigationController.viewControllers数组中。而通过pu...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on April 14, 2017
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2017/02/14/find-first-responder/">
-        <h2 class="post-title">
-            如何查找当前的第一响应者
-        </h2>
-        
-        <h3 class="post-subtitle">
-            不调用私有API查找第一响应者
-        </h3>
-        
-        <div class="post-content-preview">
-            有时候总是有需求来获取当前的第一响应者，例如让TextField收键盘，隐藏视图等等操作都需要获取当前的第一响应者，那么该如何获取呢？
-
-UIWindow *keyWindow = [[UIAp...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on February 14, 2017
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2016/11/09/Objective-C-enum/">
-        <h2 class="post-title">
-            Objective-C 枚举（位移枚举)
-        </h2>
-        
-        <h3 class="post-subtitle">
-            枚举真的有这么简单？快！上车！
-        </h3>
-        
-        <div class="post-content-preview">
-            什么是枚举
-
-在程序设计语言中，一般用一个数值来代表某一状态，这种处理方法不直观，易读性差。如果能在程序中用自然语言中有相应含义的单词来代表某一状态，则程序就很容易阅读和理解。也就是说，事先考虑...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on November 9, 2016
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2016/11/07/iOS-Widget-realiziton/">
-        <h2 class="post-title">
-            iOS Widget的简单实现
-        </h2>
-        
-        <h3 class="post-subtitle">
-            基于iOS10的插件开发
-        </h3>
-        
-        <div class="post-content-preview">
-            前言
-
-
-  自iOS8之后，苹果支持了扩展（Extension）的开发，开发者可以通过系统提供给我们的扩展接入点 (Extension point) 来为系统特定的服务提供某些附加的功能。今年...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on November 7, 2016
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2016/11/01/Objective-C-singleton/">
-        <h2 class="post-title">
-            Objective-C 单例模式
-        </h2>
-        
-        <h3 class="post-subtitle">
-            单例模式，不是说说而已
-        </h3>
-        
-        <div class="post-content-preview">
-            何为单例模式
-
-
-  单例模式：保证一个类只有一个实例，并提供一个访问它的全局访问点。
-
-
-单例模式几乎是设计模式的最简单形式了。这一模式的意图是使得类的一个对象成为系统中的唯一实例。要实现这一...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on November 1, 2016
-    </p>
-</div>
-<hr>
-
-
-<!-- Pager -->
-
-<ul class="pager">
-    
-    <li class="previous">
-        <a href="/">&larr; Newer Posts</a>
-    </li>
-    
-    
-    <li class="next">
-        <a href="/page3">Older Posts &rarr;</a>
-    </li>
-    
-</ul>
-
-
-    		</div>
     <!-- Sidebar Container -->
             <div class="
-                col-lg-3 col-lg-offset-0
-                col-md-3 col-md-offset-0
-                col-sm-12
-                col-xs-12
-                sidebar-container
-            ">
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
                 <!-- Featured Tags -->
                 
                 <section>
                     <hr class="hidden-sm hidden-xs">
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
-                        
+        				
                             
-                                <a href="/tags/#iOS" title="iOS" rel="30">
+                				<a href="/tags/#iOS" title="iOS" rel="30">
                                     iOS
                                 </a>
                             
-                        
+        				
                             
-                                <a href="/tags/#读书笔记" title="读书笔记" rel="13">
+                				<a href="/tags/#读书笔记" title="读书笔记" rel="13">
                                     读书笔记
                                 </a>
                             
-                        
-                    </div>
+        				
+        			</div>
                 </section>
                 
 
-                <!-- Short About -->
-                <section class="visible-md visible-lg">
-                    <hr><h5><a href="/about/">ABOUT ME</a></h5>
-                    <div class="short-about">
-                        
-                            <a href="/about">
-                                <img src="/img/about-BY-gentle.jpg"/>
-                            </a>
-                        
-                        
-                            <p>The shortest answer is doing.</p>
-                        
-                        <!-- SNS Link -->
-                        <ul class="list-inline">
-                            
-                            <!-- add jianshu add target = "_blank" to <a> by BY -->
-                            
-                            <li>
-                                <a target="_blank" href="https://www.jianshu.com/u/a1d80b6eaa9e">
-                                    <span class="fa-stack fa-lg">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa  fa-stack-1x fa-inverse">简</i>
-                                    </span>
-                                </a>
-                            </li>
-                            
-                            
-                            
-                            <li>
-                                <a target="_blank" href="https://www.zhihu.com/people/japho">
-                                    <span class="fa-stack fa-lg">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa  fa-stack-1x fa-inverse">知</i>
-                                    </span>
-                                </a>
-                            </li>
-                            
-                            
-                            <li>
-                                <a target="_blank" href="http://weibo.com/wangjifeng1114">
-                                    <span class="fa-stack fa-lg">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
-                                    </span>
-                                </a>
-                            </li>
-                            
-                            
-                            
-                            <li>
-                                <a target="_blank" href="https://github.com/japho">
-                                    <span class="fa-stack fa-lg">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-                                    </span>
-                                </a>
-                            </li>
-                            
-                            
-                        </ul>
-                        
-                            <p>✉️ japhoo@163.com</p>
-                        
-                    </div>
-                </section>
                 <!-- Friends Blog -->
                 
                 <hr>
@@ -536,10 +334,50 @@ UIWindow *keyWindow = [[UIAp...
                     
                 </ul>
                 
-    		</div>
-        
-	</div>
-</div>
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        // BY Fix:去除标题前的‘#’ issues:<https://github.com/qiubaiying/qiubaiying.github.io/issues/137>
+        // anchors.options = {
+        //   visible: 'always',
+        //   placement: 'right',
+        //   icon: '#'
+        // };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
 
 
     <!-- Footer -->
@@ -716,6 +554,50 @@ UIWindow *keyWindow = [[UIAp...
 
 
 <!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
 
 
 

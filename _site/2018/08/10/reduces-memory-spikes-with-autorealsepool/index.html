@@ -10,7 +10,7 @@
     <meta name="keywords"  content="Japho, Japho Blog, Japho的博客, iOS, Apple, iPhone">
     <meta name="theme-color" content="#000000">
     
-    <title>Japho Blog</title>
+    <title>以“自动释放池块”降低内存峰值 - Japho Blog</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -22,7 +22,7 @@
     <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
     
     <!-- Canonical URL -->
-    <link rel="canonical" href="http://localhost:4000/page2/">
+    <link rel="canonical" href="http://localhost:4000/2018/08/10/reduces-memory-spikes-with-autorealsepool/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -152,374 +152,212 @@
 </script>
 
 
-    <!-- Page Header -->
-<header class="intro-header" style="background-image: url('/img/home-bg.jpg')">
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/postimage/post_computer.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/postimage/post_computer.jpg')
+    }
+
+    
+</style>
+<header class="intro-header" >
+    <div class="header-mask"></div>
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
-                <div class="site-heading">
-                    <h1>Japho Blog</h1>
-                    <!--<hr class="small">-->
-                    <span class="subheading">Hang on to your dreams.</span>
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#iOS" title="iOS">iOS</a>
+                        
+                        <a class="tag" href="/tags/#读书笔记" title="读书笔记">读书笔记</a>
+                        
+                    </div>
+                    <h1>以“自动释放池块”降低内存峰值</h1>
+                    
+                    
+                    <h2 class="subheading">《Effective Objective-C 2.0》读书笔记</h2>
+                    
+                    <span class="meta">Posted by Japho on August 10, 2018</span>
                 </div>
             </div>
         </div>
     </div>
 </header>
 
-<!-- Main Content -->
-<div class="container">
-	<div class="row">
-        
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
 
-<!-- USE SIDEBAR -->
-    <!-- PostList Container -->
-    		<div class="
-                col-lg-8 col-lg-offset-1
-                col-md-8 col-md-offset-1
-                col-sm-12
-                col-xs-12
-                postlist-container
-            ">
-    			
-<div class="post-preview">
-    <a href="/2018/06/29/coding-in-the-catergory/">
-        <h2 class="post-title">
-            编码习惯问题
-        </h2>
-        
-        <h3 class="post-subtitle">
-            《Effective Objective-C 2.0》读书笔记
-        </h3>
-        
-        <div class="post-content-preview">
-            将类的实现代码分散到便于管理的数个分类中
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
 
-当类中方法及实现过多的时候，可以考虑用Objective-C的“分类”机制，把代码按逻辑划分到几个分区中。通过分类机制，可以把类代码分成很多个易于管理...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on June 29, 2018
-    </p>
-</div>
-<hr>
+				<p>释放对象有两种方式：一种是调用<code class="highlighter-rouge">release</code>方法，使其保留计数立即递减；另一种是调用<code class="highlighter-rouge">autorelease</code>方法，将其加入到“自动释放池”中。自动释放池用于存放那些需要稍后再某个时刻释放的对象。清空（<code class="highlighter-rouge">drain</code>）自动释放池时，系统会向其中的对象发送<code class="highlighter-rouge">release</code>信息。</p>
 
-<div class="post-preview">
-    <a href="/2018/06/28/comprehend-Objective-C-error-type/">
-        <h2 class="post-title">
-            理解Objective-C错误类型
-        </h2>
-        
-        <h3 class="post-subtitle">
-            《Effective Objective-C 2.0》读书笔记
-        </h3>
-        
-        <div class="post-content-preview">
-            ARC下默认情况非“异常安全”，如果抛出异常，本应在作用域末尾释放的对象将不会进行自动释放了。若想生成“异常安全”代码，通过设置编译器的标志来实现，不过将引入一些额外代码，在不抛出异常时，也会照...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on June 28, 2018
-    </p>
-</div>
-<hr>
+<p>一般情况下无需担心自动释放池的创建问题。系统会自动创建一些线程，例如主线程，或GCD机制中的线程，这些线程默认都是自动释放池的，每次执行事件循环（<code class="highlighter-rouge">event loop</code>）时，就会将其清空。因此，不需要自己创建“自动释放池块”。通常只有一个地方需要创建自动释放池，那就是在main函数中。用自动释放池来包裹应用程序的主入口点。</p>
 
-<div class="post-preview">
-    <a href="/2018/06/27/communication-between-obj-delegate-data-source/">
-        <h2 class="post-title">
-            通过委托与数据源协议进行对象间的通信
-        </h2>
-        
-        <h3 class="post-subtitle">
-            《Effective Objective-C 2.0》读书笔记
-        </h3>
-        
-        <div class="post-content-preview">
-            Objective-C不支持多继承，因此我们把某个类应该实现的一系列方法定义在协议里面。协议最常见的用途就是委托模式（delegate），“分类”（category），也是Objective-C...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on June 27, 2018
-    </p>
-</div>
-<hr>
+<p>例如：</p>
 
-<div class="post-preview">
-    <a href="/2018/06/26/comprehend-NSCopying-protocol/">
-        <h2 class="post-title">
-            理解NSCopying协议
-        </h2>
-        
-        <h3 class="post-subtitle">
-            《Effective Objective-C 2.0》读书笔记
-        </h3>
-        
-        <div class="post-content-preview">
-            在需要拷贝对象时，要通过copy方法来完成，如果想令自己创建的类支持拷贝操作，那就需要实现NSCopying协议，次协议只有一个方法：
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int main(int argc,  char *argv[])
+{
+@autoreleasepool{
+return UIApplicationMain(argc,  argv,  nil,  @"AppDelegate");
+}
+}
+</code></pre></div></div>
 
-- (id)copyWithZone:(NSZone *...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on June 26, 2018
-    </p>
-</div>
-<hr>
+<p>如果不写这个块的话，那么由<code class="highlighter-rouge">UIApplicationMain</code>函数所释放的那些对象，就没有自动释放池可以容纳了，系统会警告。这个池可以理解成最外围捕捉全部自动释放对象所用的池。</p>
 
-<div class="post-preview">
-    <a href="/2018/06/05/WWDC-2018/">
-        <h2 class="post-title">
-            5分钟带你看完 WWDC 2018
-        </h2>
-        
-        <h3 class="post-subtitle">
-            WWDC 2018 Keynote 全记录
-        </h3>
-        
-        <div class="post-content-preview">
-            前言
+<p>自动释放池于左花括号处创建，并于右花括号处自动清空。位于自动释放池范围内的对象，将在此范围末尾处收到<code class="highlighter-rouge">release</code>消息。自动释放池可以嵌套。系统在自动释放对象时，会把它放到最内层的池里。</p>
 
-一年一度的 WWDC（苹果全球开发者大会）于北京时间 6月5日 凌晨1点开幕。废话不多说，来看看这次WWDC 都有哪些亮点吧!
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@autoreleasepool{
+NSString *string =  [NSString  stringWithFormat:@"1  =  %i",  1];
 
-iOS 12 和 ARKit 2.0
+@autoreleasepool{
+NSNumber  *number =  [NSNumber  numberWithInt:1];
+}
+}
+</code></pre></div></div>
 
+<p>这两个对象都由类的工厂方法创建，这样创建出来的对象会自动释放。<code class="highlighter-rouge">NSString</code>对象在外围的自动释放池中，<code class="highlighter-rouge">NSNumber</code>在里层的自动释放池中。将自动释放池嵌套使用的好处是，可以借此控制应用程序的内存峰值，使其不致过高。</p>
 
-  关键词：官...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on June 5, 2018
-    </p>
-</div>
-<hr>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for (int i =  0;i &lt; 10000;  i++)
+{
+[self doSomethingWithInt:i];
+}
+</code></pre></div></div>
 
-<div class="post-preview">
-    <a href="/2017/04/14/viewcontroller-push-or-present/">
-        <h2 class="post-title">
-            判断当前viewcontroller是push还是present的方式显示
-        </h2>
-        
-        <h3 class="post-subtitle">
-            妈妈再也不用担心我不会判断了
-        </h3>
-        
-        <div class="post-content-preview">
-            通过presentviewcontroller的方式显示的viewcontroller不会存入self.navigationController.viewControllers数组中。而通过pu...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on April 14, 2017
-    </p>
-</div>
-<hr>
+<p>如果方法<code class="highlighter-rouge">doSomethingWithInt:</code>要创建临时对象，那么这些对象很有可能放在自动释放池里，但是即便这些对象在调用完方法之后就不再使用了，他们也依然处于存活状态，因为目前还在自动释放池里。等系统线程执行下一次事件循环时才会清空。这意味着在执行<code class="highlighter-rouge">for</code>循环时，会持续有新的对象创建出来，并加入自动释放池中。所有这种对象都要等for循环执行完毕才会释放，这样一来，在执行<code class="highlighter-rouge">for</code>循环时，应用程序所占内存量就会持续上涨，而等到所有临时对象都释放后，内存用量又会突然下降。</p>
 
-<div class="post-preview">
-    <a href="/2017/02/14/find-first-responder/">
-        <h2 class="post-title">
-            如何查找当前的第一响应者
-        </h2>
-        
-        <h3 class="post-subtitle">
-            不调用私有API查找第一响应者
-        </h3>
-        
-        <div class="post-content-preview">
-            有时候总是有需求来获取当前的第一响应者，例如让TextField收键盘，隐藏视图等等操作都需要获取当前的第一响应者，那么该如何获取呢？
+<p>这里增加一个自动释放池即可解决此问题。把循环内的代码包裹在“自动释放池块”中，那么在循环中自动释放的对象就会放在这个池，而不是线程的主池里面。</p>
 
-UIWindow *keyWindow = [[UIAp...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on February 14, 2017
-    </p>
-</div>
-<hr>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for (int i =  0;i &lt; 10000;  i++)
+{
+@autoreleasepool{
+[self doSomethingWithInt:i];
+}
+}
+</code></pre></div></div>
 
-<div class="post-preview">
-    <a href="/2016/11/09/Objective-C-enum/">
-        <h2 class="post-title">
-            Objective-C 枚举（位移枚举)
-        </h2>
-        
-        <h3 class="post-subtitle">
-            枚举真的有这么简单？快！上车！
-        </h3>
-        
-        <div class="post-content-preview">
-            什么是枚举
+<p>加上这个自动释放池之后，执行循环时内存峰值就会降低。内存峰值：应用程序在某个特定的时间段内的最大内存用量。新增自动释放吃块可以减少峰值，是因为系统会在块的末位把某些对象回收掉。</p>
 
-在程序设计语言中，一般用一个数值来代表某一状态，这种处理方法不直观，易读性差。如果能在程序中用自然语言中有相应含义的单词来代表某一状态，则程序就很容易阅读和理解。也就是说，事先考虑...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on November 9, 2016
-    </p>
-</div>
-<hr>
+<p>自动释放池机制就像“栈”一样。系统创建好自动释放池之后，就将其推入栈中，而清空自动释放池，则相当于将其从栈中弹出。在对象上执行自动释放操作，就等于将其放入栈顶的那个池里。</p>
 
-<div class="post-preview">
-    <a href="/2016/11/07/iOS-Widget-realiziton/">
-        <h2 class="post-title">
-            iOS Widget的简单实现
-        </h2>
-        
-        <h3 class="post-subtitle">
-            基于iOS10的插件开发
-        </h3>
-        
-        <div class="post-content-preview">
-            前言
+<p><strong>要点：</strong></p>
 
-
-  自iOS8之后，苹果支持了扩展（Extension）的开发，开发者可以通过系统提供给我们的扩展接入点 (Extension point) 来为系统特定的服务提供某些附加的功能。今年...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on November 7, 2016
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2016/11/01/Objective-C-singleton/">
-        <h2 class="post-title">
-            Objective-C 单例模式
-        </h2>
-        
-        <h3 class="post-subtitle">
-            单例模式，不是说说而已
-        </h3>
-        
-        <div class="post-content-preview">
-            何为单例模式
-
-
-  单例模式：保证一个类只有一个实例，并提供一个访问它的全局访问点。
-
-
-单例模式几乎是设计模式的最简单形式了。这一模式的意图是使得类的一个对象成为系统中的唯一实例。要实现这一...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on November 1, 2016
-    </p>
-</div>
-<hr>
-
-
-<!-- Pager -->
-
-<ul class="pager">
-    
-    <li class="previous">
-        <a href="/">&larr; Newer Posts</a>
-    </li>
-    
-    
-    <li class="next">
-        <a href="/page3">Older Posts &rarr;</a>
-    </li>
-    
+<ul>
+  <li>自动释放池排布在栈中，对象收到<code class="highlighter-rouge">autorelease</code>消息后，系统将其放入最顶端的池里。</li>
+  <li>合理运用自动释放池，可降低应用程序的内存峰值。</li>
+  <li><code class="highlighter-rouge">@autoreleasepool</code>这种新写法大能创建出更为轻便的自动释放池。</li>
 </ul>
 
 
-    		</div>
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2018/08/06/aviod-retain-cycle-with-weak-property/" data-toggle="tooltip" data-placement="top" title="以弱引用避免保留环">
+                        Previous<br>
+                        <span>以弱引用避免保留环</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2018/08/12/comprehend-the-conception-of-block/" data-toggle="tooltip" data-placement="top" title="理解“块”这一概念">
+                        Next<br>
+                        <span>理解“块”这一概念</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+
+                <!--Gitalk评论start  -->
+                
+                <!-- 引入Gitalk评论插件  -->
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+                <div id="gitalk-container"></div>
+                <!-- 引入一个生产md5的js，用于对id值进行处理，防止其过长 -->
+                <!-- Thank DF:https://github.com/NSDingFan/NSDingFan.github.io/issues/3#issuecomment-407496538 -->
+                <script src="/js/md5.min.js"></script>
+                <script type="text/javascript">
+                    var gitalk = new Gitalk({
+                    clientID: '440847f85c950402a76b',
+                    clientSecret: '92371c89905e71fe83cfd3815f779358726d9c48',
+                    repo: 'japho.github.io',
+                    owner: 'japho',
+                    admin: ['japho'],
+                    distractionFreeMode: true,
+                    id: md5(location.pathname),
+                    });
+                    gitalk.render('gitalk-container');
+                </script>
+                
+                <!-- Gitalk end -->
+
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
     <!-- Sidebar Container -->
             <div class="
-                col-lg-3 col-lg-offset-0
-                col-md-3 col-md-offset-0
-                col-sm-12
-                col-xs-12
-                sidebar-container
-            ">
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
                 <!-- Featured Tags -->
                 
                 <section>
                     <hr class="hidden-sm hidden-xs">
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
-                        
+        				
                             
-                                <a href="/tags/#iOS" title="iOS" rel="30">
+                				<a href="/tags/#iOS" title="iOS" rel="30">
                                     iOS
                                 </a>
                             
-                        
+        				
                             
-                                <a href="/tags/#读书笔记" title="读书笔记" rel="13">
+                				<a href="/tags/#读书笔记" title="读书笔记" rel="13">
                                     读书笔记
                                 </a>
                             
-                        
-                    </div>
+        				
+        			</div>
                 </section>
                 
 
-                <!-- Short About -->
-                <section class="visible-md visible-lg">
-                    <hr><h5><a href="/about/">ABOUT ME</a></h5>
-                    <div class="short-about">
-                        
-                            <a href="/about">
-                                <img src="/img/about-BY-gentle.jpg"/>
-                            </a>
-                        
-                        
-                            <p>The shortest answer is doing.</p>
-                        
-                        <!-- SNS Link -->
-                        <ul class="list-inline">
-                            
-                            <!-- add jianshu add target = "_blank" to <a> by BY -->
-                            
-                            <li>
-                                <a target="_blank" href="https://www.jianshu.com/u/a1d80b6eaa9e">
-                                    <span class="fa-stack fa-lg">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa  fa-stack-1x fa-inverse">简</i>
-                                    </span>
-                                </a>
-                            </li>
-                            
-                            
-                            
-                            <li>
-                                <a target="_blank" href="https://www.zhihu.com/people/japho">
-                                    <span class="fa-stack fa-lg">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa  fa-stack-1x fa-inverse">知</i>
-                                    </span>
-                                </a>
-                            </li>
-                            
-                            
-                            <li>
-                                <a target="_blank" href="http://weibo.com/wangjifeng1114">
-                                    <span class="fa-stack fa-lg">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
-                                    </span>
-                                </a>
-                            </li>
-                            
-                            
-                            
-                            <li>
-                                <a target="_blank" href="https://github.com/japho">
-                                    <span class="fa-stack fa-lg">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-                                    </span>
-                                </a>
-                            </li>
-                            
-                            
-                        </ul>
-                        
-                            <p>✉️ japhoo@163.com</p>
-                        
-                    </div>
-                </section>
                 <!-- Friends Blog -->
                 
                 <hr>
@@ -536,10 +374,50 @@ UIWindow *keyWindow = [[UIAp...
                     
                 </ul>
                 
-    		</div>
-        
-	</div>
-</div>
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        // BY Fix:去除标题前的‘#’ issues:<https://github.com/qiubaiying/qiubaiying.github.io/issues/137>
+        // anchors.options = {
+        //   visible: 'always',
+        //   placement: 'right',
+        //   icon: '#'
+        // };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
 
 
     <!-- Footer -->
@@ -716,6 +594,50 @@ UIWindow *keyWindow = [[UIAp...
 
 
 <!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
 
 
 

@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="The shortest answer is doing.">
+    <meta name="keywords"  content="Japho, Japho Blog, Japho的博客, iOS, Apple, iPhone">
+    <meta name="theme-color" content="#000000">
+    
+    <title>iOS 微博第三方登录的实现 - Japho Blog</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <!-- Safari Webpage Icon    by-BY -->
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="http://localhost:4000/2016/04/19/weibo-third-party-login/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Japho Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/postimage/post_computer.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/postimage/post_computer.jpg')
+    }
+
+    
+</style>
+<header class="intro-header" >
+    <div class="header-mask"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#iOS" title="iOS">iOS</a>
+                        
+                    </div>
+                    <h1>iOS 微博第三方登录的实现</h1>
+                    
+                    
+                    <h2 class="subheading">基于微博原生SDK开发实现</h2>
+                    
+                    <span class="meta">Posted by Japho on April 19, 2016</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<h3 id="下载微博sdk">下载微博SDK</h3>
+
+<p>微博SDK的官方github：<a href="https://github.com/sinaweibosdk/weibo_ios_sdk">https://github.com/sinaweibosdk/weibo_ios_sdk</a>
+下载所需要的SDK</p>
+
+<h3 id="集成sdk">集成SDK</h3>
+
+<p>下载后的SDK文件结构如下：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1269906-df38a81f23cecd38.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>将这个文件夹拖拽到你所要添加的工程中。</p>
+
+<h3 id="引入依赖库及相关设置">引入依赖库及相关设置</h3>
+
+<p><strong>如图点击添加依赖库</strong></p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1269906-06737caa9db98130.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p><strong>所需依赖库：</strong></p>
+
+<blockquote>
+  <p><code class="highlighter-rouge">QuartzCore.framework</code>,
+<code class="highlighter-rouge">ImageIO.framework</code>,
+<code class="highlighter-rouge">SystemConfiguration.framework</code>,
+<code class="highlighter-rouge">Security.framework</code>,
+<code class="highlighter-rouge">CoreTelephony.framework</code>,
+<code class="highlighter-rouge">CoreText.framework</code>,
+<code class="highlighter-rouge">UIKit.framework</code>,
+<code class="highlighter-rouge">Foundation.framework</code>,
+<code class="highlighter-rouge">CoreGraphics.framework</code>,
+<code class="highlighter-rouge">libz.dylib</code>,
+<code class="highlighter-rouge">ibsqlite3.dylib</code></p>
+</blockquote>
+
+<p><strong>添加编译选项：</strong></p>
+
+<p>引入静态库后，需添加-ObjC编译选项，避免静态库中类加载不全引起崩溃。</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1269906-e514ec4a7ce1f65e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<h3 id="创建应用">创建应用</h3>
+
+<p>参考SDK包文件中文档进行应用的创建，这里要强调一下，申请应用时的AppleID和BundleID一定要与工程对应，否则运行会出错，无法进行授权。</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1269906-ffcfb508fe04dacc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<h3 id="设置工程回调url-scheme">设置工程回调URL Scheme</h3>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1269906-f7fa91be97a49511.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>如图，设置<code class="highlighter-rouge">URLSchemes</code>为你申请的<code class="highlighter-rouge">AppKey</code>,
+例如:<code class="highlighter-rouge">wb25432236852</code></p>
+
+<h3 id="编写代码">编写代码</h3>
+
+<ul>
+  <li>在<code class="highlighter-rouge">Appdelegate</code>中导入头文件，声明遵循微博代理</li>
+</ul>
+
+<p><code class="highlighter-rouge">Appdelegate.m</code></p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="cp">#import &lt;UIKit/UIKit.h&gt;  </span>
+<span class="cp">#import "WeiboSDK.h"  </span>
+  
+<span class="cp">#define kAppKey         @"这里是你的AppKey"  </span>
+<span class="cp">#define kRedirectURI    @"这里是你的回调网址"  </span>
+  
+<span class="kd">@interface</span> <span class="kt">AppDelegate</span> <span class="p">:</span> <span class="kt">UIResponder</span> <span class="o">&lt;</span><span class="kt">UIApplicationDelegate</span><span class="p">,</span> <span class="kt">WeiboSDKDelegate</span><span class="o">&gt;</span>  
+  
+<span class="kd">@property</span> <span class="p">(</span><span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="kt">UIWindow</span> <span class="o">*</span><span class="n">window</span><span class="p">;</span>  
+  
+<span class="kd">@end</span>  
+
+</code></pre></div></div>
+
+<ul>
+  <li>在<code class="highlighter-rouge">Appdelegate</code>中注册微博SDK</li>
+</ul>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="o">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nv">application</span><span class="p">:(</span><span class="kt">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="n">application</span> <span class="nv">didFinishLaunchingWithOptions</span><span class="p">:(</span><span class="kt">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="n">launchOptions</span> <span class="p">{</span>  
+    <span class="c1">// Override point for customization after application launch.  </span>
+      
+    <span class="p">[</span><span class="kt">WeiboSDK</span> <span class="nv">enableDebugMode</span><span class="p">:</span><span class="kt">YES</span><span class="p">];</span>  
+    <span class="p">[</span><span class="kt">WeiboSDK</span> <span class="nv">registerApp</span><span class="p">:</span><span class="s">@"这里填写你申请的Appkey"</span><span class="p">];</span>  
+      
+    <span class="k">return</span> <span class="kt">YES</span><span class="p">;</span>  
+<span class="p">}</span>  
+
+</code></pre></div></div>
+
+<ul>
+  <li>重写<code class="highlighter-rouge">AppDelegate</code>中的<code class="highlighter-rouge">handleOpenURL</code>和<code class="highlighter-rouge">openURL</code>方法</li>
+</ul>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="o">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nv">application</span><span class="p">:(</span><span class="kt">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="n">application</span> <span class="nv">openURL</span><span class="p">:(</span><span class="kt">NSURL</span> <span class="o">*</span><span class="p">)</span><span class="n">url</span> <span class="nv">sourceApplication</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">sourceApplication</span> <span class="nv">annotation</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="n">annotation</span>  
+<span class="p">{</span>  
+    <span class="k">return</span> <span class="p">[</span><span class="kt">WeiboSDK</span> <span class="nv">handleOpenURL</span><span class="p">:</span><span class="n">url</span> <span class="nv">delegate</span><span class="p">:</span><span class="k">self</span><span class="p">];</span>  
+<span class="p">}</span>  
+  
+<span class="o">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nv">application</span><span class="p">:(</span><span class="kt">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="n">application</span> <span class="nv">handleOpenURL</span><span class="p">:(</span><span class="kt">NSURL</span> <span class="o">*</span><span class="p">)</span><span class="n">url</span>  
+<span class="p">{</span>  
+    <span class="k">return</span> <span class="p">[</span><span class="kt">WeiboSDK</span> <span class="nv">handleOpenURL</span><span class="p">:</span><span class="n">url</span> <span class="nv">delegate</span><span class="p">:</span><span class="k">self</span><span class="p">];</span>  
+<span class="p">}</span>  
+
+</code></pre></div></div>
+
+<ul>
+  <li>在你所要添加登录方法的<code class="highlighter-rouge">controller</code>中添加以下登录方法，该方法会跳转微博授权</li>
+</ul>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="n">weiboLoginButtonPressed</span>  
+<span class="p">{</span>  
+    <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"%s"</span><span class="p">,</span><span class="n">__func__</span><span class="p">);</span>  
+      
+    <span class="kt">WBAuthorizeRequest</span> <span class="o">*</span><span class="n">request</span> <span class="o">=</span> <span class="p">[</span><span class="kt">WBAuthorizeRequest</span> <span class="n">request</span><span class="p">];</span>  
+    <span class="n">request</span><span class="o">.</span><span class="n">redirectURI</span> <span class="o">=</span> <span class="n">kRedirectURI</span><span class="p">;</span>  
+    <span class="n">request</span><span class="o">.</span><span class="n">scope</span> <span class="o">=</span> <span class="s">@"all"</span><span class="p">;</span>  
+    <span class="n">request</span><span class="o">.</span><span class="n">userInfo</span> <span class="o">=</span> <span class="err">@</span><span class="p">{</span><span class="s">@"SSO_From"</span><span class="p">:</span> <span class="s">@"SendMessageToWeiboViewController"</span><span class="p">,</span>  
+                         <span class="s">@"Other_Info_1"</span><span class="p">:</span> <span class="p">[</span><span class="kt">NSNumber</span> <span class="nv">numberWithInt</span><span class="p">:</span><span class="mi">123</span><span class="p">],</span>  
+                         <span class="s">@"Other_Info_2"</span><span class="p">:</span> <span class="err">@</span><span class="p">[</span><span class="s">@"obj1"</span><span class="p">,</span> <span class="s">@"obj2"</span><span class="p">],</span>  
+                         <span class="s">@"Other_Info_3"</span><span class="p">:</span> <span class="err">@</span><span class="p">{</span><span class="s">@"key1"</span><span class="p">:</span> <span class="s">@"obj1"</span><span class="p">,</span> <span class="s">@"key2"</span><span class="p">:</span> <span class="s">@"obj2"</span><span class="p">}};</span>  
+    <span class="p">[</span><span class="kt">WeiboSDK</span> <span class="nv">sendRequest</span><span class="p">:</span><span class="n">request</span><span class="p">];</span>  
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<ul>
+  <li>在Appdelegate中实现微博的回调方法，获取回调信息</li>
+</ul>
+
+<p>这里说明一下，下面的方法实现在<code class="highlighter-rouge">Appdelegate</code>中，当在你所需登录的<code class="highlighter-rouge">controller</code>调用的登录方法后会跳转微博进行授权，授权信息会以回调的方式调用<code class="highlighter-rouge">Appdelegate</code>中的下面方法，从该方法中我们可以得出授权所得到的<code class="highlighter-rouge">userId（用户唯一标识）</code>，和<code class="highlighter-rouge">accessToken</code>。拿到这两个参数后可以调用微博接口进行一系列的获取个人信息、转发、评论、发表微博等操作，这里我们只需要获取用户的个人信息就可以了。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1">//微博回调  </span>
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">didReceiveWeiboResponse</span><span class="p">:(</span><span class="kt">WBBaseResponse</span> <span class="o">*</span><span class="p">)</span><span class="n">response</span>  
+<span class="p">{</span>  
+    <span class="k">if</span> <span class="p">([</span><span class="n">response</span> <span class="nv">isKindOfClass</span><span class="p">:</span><span class="kt">WBAuthorizeResponse</span><span class="o">.</span><span class="kd">class</span><span class="p">])</span>  
+    <span class="p">{</span>  
+        <span class="kt">NSString</span> <span class="o">*</span><span class="n">userId</span> <span class="o">=</span> <span class="p">[(</span><span class="kt">WBAuthorizeResponse</span> <span class="o">*</span><span class="p">)</span><span class="n">response</span> <span class="n">userID</span><span class="p">];</span>  
+        <span class="kt">NSString</span> <span class="o">*</span><span class="n">accessToken</span> <span class="o">=</span> <span class="p">[(</span><span class="kt">WBAuthorizeResponse</span> <span class="o">*</span><span class="p">)</span><span class="n">response</span> <span class="n">accessToken</span><span class="p">];</span>  
+          
+        <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"userId %@"</span><span class="p">,</span><span class="n">userId</span><span class="p">);</span>  
+        <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"accessToken %@"</span><span class="p">,</span><span class="n">accessToken</span><span class="p">);</span>  
+          
+        <span class="kt">NSDictionary</span> <span class="o">*</span><span class="n">notification</span> <span class="o">=</span> <span class="err">@</span><span class="p">{</span>  
+                                       <span class="s">@"userId"</span> <span class="p">:</span> <span class="n">userId</span><span class="p">,</span>  
+                                       <span class="s">@"accessToken"</span> <span class="p">:</span> <span class="n">accessToken</span>  
+                                       <span class="p">};</span>  
+          
+        <span class="p">[[</span><span class="kt">NSNotificationCenter</span> <span class="n">defaultCenter</span><span class="p">]</span> <span class="nv">postNotificationName</span><span class="p">:</span><span class="s">@"weiboDidLoginNotification"</span>   
+                                              <span class="nv">object</span><span class="p">:</span><span class="k">self</span> <span class="nv">userInfo</span><span class="p">:</span><span class="n">notification</span><span class="p">];</span>  
+    <span class="p">}</span>  
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>当获取到反馈的<code class="highlighter-rouge">userID</code>和<code class="highlighter-rouge">accessToken</code>后，这里我使用了通知<code class="highlighter-rouge">Notification</code>的方式来调用刚才申请第三方登录的<code class="highlighter-rouge">controller</code>中的相应的方法。记得使用通知的时候在<code class="highlighter-rouge">dealloc</code>方法中进行通知的删除。</p>
+
+<ul>
+  <li>在实现登录的<code class="highlighter-rouge">controller</code>中的相应的通知方法中实现以下功能
+用刚刚在微博的回调方法中得到的<code class="highlighter-rouge">userId</code>和<code class="highlighter-rouge">accessToken</code>来请求微博的接口以获取用户的个人信息</li>
+</ul>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="nv">https</span><span class="p">:</span><span class="c1">//api.weibo.com/2/users/show.json  </span>
+
+</code></pre></div></div>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="cp">#pragma mark - Weibo Methods  </span>
+  
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">weiboDidLoginNotification</span><span class="p">:(</span><span class="kt">NSNotification</span> <span class="o">*</span><span class="p">)</span><span class="n">notification</span>  
+<span class="p">{</span>  
+    <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"%s"</span><span class="p">,</span><span class="n">__func__</span><span class="p">);</span>  
+      
+    <span class="kt">NSDictionary</span> <span class="o">*</span><span class="n">userInfo</span> <span class="o">=</span> <span class="p">[</span><span class="n">notification</span> <span class="n">userInfo</span><span class="p">];</span>  
+    <span class="kt">NSString</span> <span class="o">*</span><span class="n">accessToken</span> <span class="o">=</span> <span class="p">[</span><span class="n">userInfo</span> <span class="nv">objectForKey</span><span class="p">:</span><span class="s">@"accessToken"</span><span class="p">];</span>  
+    <span class="kt">NSString</span> <span class="o">*</span><span class="n">uid</span> <span class="o">=</span> <span class="p">[</span><span class="n">userInfo</span> <span class="nv">objectForKey</span><span class="p">:</span><span class="s">@"userId"</span><span class="p">];</span>  
+      
+    <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"userInfo %@"</span><span class="p">,</span><span class="n">userInfo</span><span class="p">);</span>  
+      
+    <span class="p">[</span><span class="k">self</span> <span class="nv">getWeiboUserInfoWithAccessToken</span><span class="p">:</span><span class="n">accessToken</span> <span class="nv">uid</span><span class="p">:</span><span class="n">uid</span><span class="p">];</span>  
+<span class="p">}</span>  
+  
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">getWeiboUserInfoWithAccessToken</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">accessToken</span> <span class="nv">uid</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">uid</span>  
+<span class="p">{</span>  
+    <span class="kt">NSString</span> <span class="o">*</span><span class="n">url</span> <span class="o">=</span><span class="p">[</span><span class="kt">NSString</span> <span class="nv">stringWithFormat</span><span class="p">:</span>  
+    <span class="s">@"https://api.weibo.com/2/users/show.json?access_token=%@&amp;uid=%@"</span><span class="p">,</span><span class="n">accessToken</span><span class="p">,</span><span class="n">uid</span><span class="p">];</span>  
+      
+    <span class="nf">dispatch_async</span><span class="p">(</span><span class="nf">dispatch_get_global_queue</span><span class="p">(</span><span class="kt">DISPATCH_QUEUE_PRIORITY_DEFAULT</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="o">^</span><span class="p">{</span>  
+        <span class="kt">NSURL</span> <span class="o">*</span><span class="n">zoneUrl</span> <span class="o">=</span> <span class="p">[</span><span class="kt">NSURL</span> <span class="kt">URLWithString</span><span class="p">:</span><span class="n">url</span><span class="p">];</span>  
+        <span class="kt">NSString</span> <span class="o">*</span><span class="n">zoneStr</span> <span class="o">=</span> <span class="p">[</span><span class="kt">NSString</span> <span class="nv">stringWithContentsOfURL</span><span class="p">:</span><span class="n">zoneUrl</span>   
+                                                     <span class="nv">encoding</span><span class="p">:</span><span class="kt">NSUTF8StringEncoding</span> <span class="nv">error</span><span class="p">:</span><span class="kc">nil</span><span class="p">];</span>  
+        <span class="kt">NSData</span> <span class="o">*</span><span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">zoneStr</span> <span class="nv">dataUsingEncoding</span><span class="p">:</span><span class="kt">NSUTF8StringEncoding</span><span class="p">];</span>  
+        <span class="nf">dispatch_async</span><span class="p">(</span><span class="nf">dispatch_get_main_queue</span><span class="p">(),</span> <span class="o">^</span><span class="p">{</span>  
+            <span class="k">if</span> <span class="p">(</span><span class="n">data</span><span class="p">)</span>  
+            <span class="p">{</span>  
+                <span class="kt">NSDictionary</span> <span class="o">*</span><span class="n">dic</span> <span class="o">=</span> <span class="p">[</span><span class="kt">NSJSONSerialization</span> <span class="kt">JSONObjectWithData</span><span class="p">:</span><span class="n">data</span>   
+                                                                    <span class="nv">options</span><span class="p">:</span><span class="kt">NSJSONReadingMutableContainers</span> <span class="nv">error</span><span class="p">:</span><span class="kc">nil</span><span class="p">];</span>  
+                  
+                <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"%@"</span><span class="p">,</span><span class="n">dic</span><span class="p">);</span>  
+                  
+                <span class="kt">NSString</span> <span class="o">*</span><span class="n">openId</span> <span class="o">=</span> <span class="p">[</span><span class="n">dic</span> <span class="nv">objectForKey</span><span class="p">:</span><span class="s">@"id"</span><span class="p">];</span>  
+                <span class="kt">NSString</span> <span class="o">*</span><span class="n">memNickName</span> <span class="o">=</span> <span class="p">[</span><span class="n">dic</span> <span class="nv">objectForKey</span><span class="p">:</span><span class="s">@"name"</span><span class="p">];</span>  
+                <span class="kt">NSString</span> <span class="o">*</span><span class="n">memSex</span> <span class="o">=</span> <span class="p">[[</span><span class="n">dic</span> <span class="nv">objectForKey</span><span class="p">:</span><span class="s">@"gender"</span><span class="p">]</span> <span class="nv">isEqualToString</span><span class="p">:</span><span class="s">@"m"</span><span class="p">]</span> <span class="p">?</span> <span class="s">@"1"</span> <span class="p">:</span> <span class="s">@"0"</span><span class="p">;</span>  
+                  
+                <span class="p">[</span><span class="k">self</span> <span class="nv">loginWithOpenId</span><span class="p">:</span><span class="n">openId</span> <span class="nv">memNickName</span><span class="p">:</span><span class="n">memNickName</span> <span class="nv">memSex</span><span class="p">:</span><span class="n">memSex</span><span class="p">];</span>  
+            <span class="p">}</span>  
+        <span class="p">});</span>  
+          
+    <span class="p">});</span>  
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>至此，已经获取到了用户微博的UserId及用户其他的基本信息，用这些信息就可以进行与自己的服务端进行交互来实现第三方登录了。</p>
+
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2016/04/18/wechat-third-party-login/" data-toggle="tooltip" data-placement="top" title="iOS 微信第三方登录的实现">
+                        Previous<br>
+                        <span>iOS 微信第三方登录的实现</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2016/06/14/delegate-notification-KVO-selection/" data-toggle="tooltip" data-placement="top" title="delegate、notification、KVO如何选择">
+                        Next<br>
+                        <span>delegate、notification、KVO如何选择</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+
+                <!--Gitalk评论start  -->
+                
+                <!-- 引入Gitalk评论插件  -->
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+                <div id="gitalk-container"></div>
+                <!-- 引入一个生产md5的js，用于对id值进行处理，防止其过长 -->
+                <!-- Thank DF:https://github.com/NSDingFan/NSDingFan.github.io/issues/3#issuecomment-407496538 -->
+                <script src="/js/md5.min.js"></script>
+                <script type="text/javascript">
+                    var gitalk = new Gitalk({
+                    clientID: '440847f85c950402a76b',
+                    clientSecret: '92371c89905e71fe83cfd3815f779358726d9c48',
+                    repo: 'japho.github.io',
+                    owner: 'japho',
+                    admin: ['japho'],
+                    distractionFreeMode: true,
+                    id: md5(location.pathname),
+                    });
+                    gitalk.render('gitalk-container');
+                </script>
+                
+                <!-- Gitalk end -->
+
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+                				<a href="/tags/#iOS" title="iOS" rel="30">
+                                    iOS
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#读书笔记" title="读书笔记" rel="13">
+                                    读书笔记
+                                </a>
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="https://www.jianshu.com/u/a1d80b6eaa9e">简书·Japho</a></li>
+                    
+                        <li><a href="https://apple.com">Apple</a></li>
+                    
+                        <li><a href="https://developer.apple.com/">Apple Developer</a></li>
+                    
+                        <li><a href="https://analytics.google.com">Google Analytics</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        // BY Fix:去除标题前的‘#’ issues:<https://github.com/qiubaiying/qiubaiying.github.io/issues/137>
+        // anchors.options = {
+        //   visible: 'always',
+        //   placement: 'right',
+        //   icon: '#'
+        // };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <!-- add jianshu add target = "_blank" to <a> by BY -->
+                    
+                            <li>
+                                <a target="_blank" href="https://www.jianshu.com/u/a1d80b6eaa9e">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa  fa-stack-1x fa-inverse">简</i>
+                                    </span>
+                                </a>
+                            </li>
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/japho">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="http://weibo.com/wangjifeng1114">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+
+
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/japho">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Japho Blog 2018
+                    <br>
+                    <!-- Theme on <a href="hhttps://github.com/japho/japho.github.io.git">GitHub</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=japho&repo=japho.github.io&type=star&count=true" >
+                    </iframe> -->
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script type="text/javascript">
+    if(navigator.serviceWorker){
+        // For security reasons, a service worker can only control the pages that are in the same directory level or below it. That's why we put sw.js at ROOT level.
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {console.log('Service Worker Registered. ', registration)})
+            .catch((error) => {console.log('ServiceWorker registration failed: ', error)})
+    }
+</script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/ 
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers   
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-128251504-1';
+    var _gaDomain = 'japho.top';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/apple-touch-icon.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
