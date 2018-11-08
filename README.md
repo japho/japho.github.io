@@ -2,7 +2,7 @@
 
 # Welcome
 
-This is a blog based on jekyll created by Japho and available on [https://japho.top/](https://japho.top/)
+This is a blog based on jekyll created by Japho and now available on [https://japho.top/](https://japho.top/)
 
 Now you are on **master branch**.
 
