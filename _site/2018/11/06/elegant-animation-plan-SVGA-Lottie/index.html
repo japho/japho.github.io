@@ -154,13 +154,13 @@
 
     <!-- Image to hack wechat -->
 <!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
-<!-- <img src="/postimage/post_img_ios11.jpg" width="0" height="0"> -->
+<!-- <img src="/postimage/post_pdf_kit.jpg" width="0" height="0"> -->
 
 <!-- Post Header -->
 <style type="text/css">
     header.intro-header{
         position: relative;
-        background-image: url('/postimage/post_img_ios11.jpg')
+        background-image: url('/postimage/post_pdf_kit.jpg')
     }
 
     
@@ -569,7 +569,8 @@
     <span class="kt">AnimationTypeLottie</span>
 <span class="p">};</span>
 
-<span class="n">typedef</span> <span class="nf">void</span> <span class="p">(</span><span class="o">^</span><span class="kt">JFAnimationCompletionBlock</span><span class="p">)(</span><span class="n">void</span><span class="p">);</span>
+<span class="n">typedef</span> <span class="nf">void</span> <span class="p">(</span><span class="o">^</span><span class="kt">JFAnimationCompletionBlock</span><span class="p">)(</span><span class="kt">BOOL</span> <span class="n">animationFinished</span><span class="p">);</span>
+<span class="n">typedef</span> <span class="nf">void</span> <span class="p">(</span><span class="o">^</span><span class="kt">JFAnimationResourceCompletionBlcok</span><span class="p">)(</span><span class="kt">CGRect</span> <span class="n">animationBounds</span><span class="p">,</span> <span class="kt">BOOL</span> <span class="n">loadFinished</span><span class="p">);</span>
 
 <span class="kd">@protocol</span> <span class="kt">JFAnimationViewDelegate</span> <span class="o">&lt;</span><span class="kt">NSObject</span><span class="o">&gt;</span>
 
@@ -581,13 +582,23 @@
  */</span>
 <span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">animationViewDidFinishedAnimation</span><span class="p">:(</span><span class="kt">JFAnimationView</span> <span class="o">*</span><span class="p">)</span><span class="n">animationView</span><span class="p">;</span>
 
+
+<span class="cm">/**
+ 动画调用失败
+
+ @param animationView 动画视图
+ */</span>
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">animationViewDidFailed</span><span class="p">:(</span><span class="kt">JFAnimationView</span> <span class="o">*</span><span class="p">)</span><span class="n">animationView</span><span class="p">;</span>
+
 <span class="kd">@end</span>
 
 <span class="kd">@interface</span> <span class="kt">JFAnimationView</span> <span class="p">:</span> <span class="kt">UIView</span>
 
+<span class="kd">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="kt">JFAnimationType</span> <span class="n">animationType</span><span class="p">;</span> <span class="c1">//在设置其他属性之前，需设置此属性</span>
 <span class="kd">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="kt">BOOL</span> <span class="n">loopAnimation</span><span class="p">;</span>   <span class="c1">//动画是否循环</span>
 <span class="kd">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">id</span><span class="o">&lt;</span><span class="kt">JFAnimationViewDelegate</span><span class="o">&gt;</span> <span class="n">delegate</span><span class="p">;</span>
 <span class="kd">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">)</span> <span class="kt">JFAnimationCompletionBlock</span> <span class="n">completionBlock</span><span class="p">;</span> <span class="c1">//动画完成回调block</span>
+<span class="kd">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">)</span> <span class="kt">JFAnimationResourceCompletionBlcok</span> <span class="n">resourceComplitionBlock</span><span class="p">;</span> <span class="c1">//动画资源加载完成动画</span>
 
 
 <span class="cm">/**
@@ -595,44 +606,35 @@
 
  @param frame frame
  @param animationType 动画类型
- @param animationName 动画文件名称
  @return 动画视图
  */</span>
-<span class="o">+</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="nv">animationViewWithFrame</span><span class="p">:(</span><span class="kt">CGRect</span><span class="p">)</span><span class="n">frame</span> <span class="nv">animationType</span><span class="p">:(</span><span class="kt">JFAnimationType</span><span class="p">)</span><span class="n">animationType</span> <span class="nv">animationName</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">animationName</span><span class="p">;</span>
-
-
-<span class="cm">/**
- 类初始化方法
-
- @param frame frame
- @param animationType 动画类型
- @param animationURL 动画网络地址URL
- @return 动画视图
- */</span>
-<span class="o">+</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="nv">animationViewWithFrame</span><span class="p">:(</span><span class="kt">CGRect</span><span class="p">)</span><span class="n">frame</span> <span class="nv">animationType</span><span class="p">:(</span><span class="kt">JFAnimationType</span><span class="p">)</span><span class="n">animationType</span> <span class="nv">animationURL</span><span class="p">:(</span><span class="kt">NSURL</span> <span class="o">*</span><span class="p">)</span><span class="n">animationURL</span><span class="p">;</span>
-
+<span class="o">+</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="nv">animationViewWithFrame</span><span class="p">:(</span><span class="kt">CGRect</span><span class="p">)</span><span class="n">frame</span> <span class="nv">animationType</span><span class="p">:(</span><span class="kt">JFAnimationType</span><span class="p">)</span><span class="n">animationType</span><span class="p">;</span>
 
 <span class="cm">/**
  对象初始化方法
 
  @param frame frame
  @param animationType 动画类型
- @param animationName 动画文件名称
  @return 动画视图
  */</span>
-<span class="o">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="nv">initWithFrame</span><span class="p">:(</span><span class="kt">CGRect</span><span class="p">)</span><span class="n">frame</span> <span class="nv">animationType</span><span class="p">:(</span><span class="kt">JFAnimationType</span><span class="p">)</span><span class="n">animationType</span> <span class="nv">animationName</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">animationName</span><span class="p">;</span>
-
+<span class="o">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="nv">initWithFrame</span><span class="p">:(</span><span class="kt">CGRect</span><span class="p">)</span><span class="n">frame</span> <span class="nv">animationType</span><span class="p">:(</span><span class="kt">JFAnimationType</span><span class="p">)</span><span class="n">animationType</span><span class="p">;</span>
 
 <span class="cm">/**
- 对象初始化方法
+ 设置本地动画资源
 
- @param frame frame
- @param animationType 动画类型
- @param animationURL 动画网络地址URL
- @return 动画视图
+ @param name 本地动画名称
+ @param bundle 图片bundle
+ @param resourceComplition 资源加载完成回调 返回动画bounds，及是否加载完成状态（完成状态只有SVGA会返回）
  */</span>
-<span class="o">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="nv">initWithFrame</span><span class="p">:(</span><span class="kt">CGRect</span><span class="p">)</span><span class="n">frame</span> <span class="nv">animationType</span><span class="p">:(</span><span class="kt">JFAnimationType</span><span class="p">)</span><span class="n">animationType</span> <span class="nv">animationURL</span><span class="p">:(</span><span class="kt">NSURL</span> <span class="o">*</span><span class="p">)</span><span class="n">animationURL</span><span class="p">;</span>
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">setAnimationResourceWithName</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">name</span> <span class="nv">bundle</span><span class="p">:(</span><span class="kt">NSBundle</span> <span class="o">*</span><span class="p">)</span><span class="n">bundle</span> <span class="nv">resourceCompliton</span><span class="p">:(</span><span class="kt">JFAnimationResourceCompletionBlcok</span><span class="p">)</span><span class="n">resourceComplition</span><span class="p">;</span>
 
+<span class="cm">/**
+ 设置网络动画资源
+
+ @param urlString urlString
+ @param resourceComplition 资源加载完成回调 返回动画bounds，及是否加载完成状态（完成状态只有SVGA会返回）
+ */</span>
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">setAnimationResourceWithUrlString</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">urlString</span> <span class="nv">resourceComplition</span><span class="p">:(</span><span class="kt">JFAnimationResourceCompletionBlcok</span><span class="p">)</span><span class="n">resourceComplition</span><span class="p">;</span>
 
 <span class="cm">/**
  开始动画
@@ -649,7 +651,7 @@
 <span class="cm">/**
  开始动画
 
- @param completion 动画完成后回调
+ @param completion 动画完成后回调 （只有Lottie会返回是否成功状态）
  */</span>
 <span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">startAnimatingWithCompletion</span><span class="p">:(</span><span class="kt">JFAnimationCompletionBlock</span><span class="p">)</span><span class="n">completion</span><span class="p">;</span>
 
@@ -678,6 +680,7 @@
 <span class="kd">@end</span>
 
 <span class="kt">NS_ASSUME_NONNULL_END</span>
+
 </code></pre></div></div>
 
 <p><code class="highlighter-rouge">JFAnimationView.m</code></p>
@@ -693,90 +696,151 @@
 <span class="cp">#import "JFAnimationView.h"</span>
 <span class="cp">#import "SVGA.h"</span>
 <span class="cp">#import "LOTAnimationView.h"</span>
+<span class="cp">#import "LOTAnimationCache.h"</span>
 
 <span class="kd">@interface</span> <span class="kt">JFAnimationView</span> <span class="p">()</span> <span class="o">&lt;</span><span class="kt">SVGAPlayerDelegate</span><span class="o">&gt;</span>
 
-<span class="kd">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="kt">JFAnimationType</span> <span class="n">animationType</span><span class="p">;</span>
 <span class="kd">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="kt">SVGAPlayer</span> <span class="o">*</span><span class="n">svgaPlayer</span><span class="p">;</span>
 <span class="kd">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="kt">SVGAParser</span> <span class="o">*</span><span class="n">svgaParser</span><span class="p">;</span>
 <span class="kd">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="kt">LOTAnimationView</span> <span class="o">*</span><span class="n">lotAnimationView</span><span class="p">;</span>
-<span class="kd">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="kt">NSString</span> <span class="o">*</span><span class="n">animationName</span><span class="p">;</span>
-<span class="kd">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="kt">NSURL</span> <span class="o">*</span><span class="n">animationUrl</span><span class="p">;</span>
+<span class="kd">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="kt">BOOL</span> <span class="n">hasSVGALoad</span><span class="p">;</span>
+<span class="kd">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="kt">BOOL</span> <span class="n">hasLottieLoad</span><span class="p">;</span>
 
 <span class="kd">@end</span>
 
 <span class="kd">@implementation</span> <span class="kt">JFAnimationView</span>
 
-<span class="o">+</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="nv">animationViewWithFrame</span><span class="p">:(</span><span class="kt">CGRect</span><span class="p">)</span><span class="n">frame</span> <span class="nv">animationType</span><span class="p">:(</span><span class="kt">JFAnimationType</span><span class="p">)</span><span class="n">animationType</span> <span class="nv">animationName</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">animationName</span>
-<span class="p">{</span>
-    <span class="k">return</span> <span class="p">[[</span><span class="kt">JFAnimationView</span> <span class="n">alloc</span><span class="p">]</span> <span class="nv">initWithFrame</span><span class="p">:</span><span class="n">frame</span> <span class="nv">animationType</span><span class="p">:</span><span class="n">animationType</span> <span class="nv">animationName</span><span class="p">:</span><span class="n">animationName</span><span class="p">];</span>
-<span class="p">}</span>
-
-<span class="o">+</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="nv">animationViewWithFrame</span><span class="p">:(</span><span class="kt">CGRect</span><span class="p">)</span><span class="n">frame</span> <span class="nv">animationType</span><span class="p">:(</span><span class="kt">JFAnimationType</span><span class="p">)</span><span class="n">animationType</span> <span class="nv">animationURL</span><span class="p">:(</span><span class="kt">NSURL</span> <span class="o">*</span><span class="p">)</span><span class="n">animationURL</span>
-<span class="p">{</span>
-    <span class="k">return</span> <span class="p">[[</span><span class="kt">JFAnimationView</span> <span class="n">alloc</span><span class="p">]</span> <span class="nv">initWithFrame</span><span class="p">:</span><span class="n">frame</span> <span class="nv">animationType</span><span class="p">:</span><span class="n">animationType</span> <span class="nv">animationURL</span><span class="p">:</span><span class="n">animationURL</span><span class="p">];</span>
-<span class="p">}</span>
-
-<span class="o">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="nv">initWithFrame</span><span class="p">:(</span><span class="kt">CGRect</span><span class="p">)</span><span class="n">frame</span> <span class="nv">animationType</span><span class="p">:(</span><span class="kt">JFAnimationType</span><span class="p">)</span><span class="n">animationType</span> <span class="nv">animationName</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">animationName</span>
+<span class="o">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="nv">initWithFrame</span><span class="p">:(</span><span class="kt">CGRect</span><span class="p">)</span><span class="n">frame</span>
 <span class="p">{</span>
     <span class="k">self</span> <span class="o">=</span> <span class="p">[</span><span class="k">super</span> <span class="nv">initWithFrame</span><span class="p">:</span><span class="n">frame</span><span class="p">];</span>
     
     <span class="k">if</span> <span class="p">(</span><span class="k">self</span><span class="p">)</span>
     <span class="p">{</span>
-        <span class="n">_animationType</span> <span class="o">=</span> <span class="n">animationType</span><span class="p">;</span>
-        
-        <span class="kt">NSArray</span> <span class="o">*</span><span class="n">components</span> <span class="o">=</span> <span class="p">[</span><span class="n">animationName</span> <span class="nv">componentsSeparatedByString</span><span class="p">:</span><span class="s">@"."</span><span class="p">];</span>
-        <span class="n">animationName</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">firstObject</span><span class="p">;</span>
-        
-        <span class="p">[</span><span class="k">self</span> <span class="nv">setupUIWithAnimationName</span><span class="p">:</span><span class="n">animationName</span><span class="p">];</span>
+        <span class="n">_animationType</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
     <span class="p">}</span>
     
     <span class="k">return</span> <span class="k">self</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="o">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="nv">initWithFrame</span><span class="p">:(</span><span class="kt">CGRect</span><span class="p">)</span><span class="n">frame</span> <span class="nv">animationType</span><span class="p">:(</span><span class="kt">JFAnimationType</span><span class="p">)</span><span class="n">animationType</span> <span class="nv">animationURL</span><span class="p">:(</span><span class="kt">NSURL</span> <span class="o">*</span><span class="p">)</span><span class="n">animationURL</span>
+<span class="o">+</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="nv">animationViewWithFrame</span><span class="p">:(</span><span class="kt">CGRect</span><span class="p">)</span><span class="n">frame</span> <span class="nv">animationType</span><span class="p">:(</span><span class="kt">JFAnimationType</span><span class="p">)</span><span class="n">animationType</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="p">[[</span><span class="kt">JFAnimationView</span> <span class="n">alloc</span><span class="p">]</span> <span class="nv">initWithFrame</span><span class="p">:</span><span class="n">frame</span> <span class="nv">animationType</span><span class="p">:</span><span class="n">animationType</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="nv">initWithFrame</span><span class="p">:(</span><span class="kt">CGRect</span><span class="p">)</span><span class="n">frame</span> <span class="nv">animationType</span><span class="p">:(</span><span class="kt">JFAnimationType</span><span class="p">)</span><span class="n">animationType</span>
 <span class="p">{</span>
     <span class="k">self</span> <span class="o">=</span> <span class="p">[</span><span class="k">super</span> <span class="nv">initWithFrame</span><span class="p">:</span><span class="n">frame</span><span class="p">];</span>
     
     <span class="k">if</span> <span class="p">(</span><span class="k">self</span><span class="p">)</span>
     <span class="p">{</span>
-        <span class="n">_animationType</span> <span class="o">=</span> <span class="n">animationType</span><span class="p">;</span>
-        
-        <span class="p">[</span><span class="k">self</span> <span class="nv">setupUIWithAnimationURL</span><span class="p">:</span><span class="n">animationURL</span><span class="p">];</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">animationType</span> <span class="o">=</span> <span class="n">animationType</span><span class="p">;</span>
     <span class="p">}</span>
     
     <span class="k">return</span> <span class="k">self</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">setupUIWithAnimationName</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">animationName</span>
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">setAnimationResourceWithName</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">name</span> <span class="nv">bundle</span><span class="p">:(</span><span class="kt">NSBundle</span> <span class="o">*</span><span class="p">)</span><span class="n">bundle</span> <span class="nv">resourceCompliton</span><span class="p">:(</span><span class="n">nonnull</span> <span class="kt">JFAnimationResourceCompletionBlcok</span><span class="p">)</span><span class="n">resourceComplition</span>
 <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="k">self</span><span class="o">.</span><span class="n">animationType</span> <span class="o">==</span> <span class="kt">AnimationTypeSVGA</span><span class="p">)</span>
+    <span class="kt">NSArray</span> <span class="o">*</span><span class="n">components</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span> <span class="nv">componentsSeparatedByString</span><span class="p">:</span><span class="s">@"."</span><span class="p">];</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">firstObject</span><span class="p">;</span>
+    
+    <span class="k">switch</span> <span class="p">(</span><span class="k">self</span><span class="o">.</span><span class="n">animationType</span><span class="p">)</span>
     <span class="p">{</span>
-        <span class="k">self</span><span class="o">.</span><span class="n">animationName</span> <span class="o">=</span> <span class="n">animationName</span><span class="p">;</span>
-        <span class="p">[</span><span class="k">self</span> <span class="nv">addSubview</span><span class="p">:</span><span class="k">self</span><span class="o">.</span><span class="n">svgaPlayer</span><span class="p">];</span>
-    <span class="p">}</span>
-    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">self</span><span class="o">.</span><span class="n">animationType</span> <span class="o">==</span> <span class="kt">AnimationTypeLottie</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="k">self</span><span class="o">.</span><span class="n">lotAnimationView</span> <span class="o">=</span> <span class="p">[</span><span class="kt">LOTAnimationView</span> <span class="nv">animationNamed</span><span class="p">:</span><span class="n">animationName</span><span class="p">];</span>
-        <span class="k">self</span><span class="o">.</span><span class="n">lotAnimationView</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">;</span>
-        
-        <span class="p">[</span><span class="k">self</span> <span class="nv">addSubview</span><span class="p">:</span><span class="k">self</span><span class="o">.</span><span class="n">lotAnimationView</span><span class="p">];</span>
+        <span class="k">case</span> <span class="kt">AnimationTypeSVGA</span><span class="p">:</span>
+        <span class="p">{</span>
+            <span class="n">__weak</span> <span class="nf">__typeof</span><span class="p">(</span><span class="o">&amp;*</span><span class="k">self</span><span class="p">)</span><span class="n">weakSelf</span> <span class="o">=</span> <span class="k">self</span><span class="p">;</span>
+            
+            <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">svgaParser</span> <span class="nv">parseWithNamed</span><span class="p">:</span><span class="n">name</span> <span class="nv">inBundle</span><span class="p">:</span><span class="n">bundle</span> <span class="nv">completionBlock</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="kt">SVGAVideoEntity</span> <span class="o">*</span> <span class="n">_Nonnull</span> <span class="n">videoItem</span><span class="p">)</span> <span class="p">{</span>
+                
+                <span class="n">__strong</span> <span class="nf">__typeof</span><span class="p">(</span><span class="k">self</span><span class="p">)</span><span class="n">strongSelf</span> <span class="o">=</span> <span class="n">weakSelf</span><span class="p">;</span>
+                <span class="n">strongSelf</span><span class="o">.</span><span class="n">svgaPlayer</span><span class="o">.</span><span class="n">videoItem</span> <span class="o">=</span> <span class="n">videoItem</span><span class="p">;</span>
+                
+                <span class="kt">CGRect</span> <span class="n">bounds</span> <span class="o">=</span> <span class="kt">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">videoItem</span><span class="o">.</span><span class="n">videoSize</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">videoItem</span><span class="o">.</span><span class="n">videoSize</span><span class="o">.</span><span class="n">height</span><span class="p">);</span>
+                <span class="nf">resourceComplition</span><span class="p">(</span><span class="n">bounds</span><span class="p">,</span> <span class="kt">YES</span><span class="p">);</span>
+                
+            <span class="p">}</span> <span class="nv">failureBlock</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="kt">NSError</span> <span class="o">*</span> <span class="n">_Nonnull</span> <span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+                
+                <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"Error: %@"</span><span class="p">,</span><span class="n">error</span><span class="p">);</span>
+                <span class="nf">resourceComplition</span><span class="p">(</span><span class="kt">CGRectZero</span><span class="p">,</span> <span class="kt">NO</span><span class="p">);</span>
+                
+            <span class="p">}];</span>
+            
+            <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">case</span> <span class="kt">AnimationTypeLottie</span><span class="p">:</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">bundle</span> <span class="o">==</span> <span class="kc">nil</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">bundle</span> <span class="o">=</span> <span class="p">[</span><span class="kt">NSBundle</span> <span class="n">mainBundle</span><span class="p">];</span>
+            <span class="p">}</span>
+            
+            <span class="kt">LOTComposition</span> <span class="o">*</span><span class="n">comp</span> <span class="o">=</span> <span class="p">[</span><span class="kt">LOTComposition</span> <span class="nv">animationNamed</span><span class="p">:</span><span class="n">name</span> <span class="nv">inBundle</span><span class="p">:</span><span class="n">bundle</span><span class="p">];</span>
+            <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">lotAnimationView</span> <span class="nv">setSceneModel</span><span class="p">:</span><span class="n">comp</span><span class="p">];</span>
+            <span class="nf">resourceComplition</span><span class="p">(</span><span class="n">comp</span><span class="o">.</span><span class="n">compBounds</span><span class="p">,</span> <span class="kt">YES</span><span class="p">);</span>
+            
+            <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">default</span><span class="p">:</span>
+            <span class="k">break</span><span class="p">;</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">setupUIWithAnimationURL</span><span class="p">:(</span><span class="kt">NSURL</span> <span class="o">*</span><span class="p">)</span><span class="n">animationURL</span>
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">setAnimationResourceWithUrlString</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">urlString</span> <span class="nv">resourceComplition</span><span class="p">:(</span><span class="kt">JFAnimationResourceCompletionBlcok</span><span class="p">)</span><span class="n">resourceComplition</span>
 <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="k">self</span><span class="o">.</span><span class="n">animationType</span> <span class="o">==</span> <span class="kt">AnimationTypeSVGA</span><span class="p">)</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="k">self</span><span class="o">.</span><span class="n">animationType</span><span class="p">)</span>
     <span class="p">{</span>
-        <span class="k">self</span><span class="o">.</span><span class="n">animationUrl</span> <span class="o">=</span> <span class="n">animationURL</span><span class="p">;</span>
-        <span class="p">[</span><span class="k">self</span> <span class="nv">addSubview</span><span class="p">:</span><span class="k">self</span><span class="o">.</span><span class="n">svgaPlayer</span><span class="p">];</span>
-    <span class="p">}</span>
-    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">self</span><span class="o">.</span><span class="n">animationType</span> <span class="o">==</span> <span class="kt">AnimationTypeLottie</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="k">self</span><span class="o">.</span><span class="n">lotAnimationView</span> <span class="o">=</span> <span class="p">[[</span><span class="kt">LOTAnimationView</span> <span class="n">alloc</span><span class="p">]</span> <span class="nv">initWithContentsOfURL</span><span class="p">:</span><span class="n">animationURL</span><span class="p">];</span>
-        <span class="k">self</span><span class="o">.</span><span class="n">lotAnimationView</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">;</span>
-        
-        <span class="p">[</span><span class="k">self</span> <span class="nv">addSubview</span><span class="p">:</span><span class="k">self</span><span class="o">.</span><span class="n">lotAnimationView</span><span class="p">];</span>
+        <span class="k">case</span> <span class="kt">AnimationTypeSVGA</span><span class="p">:</span>
+        <span class="p">{</span>
+            <span class="n">__weak</span> <span class="nf">__typeof</span><span class="p">(</span><span class="o">&amp;*</span><span class="k">self</span><span class="p">)</span><span class="n">weakSelf</span> <span class="o">=</span> <span class="k">self</span><span class="p">;</span>
+            
+            <span class="kt">NSData</span> <span class="o">*</span><span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="kt">NSData</span> <span class="nv">dataWithContentsOfFile</span><span class="p">:</span><span class="n">urlString</span><span class="p">];</span>
+            
+            <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">svgaParser</span> <span class="nv">parseWithData</span><span class="p">:</span><span class="n">data</span> <span class="nv">cacheKey</span><span class="p">:</span><span class="n">urlString</span> <span class="nv">completionBlock</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="kt">SVGAVideoEntity</span> <span class="o">*</span> <span class="n">_Nonnull</span> <span class="n">videoItem</span><span class="p">)</span> <span class="p">{</span>
+                
+                <span class="n">__strong</span> <span class="nf">__typeof</span><span class="p">(</span><span class="k">self</span><span class="p">)</span><span class="n">strongSelf</span> <span class="o">=</span> <span class="n">weakSelf</span><span class="p">;</span>
+                <span class="n">strongSelf</span><span class="o">.</span><span class="n">svgaPlayer</span><span class="o">.</span><span class="n">videoItem</span> <span class="o">=</span> <span class="n">videoItem</span><span class="p">;</span>
+                
+                <span class="kt">CGRect</span> <span class="n">bounds</span> <span class="o">=</span> <span class="kt">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">videoItem</span><span class="o">.</span><span class="n">videoSize</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">videoItem</span><span class="o">.</span><span class="n">videoSize</span><span class="o">.</span><span class="n">height</span><span class="p">);</span>
+                <span class="nf">resourceComplition</span><span class="p">(</span><span class="n">bounds</span><span class="p">,</span> <span class="kt">YES</span><span class="p">);</span>
+                
+            <span class="p">}</span> <span class="nv">failureBlock</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="kt">NSError</span> <span class="o">*</span> <span class="n">_Nonnull</span> <span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+                
+                <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"Error: %@"</span><span class="p">,</span><span class="n">error</span><span class="p">);</span>
+                
+                <span class="nf">resourceComplition</span><span class="p">(</span><span class="kt">CGRectZero</span><span class="p">,</span> <span class="kt">NO</span><span class="p">);</span>
+                
+            <span class="p">}];</span>
+            
+            <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">case</span> <span class="kt">AnimationTypeLottie</span><span class="p">:</span>
+        <span class="p">{</span>
+            <span class="kt">LOTComposition</span> <span class="o">*</span><span class="n">laScene</span> <span class="o">=</span> <span class="p">[[</span><span class="kt">LOTAnimationCache</span> <span class="n">sharedCache</span><span class="p">]</span> <span class="nv">animationForKey</span><span class="p">:</span><span class="n">urlString</span><span class="p">];</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">laScene</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">laScene</span><span class="o">.</span><span class="n">cacheKey</span> <span class="o">=</span> <span class="n">urlString</span><span class="p">;</span>
+                <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">lotAnimationView</span> <span class="nv">setSceneModel</span><span class="p">:</span><span class="n">laScene</span><span class="p">];</span>
+                <span class="nf">resourceComplition</span><span class="p">(</span><span class="n">laScene</span><span class="o">.</span><span class="n">compBounds</span><span class="p">,</span> <span class="kt">YES</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">else</span>
+            <span class="p">{</span>
+                <span class="nf">dispatch_async</span><span class="p">(</span><span class="nf">dispatch_get_global_queue</span><span class="p">(</span><span class="kt">DISPATCH_QUEUE_PRIORITY_DEFAULT</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="o">^</span><span class="p">(</span><span class="n">void</span><span class="p">)</span> <span class="p">{</span>
+                    
+                    <span class="kt">LOTComposition</span> <span class="o">*</span><span class="n">laScene</span> <span class="o">=</span> <span class="p">[</span><span class="kt">LOTComposition</span> <span class="nv">animationWithFilePath</span><span class="p">:</span><span class="n">urlString</span><span class="p">];</span>
+                    
+                    <span class="nf">dispatch_async</span><span class="p">(</span><span class="nf">dispatch_get_main_queue</span><span class="p">(),</span> <span class="o">^</span><span class="p">(</span><span class="n">void</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="p">[[</span><span class="kt">LOTAnimationCache</span> <span class="n">sharedCache</span><span class="p">]</span> <span class="nv">addAnimation</span><span class="p">:</span><span class="n">laScene</span> <span class="nv">forKey</span><span class="p">:</span><span class="n">urlString</span><span class="p">];</span>
+                        <span class="n">laScene</span><span class="o">.</span><span class="n">cacheKey</span> <span class="o">=</span> <span class="n">urlString</span><span class="p">;</span>
+                        <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">lotAnimationView</span> <span class="nv">setSceneModel</span><span class="p">:</span><span class="n">laScene</span><span class="p">];</span>
+                        <span class="nf">resourceComplition</span><span class="p">(</span><span class="n">laScene</span><span class="o">.</span><span class="n">compBounds</span><span class="p">,</span> <span class="kt">YES</span><span class="p">);</span>
+                    <span class="p">});</span>
+                <span class="p">});</span>
+            <span class="p">}</span>
+            
+            <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">default</span><span class="p">:</span>
+            <span class="k">break</span><span class="p">;</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
@@ -784,96 +848,47 @@
 <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="k">self</span><span class="o">.</span><span class="n">animationType</span> <span class="o">==</span> <span class="kt">AnimationTypeSVGA</span><span class="p">)</span>
     <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">self</span><span class="o">.</span><span class="n">animationName</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">__weak</span> <span class="nf">__typeof</span><span class="p">(</span><span class="o">&amp;*</span><span class="k">self</span><span class="p">)</span><span class="n">weakSelf</span> <span class="o">=</span> <span class="k">self</span><span class="p">;</span>
-            
-            <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">svgaParser</span> <span class="nv">parseWithNamed</span><span class="p">:</span><span class="k">self</span><span class="o">.</span><span class="n">animationName</span> <span class="nv">inBundle</span><span class="p">:</span><span class="kc">nil</span> <span class="nv">completionBlock</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="kt">SVGAVideoEntity</span> <span class="o">*</span> <span class="n">_Nonnull</span> <span class="n">videoItem</span><span class="p">)</span> <span class="p">{</span>
-                
-                <span class="n">__strong</span> <span class="nf">__typeof</span><span class="p">(</span><span class="k">self</span><span class="p">)</span><span class="n">strongSelf</span> <span class="o">=</span> <span class="n">weakSelf</span><span class="p">;</span>
-                <span class="n">strongSelf</span><span class="o">.</span><span class="n">svgaPlayer</span><span class="o">.</span><span class="n">videoItem</span> <span class="o">=</span> <span class="n">videoItem</span><span class="p">;</span>
-                <span class="p">[</span><span class="n">strongSelf</span><span class="o">.</span><span class="n">svgaPlayer</span> <span class="n">startAnimation</span><span class="p">];</span>
-                
-            <span class="p">}</span> <span class="nv">failureBlock</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="kt">NSError</span> <span class="o">*</span> <span class="n">_Nonnull</span> <span class="n">error</span><span class="p">)</span> <span class="p">{</span>
-                
-                <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"Error: %@"</span><span class="p">,</span><span class="n">error</span><span class="p">);</span>
-                
-            <span class="p">}];</span>
-        <span class="p">}</span>
-        <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">self</span><span class="o">.</span><span class="n">animationUrl</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">__weak</span> <span class="nf">__typeof</span><span class="p">(</span><span class="o">&amp;*</span><span class="k">self</span><span class="p">)</span><span class="n">weakSelf</span> <span class="o">=</span> <span class="k">self</span><span class="p">;</span>
-            
-            <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">svgaParser</span> <span class="nv">parseWithURL</span><span class="p">:</span><span class="k">self</span><span class="o">.</span><span class="n">animationUrl</span> <span class="nv">completionBlock</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="kt">SVGAVideoEntity</span> <span class="o">*</span> <span class="n">_Nullable</span> <span class="n">videoItem</span><span class="p">)</span> <span class="p">{</span>
-                
-                <span class="n">__strong</span> <span class="nf">__typeof</span><span class="p">(</span><span class="k">self</span><span class="p">)</span><span class="n">strongSelf</span> <span class="o">=</span> <span class="n">weakSelf</span><span class="p">;</span>
-                <span class="n">strongSelf</span><span class="o">.</span><span class="n">svgaPlayer</span><span class="o">.</span><span class="n">videoItem</span> <span class="o">=</span> <span class="n">videoItem</span><span class="p">;</span>
-                <span class="p">[</span><span class="n">strongSelf</span><span class="o">.</span><span class="n">svgaPlayer</span> <span class="n">startAnimation</span><span class="p">];</span>
-                
-            <span class="p">}</span> <span class="nv">failureBlock</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="kt">NSError</span> <span class="o">*</span> <span class="n">_Nullable</span> <span class="n">error</span><span class="p">)</span> <span class="p">{</span>
-                
-                <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"Error: %@"</span><span class="p">,</span><span class="n">error</span><span class="p">);</span>
-                
-            <span class="p">}];</span>
-        <span class="p">}</span>
+        <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">svgaPlayer</span> <span class="n">startAnimation</span><span class="p">];</span>
     <span class="p">}</span>
     <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">self</span><span class="o">.</span><span class="n">animationType</span> <span class="o">==</span> <span class="kt">AnimationTypeLottie</span><span class="p">)</span>
     <span class="p">{</span>
+        <span class="n">__weak</span> <span class="nf">__typeof</span><span class="p">(</span><span class="o">&amp;*</span><span class="k">self</span><span class="p">)</span><span class="n">weakSelf</span> <span class="o">=</span> <span class="k">self</span><span class="p">;</span>
+        
         <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">lotAnimationView</span> <span class="nv">playWithCompletion</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="kt">BOOL</span> <span class="n">animationFinished</span><span class="p">)</span> <span class="p">{</span>
             
-            <span class="k">if</span> <span class="p">(</span><span class="k">self</span><span class="o">.</span><span class="n">delegate</span> <span class="o">&amp;&amp;</span> <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">delegate</span> <span class="nv">respondsToSelector</span><span class="p">:</span><span class="kd">@selector(animationViewDidFinishedAnimation:)</span><span class="p">])</span>
-            <span class="p">{</span>
-                <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">delegate</span> <span class="nv">animationViewDidFinishedAnimation</span><span class="p">:</span><span class="k">self</span><span class="p">];</span>
-            <span class="p">}</span>
+            <span class="n">__strong</span> <span class="nf">__typeof</span><span class="p">(</span><span class="k">self</span><span class="p">)</span><span class="n">strongSelf</span> <span class="o">=</span> <span class="n">weakSelf</span><span class="p">;</span>
             
+            <span class="k">if</span> <span class="p">(</span><span class="n">animationFinished</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">strongSelf</span><span class="o">.</span><span class="n">delegate</span> <span class="o">&amp;&amp;</span> <span class="p">[</span><span class="n">strongSelf</span><span class="o">.</span><span class="n">delegate</span> <span class="nv">respondsToSelector</span><span class="p">:</span><span class="kd">@selector(animationViewDidFinishedAnimation:)</span><span class="p">])</span>
+                <span class="p">{</span>
+                    <span class="p">[</span><span class="n">strongSelf</span><span class="o">.</span><span class="n">delegate</span> <span class="nv">animationViewDidFinishedAnimation</span><span class="p">:</span><span class="n">strongSelf</span><span class="p">];</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">else</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">strongSelf</span><span class="o">.</span><span class="n">delegate</span> <span class="o">&amp;&amp;</span> <span class="p">[</span><span class="n">strongSelf</span><span class="o">.</span><span class="n">delegate</span> <span class="nv">respondsToSelector</span><span class="p">:</span><span class="kd">@selector(animationViewDidFailed:)</span><span class="p">])</span>
+                <span class="p">{</span>
+                    <span class="p">[</span><span class="n">strongSelf</span><span class="o">.</span><span class="n">delegate</span> <span class="nv">animationViewDidFailed</span><span class="p">:</span><span class="n">strongSelf</span><span class="p">];</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
         <span class="p">}];</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
 <span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">startAnimatingWithCompletion</span><span class="p">:(</span><span class="kt">JFAnimationCompletionBlock</span><span class="p">)</span><span class="n">completion</span>
 <span class="p">{</span>
+    <span class="k">self</span><span class="o">.</span><span class="n">completionBlock</span> <span class="o">=</span> <span class="n">completion</span><span class="p">;</span>
+    
     <span class="k">if</span> <span class="p">(</span><span class="k">self</span><span class="o">.</span><span class="n">animationType</span> <span class="o">==</span> <span class="kt">AnimationTypeSVGA</span><span class="p">)</span>
     <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">self</span><span class="o">.</span><span class="n">animationName</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">__weak</span> <span class="nf">__typeof</span><span class="p">(</span><span class="o">&amp;*</span><span class="k">self</span><span class="p">)</span><span class="n">weakSelf</span> <span class="o">=</span> <span class="k">self</span><span class="p">;</span>
-            
-            <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">svgaParser</span> <span class="nv">parseWithNamed</span><span class="p">:</span><span class="k">self</span><span class="o">.</span><span class="n">animationName</span> <span class="nv">inBundle</span><span class="p">:</span><span class="kc">nil</span> <span class="nv">completionBlock</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="kt">SVGAVideoEntity</span> <span class="o">*</span> <span class="n">_Nonnull</span> <span class="n">videoItem</span><span class="p">)</span> <span class="p">{</span>
-                
-                <span class="n">__strong</span> <span class="nf">__typeof</span><span class="p">(</span><span class="k">self</span><span class="p">)</span><span class="n">strongSelf</span> <span class="o">=</span> <span class="n">weakSelf</span><span class="p">;</span>
-                <span class="n">strongSelf</span><span class="o">.</span><span class="n">svgaPlayer</span><span class="o">.</span><span class="n">videoItem</span> <span class="o">=</span> <span class="n">videoItem</span><span class="p">;</span>
-                <span class="p">[</span><span class="n">strongSelf</span><span class="o">.</span><span class="n">svgaPlayer</span> <span class="n">startAnimation</span><span class="p">];</span>
-                <span class="n">strongSelf</span><span class="o">.</span><span class="n">completionBlock</span> <span class="o">=</span> <span class="n">completion</span><span class="p">;</span>
-                
-            <span class="p">}</span> <span class="nv">failureBlock</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="kt">NSError</span> <span class="o">*</span> <span class="n">_Nonnull</span> <span class="n">error</span><span class="p">)</span> <span class="p">{</span>
-                
-                <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"Error: %@"</span><span class="p">,</span><span class="n">error</span><span class="p">);</span>
-                
-            <span class="p">}];</span>
-        <span class="p">}</span>
-        <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">self</span><span class="o">.</span><span class="n">animationUrl</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">__weak</span> <span class="nf">__typeof</span><span class="p">(</span><span class="o">&amp;*</span><span class="k">self</span><span class="p">)</span><span class="n">weakSelf</span> <span class="o">=</span> <span class="k">self</span><span class="p">;</span>
-            
-            <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">svgaParser</span> <span class="nv">parseWithURL</span><span class="p">:</span><span class="k">self</span><span class="o">.</span><span class="n">animationUrl</span> <span class="nv">completionBlock</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="kt">SVGAVideoEntity</span> <span class="o">*</span> <span class="n">_Nullable</span> <span class="n">videoItem</span><span class="p">)</span> <span class="p">{</span>
-                
-                <span class="n">__strong</span> <span class="nf">__typeof</span><span class="p">(</span><span class="k">self</span><span class="p">)</span><span class="n">strongSelf</span> <span class="o">=</span> <span class="n">weakSelf</span><span class="p">;</span>
-                <span class="n">strongSelf</span><span class="o">.</span><span class="n">svgaPlayer</span><span class="o">.</span><span class="n">videoItem</span> <span class="o">=</span> <span class="n">videoItem</span><span class="p">;</span>
-                <span class="p">[</span><span class="n">strongSelf</span><span class="o">.</span><span class="n">svgaPlayer</span> <span class="n">startAnimation</span><span class="p">];</span>
-                <span class="n">strongSelf</span><span class="o">.</span><span class="n">completionBlock</span> <span class="o">=</span> <span class="n">completion</span><span class="p">;</span>
-                
-            <span class="p">}</span> <span class="nv">failureBlock</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="kt">NSError</span> <span class="o">*</span> <span class="n">_Nullable</span> <span class="n">error</span><span class="p">)</span> <span class="p">{</span>
-                
-                <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"Error: %@"</span><span class="p">,</span><span class="n">error</span><span class="p">);</span>
-                
-            <span class="p">}];</span>
-        <span class="p">}</span>
+        <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">svgaPlayer</span> <span class="n">startAnimation</span><span class="p">];</span>
     <span class="p">}</span>
     <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">self</span><span class="o">.</span><span class="n">animationType</span> <span class="o">==</span> <span class="kt">AnimationTypeLottie</span><span class="p">)</span>
     <span class="p">{</span>
         <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">lotAnimationView</span> <span class="nv">playWithCompletion</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="kt">BOOL</span> <span class="n">animationFinished</span><span class="p">)</span> <span class="p">{</span>
             
-            <span class="nf">completion</span><span class="p">();</span>
+            <span class="k">self</span><span class="o">.</span><span class="nf">completionBlock</span><span class="p">(</span><span class="n">animationFinished</span><span class="p">);</span>
             
         <span class="p">}];</span>
     <span class="p">}</span>
@@ -894,8 +909,6 @@
     <span class="p">{</span>
         <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">lotAnimationView</span> <span class="n">stop</span><span class="p">];</span>
     <span class="p">}</span>
-    
-    <span class="p">[</span><span class="k">self</span> <span class="n">removeFromSuperview</span><span class="p">];</span>
 <span class="p">}</span>
 
 <span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">setImage</span><span class="p">:(</span><span class="kt">UIImage</span> <span class="o">*</span><span class="p">)</span><span class="n">image</span> <span class="nv">forSVGAAnimationWithKey</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">key</span>
@@ -918,6 +931,8 @@
 
 <span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">svgaPlayerDidFinishedAnimation</span><span class="p">:(</span><span class="kt">SVGAPlayer</span> <span class="o">*</span><span class="p">)</span><span class="n">player</span>
 <span class="p">{</span>
+    <span class="p">[</span><span class="n">player</span> <span class="n">clear</span><span class="p">];</span>
+
     <span class="k">if</span> <span class="p">(</span><span class="k">self</span><span class="o">.</span><span class="n">delegate</span> <span class="o">&amp;&amp;</span> <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">delegate</span> <span class="nv">respondsToSelector</span><span class="p">:</span><span class="kd">@selector(animationViewDidFinishedAnimation:)</span><span class="p">])</span>
     <span class="p">{</span>
         <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">delegate</span> <span class="nv">animationViewDidFinishedAnimation</span><span class="p">:</span><span class="k">self</span><span class="p">];</span>
@@ -925,7 +940,7 @@
     
     <span class="k">if</span> <span class="p">(</span><span class="k">self</span><span class="o">.</span><span class="n">completionBlock</span><span class="p">)</span>
     <span class="p">{</span>
-        <span class="k">self</span><span class="o">.</span><span class="nf">completionBlock</span><span class="p">();</span>
+        <span class="k">self</span><span class="o">.</span><span class="nf">completionBlock</span><span class="p">(</span><span class="kt">YES</span><span class="p">);</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
@@ -935,8 +950,8 @@
 <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">_svgaPlayer</span><span class="p">)</span>
     <span class="p">{</span>
-        <span class="n">_svgaPlayer</span> <span class="o">=</span> <span class="p">[[</span><span class="kt">SVGAPlayer</span> <span class="n">alloc</span><span class="p">]</span> <span class="kd">init</span><span class="p">];</span>
-        <span class="n">_svgaPlayer</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">;</span>
+        <span class="n">_svgaPlayer</span> <span class="o">=</span> <span class="p">[[</span><span class="kt">SVGAPlayer</span> <span class="n">alloc</span><span class="p">]</span> <span class="nv">initWithFrame</span><span class="p">:</span><span class="k">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">];</span>
+        <span class="n">_svgaPlayer</span><span class="o">.</span><span class="n">contentMode</span> <span class="o">=</span> <span class="kt">UIViewContentModeScaleAspectFit</span><span class="p">;</span>
         <span class="n">_svgaPlayer</span><span class="o">.</span><span class="n">loops</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
         <span class="n">_svgaPlayer</span><span class="o">.</span><span class="n">clearsAfterStop</span> <span class="o">=</span> <span class="kt">YES</span><span class="p">;</span>
         <span class="n">_svgaPlayer</span><span class="o">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="k">self</span><span class="p">;</span>
@@ -955,6 +970,17 @@
     <span class="k">return</span> <span class="n">_svgaParser</span><span class="p">;</span>
 <span class="p">}</span>
 
+<span class="o">-</span> <span class="p">(</span><span class="kt">LOTAnimationView</span> <span class="o">*</span><span class="p">)</span><span class="n">lotAnimationView</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">_lotAnimationView</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">_lotAnimationView</span> <span class="o">=</span> <span class="p">[[</span><span class="kt">LOTAnimationView</span> <span class="n">alloc</span><span class="p">]</span> <span class="nv">initWithFrame</span><span class="p">:</span><span class="k">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">];</span>
+        <span class="n">_lotAnimationView</span><span class="o">.</span><span class="n">contentMode</span> <span class="o">=</span> <span class="kt">UIViewContentModeScaleAspectFit</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="n">_lotAnimationView</span><span class="p">;</span>
+<span class="p">}</span>
+
 <span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">setLoopAnimation</span><span class="p">:(</span><span class="kt">BOOL</span><span class="p">)</span><span class="n">loopAnimation</span>
 <span class="p">{</span>
     <span class="n">_loopAnimation</span> <span class="o">=</span> <span class="n">loopAnimation</span><span class="p">;</span>
@@ -967,6 +993,48 @@
     <span class="p">{</span>
         <span class="k">self</span><span class="o">.</span><span class="n">lotAnimationView</span><span class="o">.</span><span class="n">loopAnimation</span> <span class="o">=</span> <span class="n">loopAnimation</span><span class="p">;</span>
     <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">setContentMode</span><span class="p">:(</span><span class="kt">UIViewContentMode</span><span class="p">)</span><span class="n">contentMode</span>
+<span class="p">{</span>
+    <span class="n">_lotAnimationView</span><span class="o">.</span><span class="n">contentMode</span> <span class="o">=</span> <span class="n">contentMode</span><span class="p">;</span>
+    <span class="n">_svgaPlayer</span><span class="o">.</span><span class="n">contentMode</span> <span class="o">=</span> <span class="n">contentMode</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">setAnimationType</span><span class="p">:(</span><span class="kt">JFAnimationType</span><span class="p">)</span><span class="n">animationType</span>
+<span class="p">{</span>
+    <span class="n">_animationType</span> <span class="o">=</span> <span class="n">animationType</span><span class="p">;</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="n">animationType</span> <span class="o">==</span> <span class="kt">AnimationTypeLottie</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">_hasLottieLoad</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="p">[</span><span class="k">self</span> <span class="nv">addSubview</span><span class="p">:</span><span class="k">self</span><span class="o">.</span><span class="n">lotAnimationView</span><span class="p">];</span>
+            <span class="n">_hasLottieLoad</span> <span class="o">=</span> <span class="kt">YES</span><span class="p">;</span>
+        <span class="p">}</span>
+        
+        <span class="n">_lotAnimationView</span><span class="o">.</span><span class="n">hidden</span> <span class="o">=</span> <span class="kt">NO</span><span class="p">;</span>
+        <span class="n">_svgaPlayer</span><span class="o">.</span><span class="n">hidden</span> <span class="o">=</span> <span class="kt">YES</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">animationType</span> <span class="o">==</span> <span class="kt">AnimationTypeSVGA</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">_hasSVGALoad</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="p">[</span><span class="k">self</span> <span class="nv">addSubview</span><span class="p">:</span><span class="k">self</span><span class="o">.</span><span class="n">svgaPlayer</span><span class="p">];</span>
+            <span class="n">_hasSVGALoad</span> <span class="o">=</span> <span class="kt">YES</span><span class="p">;</span>
+        <span class="p">}</span>
+        
+        <span class="n">_lotAnimationView</span><span class="o">.</span><span class="n">hidden</span> <span class="o">=</span> <span class="kt">YES</span><span class="p">;</span>
+        <span class="n">_svgaPlayer</span><span class="o">.</span><span class="n">hidden</span> <span class="o">=</span> <span class="kt">NO</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">setFrame</span><span class="p">:(</span><span class="kt">CGRect</span><span class="p">)</span><span class="n">frame</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="k">super</span> <span class="nv">setFrame</span><span class="p">:</span><span class="n">frame</span><span class="p">];</span>
+    
+    <span class="n">_lotAnimationView</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="kt">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">frame</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">frame</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span><span class="p">);</span>
+    <span class="n">_svgaPlayer</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="kt">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">frame</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">frame</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span><span class="p">);</span>
 <span class="p">}</span>
 
 <span class="kd">@end</span>

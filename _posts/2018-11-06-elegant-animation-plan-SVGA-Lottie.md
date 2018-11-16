@@ -4,7 +4,7 @@ title:      优雅的动画实现方案SVGA、Lottie
 subtitle:   减少开发成本，跨平台实现复杂UE动画
 date:       2018-11-06
 author:     Japho
-header-img: postimage/post_img_ios11.jpg
+header-img: postimage/post_pdf_kit.jpg
 catalog:    true
 tags:
     - iOS
@@ -384,7 +384,8 @@ typedef NS_ENUM(NSUInteger, JFAnimationType) {
     AnimationTypeLottie
 };
 
-typedef void (^JFAnimationCompletionBlock)(void);
+typedef void (^JFAnimationCompletionBlock)(BOOL animationFinished);
+typedef void (^JFAnimationResourceCompletionBlcok)(CGRect animationBounds, BOOL loadFinished);
 
 @protocol JFAnimationViewDelegate <NSObject>
 
@@ -396,13 +397,23 @@ typedef void (^JFAnimationCompletionBlock)(void);
  */
 - (void)animationViewDidFinishedAnimation:(JFAnimationView *)animationView;
 
+
+/**
+ 动画调用失败
+
+ @param animationView 动画视图
+ */
+- (void)animationViewDidFailed:(JFAnimationView *)animationView;
+
 @end
 
 @interface JFAnimationView : UIView
 
+@property (nonatomic, assign) JFAnimationType animationType; //在设置其他属性之前，需设置此属性
 @property (nonatomic, assign) BOOL loopAnimation;   //动画是否循环
 @property (nonatomic, assign) id<JFAnimationViewDelegate> delegate;
 @property (nonatomic, copy) JFAnimationCompletionBlock completionBlock; //动画完成回调block
+@property (nonatomic, copy) JFAnimationResourceCompletionBlcok resourceComplitionBlock; //动画资源加载完成动画
 
 
 /**
@@ -410,44 +421,35 @@ typedef void (^JFAnimationCompletionBlock)(void);
 
  @param frame frame
  @param animationType 动画类型
- @param animationName 动画文件名称
  @return 动画视图
  */
-+ (instancetype)animationViewWithFrame:(CGRect)frame animationType:(JFAnimationType)animationType animationName:(NSString *)animationName;
-
-
-/**
- 类初始化方法
-
- @param frame frame
- @param animationType 动画类型
- @param animationURL 动画网络地址URL
- @return 动画视图
- */
-+ (instancetype)animationViewWithFrame:(CGRect)frame animationType:(JFAnimationType)animationType animationURL:(NSURL *)animationURL;
-
++ (instancetype)animationViewWithFrame:(CGRect)frame animationType:(JFAnimationType)animationType;
 
 /**
  对象初始化方法
 
  @param frame frame
  @param animationType 动画类型
- @param animationName 动画文件名称
  @return 动画视图
  */
-- (instancetype)initWithFrame:(CGRect)frame animationType:(JFAnimationType)animationType animationName:(NSString *)animationName;
-
+- (instancetype)initWithFrame:(CGRect)frame animationType:(JFAnimationType)animationType;
 
 /**
- 对象初始化方法
+ 设置本地动画资源
 
- @param frame frame
- @param animationType 动画类型
- @param animationURL 动画网络地址URL
- @return 动画视图
+ @param name 本地动画名称
+ @param bundle 图片bundle
+ @param resourceComplition 资源加载完成回调 返回动画bounds，及是否加载完成状态（完成状态只有SVGA会返回）
  */
-- (instancetype)initWithFrame:(CGRect)frame animationType:(JFAnimationType)animationType animationURL:(NSURL *)animationURL;
+- (void)setAnimationResourceWithName:(NSString *)name bundle:(NSBundle *)bundle resourceCompliton:(JFAnimationResourceCompletionBlcok)resourceComplition;
 
+/**
+ 设置网络动画资源
+
+ @param urlString urlString
+ @param resourceComplition 资源加载完成回调 返回动画bounds，及是否加载完成状态（完成状态只有SVGA会返回）
+ */
+- (void)setAnimationResourceWithUrlString:(NSString *)urlString resourceComplition:(JFAnimationResourceCompletionBlcok)resourceComplition;
 
 /**
  开始动画
@@ -464,7 +466,7 @@ typedef void (^JFAnimationCompletionBlock)(void);
 /**
  开始动画
 
- @param completion 动画完成后回调
+ @param completion 动画完成后回调 （只有Lottie会返回是否成功状态）
  */
 - (void)startAnimatingWithCompletion:(JFAnimationCompletionBlock)completion;
 
@@ -493,6 +495,7 @@ typedef void (^JFAnimationCompletionBlock)(void);
 @end
 
 NS_ASSUME_NONNULL_END
+
 ```
 
 `JFAnimationView.m`
@@ -509,90 +512,151 @@ NS_ASSUME_NONNULL_END
 #import "JFAnimationView.h"
 #import "SVGA.h"
 #import "LOTAnimationView.h"
+#import "LOTAnimationCache.h"
 
 @interface JFAnimationView () <SVGAPlayerDelegate>
 
-@property (nonatomic, assign) JFAnimationType animationType;
 @property (nonatomic, strong) SVGAPlayer *svgaPlayer;
 @property (nonatomic, strong) SVGAParser *svgaParser;
 @property (nonatomic, strong) LOTAnimationView *lotAnimationView;
-@property (nonatomic, strong) NSString *animationName;
-@property (nonatomic, strong) NSURL *animationUrl;
+@property (nonatomic, assign) BOOL hasSVGALoad;
+@property (nonatomic, assign) BOOL hasLottieLoad;
 
 @end
 
 @implementation JFAnimationView
 
-+ (instancetype)animationViewWithFrame:(CGRect)frame animationType:(JFAnimationType)animationType animationName:(NSString *)animationName
-{
-    return [[JFAnimationView alloc] initWithFrame:frame animationType:animationType animationName:animationName];
-}
-
-+ (instancetype)animationViewWithFrame:(CGRect)frame animationType:(JFAnimationType)animationType animationURL:(NSURL *)animationURL
-{
-    return [[JFAnimationView alloc] initWithFrame:frame animationType:animationType animationURL:animationURL];
-}
-
-- (instancetype)initWithFrame:(CGRect)frame animationType:(JFAnimationType)animationType animationName:(NSString *)animationName
+- (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     
     if (self)
     {
-        _animationType = animationType;
-        
-        NSArray *components = [animationName componentsSeparatedByString:@"."];
-        animationName = components.firstObject;
-        
-        [self setupUIWithAnimationName:animationName];
+        _animationType = -1;
     }
     
     return self;
 }
 
-- (instancetype)initWithFrame:(CGRect)frame animationType:(JFAnimationType)animationType animationURL:(NSURL *)animationURL
++ (instancetype)animationViewWithFrame:(CGRect)frame animationType:(JFAnimationType)animationType
+{
+    return [[JFAnimationView alloc] initWithFrame:frame animationType:animationType];
+}
+
+- (instancetype)initWithFrame:(CGRect)frame animationType:(JFAnimationType)animationType
 {
     self = [super initWithFrame:frame];
     
     if (self)
     {
-        _animationType = animationType;
-        
-        [self setupUIWithAnimationURL:animationURL];
+        self.animationType = animationType;
     }
     
     return self;
 }
 
-- (void)setupUIWithAnimationName:(NSString *)animationName
+- (void)setAnimationResourceWithName:(NSString *)name bundle:(NSBundle *)bundle resourceCompliton:(nonnull JFAnimationResourceCompletionBlcok)resourceComplition
 {
-    if (self.animationType == AnimationTypeSVGA)
+    NSArray *components = [name componentsSeparatedByString:@"."];
+    name = components.firstObject;
+    
+    switch (self.animationType)
     {
-        self.animationName = animationName;
-        [self addSubview:self.svgaPlayer];
-    }
-    else if (self.animationType == AnimationTypeLottie)
-    {
-        self.lotAnimationView = [LOTAnimationView animationNamed:animationName];
-        self.lotAnimationView.frame = self.bounds;
-        
-        [self addSubview:self.lotAnimationView];
+        case AnimationTypeSVGA:
+        {
+            __weak __typeof(&*self)weakSelf = self;
+            
+            [self.svgaParser parseWithNamed:name inBundle:bundle completionBlock:^(SVGAVideoEntity * _Nonnull videoItem) {
+                
+                __strong __typeof(self)strongSelf = weakSelf;
+                strongSelf.svgaPlayer.videoItem = videoItem;
+                
+                CGRect bounds = CGRectMake(0, 0, videoItem.videoSize.width, videoItem.videoSize.height);
+                resourceComplition(bounds, YES);
+                
+            } failureBlock:^(NSError * _Nonnull error) {
+                
+                NSLog(@"Error: %@",error);
+                resourceComplition(CGRectZero, NO);
+                
+            }];
+            
+            break;
+        }
+        case AnimationTypeLottie:
+        {
+            if (bundle == nil)
+            {
+                bundle = [NSBundle mainBundle];
+            }
+            
+            LOTComposition *comp = [LOTComposition animationNamed:name inBundle:bundle];
+            [self.lotAnimationView setSceneModel:comp];
+            resourceComplition(comp.compBounds, YES);
+            
+            break;
+        }
+        default:
+            break;
     }
 }
 
-- (void)setupUIWithAnimationURL:(NSURL *)animationURL
+- (void)setAnimationResourceWithUrlString:(NSString *)urlString resourceComplition:(JFAnimationResourceCompletionBlcok)resourceComplition
 {
-    if (self.animationType == AnimationTypeSVGA)
+    switch (self.animationType)
     {
-        self.animationUrl = animationURL;
-        [self addSubview:self.svgaPlayer];
-    }
-    else if (self.animationType == AnimationTypeLottie)
-    {
-        self.lotAnimationView = [[LOTAnimationView alloc] initWithContentsOfURL:animationURL];
-        self.lotAnimationView.frame = self.bounds;
-        
-        [self addSubview:self.lotAnimationView];
+        case AnimationTypeSVGA:
+        {
+            __weak __typeof(&*self)weakSelf = self;
+            
+            NSData *data = [NSData dataWithContentsOfFile:urlString];
+            
+            [self.svgaParser parseWithData:data cacheKey:urlString completionBlock:^(SVGAVideoEntity * _Nonnull videoItem) {
+                
+                __strong __typeof(self)strongSelf = weakSelf;
+                strongSelf.svgaPlayer.videoItem = videoItem;
+                
+                CGRect bounds = CGRectMake(0, 0, videoItem.videoSize.width, videoItem.videoSize.height);
+                resourceComplition(bounds, YES);
+                
+            } failureBlock:^(NSError * _Nonnull error) {
+                
+                NSLog(@"Error: %@",error);
+                
+                resourceComplition(CGRectZero, NO);
+                
+            }];
+            
+            break;
+        }
+        case AnimationTypeLottie:
+        {
+            LOTComposition *laScene = [[LOTAnimationCache sharedCache] animationForKey:urlString];
+            if (laScene)
+            {
+                laScene.cacheKey = urlString;
+                [self.lotAnimationView setSceneModel:laScene];
+                resourceComplition(laScene.compBounds, YES);
+            }
+            else
+            {
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
+                    
+                    LOTComposition *laScene = [LOTComposition animationWithFilePath:urlString];
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^(void) {
+                        [[LOTAnimationCache sharedCache] addAnimation:laScene forKey:urlString];
+                        laScene.cacheKey = urlString;
+                        [self.lotAnimationView setSceneModel:laScene];
+                        resourceComplition(laScene.compBounds, YES);
+                    });
+                });
+            }
+            
+            break;
+        }
+        default:
+            break;
     }
 }
 
@@ -600,96 +664,47 @@ NS_ASSUME_NONNULL_END
 {
     if (self.animationType == AnimationTypeSVGA)
     {
-        if (self.animationName)
-        {
-            __weak __typeof(&*self)weakSelf = self;
-            
-            [self.svgaParser parseWithNamed:self.animationName inBundle:nil completionBlock:^(SVGAVideoEntity * _Nonnull videoItem) {
-                
-                __strong __typeof(self)strongSelf = weakSelf;
-                strongSelf.svgaPlayer.videoItem = videoItem;
-                [strongSelf.svgaPlayer startAnimation];
-                
-            } failureBlock:^(NSError * _Nonnull error) {
-                
-                NSLog(@"Error: %@",error);
-                
-            }];
-        }
-        else if (self.animationUrl)
-        {
-            __weak __typeof(&*self)weakSelf = self;
-            
-            [self.svgaParser parseWithURL:self.animationUrl completionBlock:^(SVGAVideoEntity * _Nullable videoItem) {
-                
-                __strong __typeof(self)strongSelf = weakSelf;
-                strongSelf.svgaPlayer.videoItem = videoItem;
-                [strongSelf.svgaPlayer startAnimation];
-                
-            } failureBlock:^(NSError * _Nullable error) {
-                
-                NSLog(@"Error: %@",error);
-                
-            }];
-        }
+        [self.svgaPlayer startAnimation];
     }
     else if (self.animationType == AnimationTypeLottie)
     {
+        __weak __typeof(&*self)weakSelf = self;
+        
         [self.lotAnimationView playWithCompletion:^(BOOL animationFinished) {
             
-            if (self.delegate && [self.delegate respondsToSelector:@selector(animationViewDidFinishedAnimation:)])
-            {
-                [self.delegate animationViewDidFinishedAnimation:self];
-            }
+            __strong __typeof(self)strongSelf = weakSelf;
             
+            if (animationFinished)
+            {
+                if (strongSelf.delegate && [strongSelf.delegate respondsToSelector:@selector(animationViewDidFinishedAnimation:)])
+                {
+                    [strongSelf.delegate animationViewDidFinishedAnimation:strongSelf];
+                }
+            }
+            else
+            {
+                if (strongSelf.delegate && [strongSelf.delegate respondsToSelector:@selector(animationViewDidFailed:)])
+                {
+                    [strongSelf.delegate animationViewDidFailed:strongSelf];
+                }
+            }
         }];
     }
 }
 
 - (void)startAnimatingWithCompletion:(JFAnimationCompletionBlock)completion
 {
+    self.completionBlock = completion;
+    
     if (self.animationType == AnimationTypeSVGA)
     {
-        if (self.animationName)
-        {
-            __weak __typeof(&*self)weakSelf = self;
-            
-            [self.svgaParser parseWithNamed:self.animationName inBundle:nil completionBlock:^(SVGAVideoEntity * _Nonnull videoItem) {
-                
-                __strong __typeof(self)strongSelf = weakSelf;
-                strongSelf.svgaPlayer.videoItem = videoItem;
-                [strongSelf.svgaPlayer startAnimation];
-                strongSelf.completionBlock = completion;
-                
-            } failureBlock:^(NSError * _Nonnull error) {
-                
-                NSLog(@"Error: %@",error);
-                
-            }];
-        }
-        else if (self.animationUrl)
-        {
-            __weak __typeof(&*self)weakSelf = self;
-            
-            [self.svgaParser parseWithURL:self.animationUrl completionBlock:^(SVGAVideoEntity * _Nullable videoItem) {
-                
-                __strong __typeof(self)strongSelf = weakSelf;
-                strongSelf.svgaPlayer.videoItem = videoItem;
-                [strongSelf.svgaPlayer startAnimation];
-                strongSelf.completionBlock = completion;
-                
-            } failureBlock:^(NSError * _Nullable error) {
-                
-                NSLog(@"Error: %@",error);
-                
-            }];
-        }
+        [self.svgaPlayer startAnimation];
     }
     else if (self.animationType == AnimationTypeLottie)
     {
         [self.lotAnimationView playWithCompletion:^(BOOL animationFinished) {
             
-            completion();
+            self.completionBlock(animationFinished);
             
         }];
     }
@@ -710,8 +725,6 @@ NS_ASSUME_NONNULL_END
     {
         [self.lotAnimationView stop];
     }
-    
-    [self removeFromSuperview];
 }
 
 - (void)setImage:(UIImage *)image forSVGAAnimationWithKey:(NSString *)key
@@ -734,6 +747,8 @@ NS_ASSUME_NONNULL_END
 
 - (void)svgaPlayerDidFinishedAnimation:(SVGAPlayer *)player
 {
+    [player clear];
+
     if (self.delegate && [self.delegate respondsToSelector:@selector(animationViewDidFinishedAnimation:)])
     {
         [self.delegate animationViewDidFinishedAnimation:self];
@@ -741,7 +756,7 @@ NS_ASSUME_NONNULL_END
     
     if (self.completionBlock)
     {
-        self.completionBlock();
+        self.completionBlock(YES);
     }
 }
 
@@ -751,8 +766,8 @@ NS_ASSUME_NONNULL_END
 {
     if (!_svgaPlayer)
     {
-        _svgaPlayer = [[SVGAPlayer alloc] init];
-        _svgaPlayer.frame = self.bounds;
+        _svgaPlayer = [[SVGAPlayer alloc] initWithFrame:self.bounds];
+        _svgaPlayer.contentMode = UIViewContentModeScaleAspectFit;
         _svgaPlayer.loops = 1;
         _svgaPlayer.clearsAfterStop = YES;
         _svgaPlayer.delegate = self;
@@ -771,6 +786,17 @@ NS_ASSUME_NONNULL_END
     return _svgaParser;
 }
 
+- (LOTAnimationView *)lotAnimationView
+{
+    if (!_lotAnimationView)
+    {
+        _lotAnimationView = [[LOTAnimationView alloc] initWithFrame:self.bounds];
+        _lotAnimationView.contentMode = UIViewContentModeScaleAspectFit;
+    }
+    
+    return _lotAnimationView;
+}
+
 - (void)setLoopAnimation:(BOOL)loopAnimation
 {
     _loopAnimation = loopAnimation;
@@ -783,6 +809,48 @@ NS_ASSUME_NONNULL_END
     {
         self.lotAnimationView.loopAnimation = loopAnimation;
     }
+}
+
+- (void)setContentMode:(UIViewContentMode)contentMode
+{
+    _lotAnimationView.contentMode = contentMode;
+    _svgaPlayer.contentMode = contentMode;
+}
+
+- (void)setAnimationType:(JFAnimationType)animationType
+{
+    _animationType = animationType;
+    
+    if (animationType == AnimationTypeLottie)
+    {
+        if (!_hasLottieLoad)
+        {
+            [self addSubview:self.lotAnimationView];
+            _hasLottieLoad = YES;
+        }
+        
+        _lotAnimationView.hidden = NO;
+        _svgaPlayer.hidden = YES;
+    }
+    else if (animationType == AnimationTypeSVGA)
+    {
+        if (!_hasSVGALoad)
+        {
+            [self addSubview:self.svgaPlayer];
+            _hasSVGALoad = YES;
+        }
+        
+        _lotAnimationView.hidden = YES;
+        _svgaPlayer.hidden = NO;
+    }
+}
+
+- (void)setFrame:(CGRect)frame
+{
+    [super setFrame:frame];
+    
+    _lotAnimationView.frame = CGRectMake(0, 0, frame.size.width, frame.size.height);
+    _svgaPlayer.frame = CGRectMake(0, 0, frame.size.width, frame.size.height);
 }
 
 @end
