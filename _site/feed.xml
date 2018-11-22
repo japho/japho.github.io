@@ -5,9 +5,59 @@
     <description>The shortest answer is doing.</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Wed, 21 Nov 2018 10:28:00 +0800</pubDate>
-    <lastBuildDate>Wed, 21 Nov 2018 10:28:00 +0800</lastBuildDate>
+    <pubDate>Thu, 22 Nov 2018 09:49:09 +0800</pubDate>
+    <lastBuildDate>Thu, 22 Nov 2018 09:49:09 +0800</lastBuildDate>
     <generator>Jekyll v3.8.4</generator>
+    
+      <item>
+        <title>iOS PDFKit 开发指北</title>
+        <description>&lt;h2 id=&quot;前言&quot;&gt;前言&lt;/h2&gt;
+
+&lt;p&gt;2017年夏天，在苹果全球开发者大会（WWDC）上，苹果公司终于推出了针对于 iOS 的 PDFKit 支持。PDFKit 自从 MacOS 10.4 以来一直在 AppKit for MacOS 中。但 UIKit 却迟迟得不到支持，尽管苹果公司之前在 iBooks 和 Mail 中使用过 PDFKit ， 但是该框架并未向开发人员开房。&lt;/p&gt;
+
+&lt;p&gt;PDFKit 包含了大量关于 PDF 相关的功能，例如，打开，修改，绘图和保存 PDF ，也包含了搜索文本。在 iOS 11 后，苹果终于开放了 PDFKit 。目前（虽然离 PDFKit 发布已经过了一年多），但是目前中文资料和 Demo 确实比较少，下面笔者就带着大家简单的了解一下 PDFKit。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ws1.sinaimg.cn/large/006tNbRwly1fxfu2iy4ydj30m80ct43b.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;核心功能&quot;&gt;核心功能&lt;/h2&gt;
+
+&lt;p&gt;主要核心功能如下：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;PDFView&lt;/strong&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;用于显示 PDF ，包括选择的内容，导航，缩放等功能。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;strong&gt;PDFDocument&lt;/strong&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;表示允许您写入、搜索和选择PDF数据的PDF数据或文件。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;strong&gt;PDFPage&lt;/strong&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;呈现PDF数据，添加注释，获取页面文本等等。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;strong&gt;PDFAnnotation&lt;/strong&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;PDF 中的附加内容，包括注释、链接、表单等。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;实现一个简单的-pdf-阅读器&quot;&gt;实现一个简单的 PDF 阅读器&lt;/h2&gt;
+
+</description>
+        <pubDate>Wed, 21 Nov 2018 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2018/11/21/guideline-of-pdfkit/</link>
+        <guid isPermaLink="true">http://localhost:4000/2018/11/21/guideline-of-pdfkit/</guid>
+        
+        <category>iOS</category>
+        
+        
+      </item>
     
       <item>
         <title>优雅的动画实现方案SVGA、Lottie</title>
@@ -1328,54 +1378,6 @@ CFRelease(coreFoundationObject);
         <pubDate>Mon, 02 Jul 2018 00:00:00 +0800</pubDate>
         <link>http://localhost:4000/2018/07/02/only-dealloc-notification-in-dealloc-methods/</link>
         <guid isPermaLink="true">http://localhost:4000/2018/07/02/only-dealloc-notification-in-dealloc-methods/</guid>
-        
-        <category>iOS</category>
-        
-        <category>读书笔记</category>
-        
-        
-      </item>
-    
-      <item>
-        <title>勿在分类中声明属性</title>
-        <description>&lt;p&gt;尽管在技术上说，分类中可以声明属性，但是还是要尽量避免这种做法。因为，分类无法向类中新增实例变量，因此，他们无法把实现属性所需的实例变量合成出来。这时，需要在分类中为该属性实现&lt;code class=&quot;highlighter-rouge&quot;&gt;setter&lt;/code&gt;  &amp;amp;&amp;amp; &lt;code class=&quot;highlighter-rouge&quot;&gt;getter&lt;/code&gt;方法，此时，可将存取方法生命为&lt;code class=&quot;highlighter-rouge&quot;&gt;@dynamic&lt;/code&gt;，就是说，这些方法在运行期再去提供，编译器目前是看不到的。&lt;/p&gt;
-
-&lt;p&gt;利用关联对象解决这个问题：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#import &amp;lt;objc/runtime.h&amp;gt;
-
-static const char *propertyKey =  &quot;porpertyKey&quot;;
-
-@implementation Person
-
--  (NSArray  *)friends
-{
-return objc_getAssociatedObject(self,  porpertyKey);
-}
-
--  (void)setFriends:(NSArray  *)friends
-{
-objc_setAssociatedObject(self,  porpertyKey,  firends,  OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-@end
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;这种方法在技术上可行，但是并不太理想，要把相似的代码写很多遍，而且在内存管理上容易出现错误。例如在为属性实现存取方法时，经常忘记遵从内存管理语义，而且修改属性特质（&lt;code class=&quot;highlighter-rouge&quot;&gt;attribute&lt;/code&gt;）时，也不能忘记修改存取方法。这里还要考虑可变对象的问题，是否传进一个不可变对象，需要生成一个可变对象的问题。&lt;/p&gt;
-
-&lt;p&gt;所以应当把分类理解成一种手段，目的在于扩展类的功能，而非封装数据。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;要点：&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;把封装数据所用的全部属性都定义在类的主接口里。&lt;/li&gt;
-  &lt;li&gt;在“&lt;code class=&quot;highlighter-rouge&quot;&gt;class-continuation&lt;/code&gt;分类”之外的其他分类中，可以定义存取方法，但是尽量不要定义属性。&lt;/li&gt;
-&lt;/ul&gt;
-
-</description>
-        <pubDate>Sun, 01 Jul 2018 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2018/07/01/do-not-using-property-in-category/</link>
-        <guid isPermaLink="true">http://localhost:4000/2018/07/01/do-not-using-property-in-category/</guid>
         
         <category>iOS</category>
         

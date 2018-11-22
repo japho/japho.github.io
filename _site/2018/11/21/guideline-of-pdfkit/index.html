@@ -10,7 +10,7 @@
     <meta name="keywords"  content="Japho, Japho Blog, Japho的博客, iOS, Apple, iPhone">
     <meta name="theme-color" content="#000000">
     
-    <title>UIButton传递多个参数的方法 - Japho Blog</title>
+    <title>iOS PDFKit 开发指北 - Japho Blog</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -22,7 +22,7 @@
     <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
     
     <!-- Canonical URL -->
-    <link rel="canonical" href="http://localhost:4000/2016/07/16/UIButton-passes-multiple-parameters/">
+    <link rel="canonical" href="http://localhost:4000/2018/11/21/guideline-of-pdfkit/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -154,13 +154,13 @@
 
     <!-- Image to hack wechat -->
 <!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
-<!-- <img src="/postimage/post-bg-swift2.jpg" width="0" height="0"> -->
+<!-- <img src="/postimage/post-bg-20181121.jpg" width="0" height="0"> -->
 
 <!-- Post Header -->
 <style type="text/css">
     header.intro-header{
         position: relative;
-        background-image: url('/postimage/post-bg-swift2.jpg')
+        background-image: url('/postimage/post-bg-20181121.jpg')
     }
 
     
@@ -176,12 +176,12 @@
                         <a class="tag" href="/tags/#iOS" title="iOS">iOS</a>
                         
                     </div>
-                    <h1>UIButton传递多个参数的方法</h1>
+                    <h1>iOS PDFKit 开发指北</h1>
                     
                     
-                    <h2 class="subheading">使用关联函数来解决这个问题</h2>
+                    <h2 class="subheading">Guideline of PDFKit on iOS 11</h2>
                     
-                    <span class="meta">Posted by Japho on July 16, 2016</span>
+                    <span class="meta">Posted by Japho on November 21, 2018</span>
                 </div>
             </div>
         </div>
@@ -201,90 +201,42 @@
 
 				<h2 id="前言">前言</h2>
 
-<p>在平时开发时经常会要遇到通过button的绑定值来做逻辑处理以区分不同的button，通常使用tag来区分，但是当需要传多个值的时候这就比较麻烦了，通常考虑用全局变量来传值，今天来介绍另一种给<code class="highlighter-rouge">UIButton</code>传值的方法——关联函数。下面来简单介绍下关联。</p>
+<p>2017年夏天，在苹果全球开发者大会（WWDC）上，苹果公司终于推出了针对于 iOS 的 PDFKit 支持。PDFKit 自从 MacOS 10.4 以来一直在 AppKit for MacOS 中。但 UIKit 却迟迟得不到支持，尽管苹果公司之前在 iBooks 和 Mail 中使用过 PDFKit ， 但是该框架并未向开发人员开房。</p>
 
-<h2 id="关联">关联</h2>
+<p>PDFKit 包含了大量关于 PDF 相关的功能，例如，打开，修改，绘图和保存 PDF ，也包含了搜索文本。在 iOS 11 后，苹果终于开放了 PDFKit 。目前（虽然离 PDFKit 发布已经过了一年多），但是目前中文资料和 Demo 确实比较少，下面笔者就带着大家简单的了解一下 PDFKit。</p>
 
-<p>关联是指把两个对象相互关联起来，使得其中的一个对象作为另外一个对象的一部分。
-关联特性只有在Mac OS X V10.6以及以后的版本上才是可用的。</p>
+<p><img src="https://ws1.sinaimg.cn/large/006tNbRwly1fxfu2iy4ydj30m80ct43b.jpg" alt="" /></p>
 
-<h2 id="在类的定义之外为类增加额外的存储空间">在类的定义之外为类增加额外的存储空间</h2>
+<h2 id="核心功能">核心功能</h2>
 
-<p>使用关联，我们可以不用修改类的定义而为其对象增加存储空间。这在我们无法访问到类的源码的时候或者是考虑到二进制兼容性的时候是非常有用。</p>
+<p>主要核心功能如下：</p>
 
-<p>关联是基于关键字的，因此，我们可以为任何对象增加任意多的关联，每个都使用不同的关键字即可。关联是可以保证被关联的对象在关联对象的整个生命周期都是可用的（在垃圾自动回收环境下也不会导致资源不可回收）。</p>
-
-<h2 id="创建关联">创建关联</h2>
-
-<p>创建关联要使用到Objective-C的运行时函数：<code class="highlighter-rouge">objc_setAssociatedObject</code>来把一个对象与另外一个对象进行关联。该函数需要四个参数：源对象，关键字，关联的对象和一个关联策略。当然，此处的关键字和关联策略是需要进一步讨论的。</p>
-
-<ul>
-  <li>关键字是一个void类型的指针。每一个关联的关键字必须是唯一的。通常都是会采用静态变量来作为关键字。</li>
-  <li>关联策略表明了相关的对象是通过赋值，保留引用还是复制的方式进行关联的；还有这种关联是原子的还是非原子的。这里的关联策略和声明属性时的很类似。这种关联策略是通过使用预先定义好的常量来表示的。</li>
-</ul>
-
-<p>下面的代码展示了如何把一个字符串关联到一个数组上。
-注意使用时导入头文件<code class="highlighter-rouge"> &lt;objc/runtime.h&gt;</code>
-<code class="highlighter-rouge">objc_setAssociatedObject</code>需要四个参数：源对象，关键字，关联的对象和一个关联策略。</p>
+<p><strong>PDFView</strong></p>
 
 <blockquote>
-  <p>1、源对象alert</p>
-
-  <p>2、关键字 唯一静态变量key associatedkey</p>
-
-  <p>3、关联的对象 sender</p>
-
-  <p>4、关键策略  <code class="highlighter-rouge">OBJC_ASSOCIATION_RETAIN_NONATOMIC</code></p>
+  <p>用于显示 PDF ，包括选择的内容，导航，缩放等功能。</p>
 </blockquote>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">static</span> <span class="n">char</span> <span class="n">overviewKey</span><span class="p">;</span>    
-<span class="kt">NSArray</span> <span class="o">*</span> <span class="n">array</span> <span class="o">=</span><span class="p">[[</span><span class="kt">NSArray</span> <span class="n">alloc</span><span class="p">]</span> <span class="nv">initWidthObjects</span><span class="p">:</span><span class="s">@"One"</span><span class="p">,</span> <span class="s">@"Two"</span><span class="p">,</span> <span class="s">@"Three"</span><span class="p">,</span> <span class="kc">nil</span> <span class="kc">nil</span><span class="p">];</span>    
-<span class="kt">NSString</span> <span class="o">*</span> <span class="n">overview</span> <span class="o">=</span> <span class="s">@"First three numbers"</span><span class="p">;</span>    
-<span class="nf">objc_setAssociatedObject</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">overviewKey</span><span class="p">,</span> <span class="n">overview</span><span class="p">,</span> <span class="kt">OBJC_ASSOCIATION_RETAIN_NONATOMIC</span><span class="p">);</span><span class="err"> </span>
-</code></pre></div></div>
+<p><strong>PDFDocument</strong></p>
 
-<h2 id="获取关联对象">获取关联对象</h2>
+<blockquote>
+  <p>表示允许您写入、搜索和选择PDF数据的PDF数据或文件。</p>
+</blockquote>
 
-<p>获取相关联的对象时使用Objective-C函数<code class="highlighter-rouge">objc_getAssociatedObject</code>。接着上面的代码，我们可以使用如下代码来获取与array相关联的字符串：</p>
+<p><strong>PDFPage</strong></p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">NSString</span> <span class="o">*</span> <span class="n">associatedObject</span> <span class="o">=</span> <span class="p">(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nf">objc_getAssociatedObject</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">oveviewKey</span><span class="p">);</span>
-</code></pre></div></div>
+<blockquote>
+  <p>呈现PDF数据，添加注释，获取页面文本等等。</p>
+</blockquote>
 
-<h2 id="断开关联">断开关联</h2>
+<p><strong>PDFAnnotation</strong></p>
 
-<p>断开关联是使用<code class="highlighter-rouge">objc_setAssociatedObject</code>函数，传入<code class="highlighter-rouge">nil</code>值即可。接着上面的程序，我们可以使用如下的代码来断开字符串<code class="highlighter-rouge">overview</code>和<code class="highlighter-rouge">arry</code>之间的关联</p>
+<blockquote>
+  <p>PDF 中的附加内容，包括注释、链接、表单等。</p>
+</blockquote>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">objc_setAssociatedObject</span><span class="p">(</span><span class="n">array</span><span class="p">,</span><span class="err"> </span><span class="o">&amp;</span><span class="n">overviewKey</span><span class="p">,</span><span class="err"> </span><span class="kc">nil</span><span class="p">,</span><span class="err"> </span><span class="kt">OBJC_ASSOCIATION_ASSIGN</span><span class="p">);</span>
-</code></pre></div></div>
+<h2 id="实现一个简单的-pdf-阅读器">实现一个简单的 PDF 阅读器</h2>
 
-<p>其中，被关联的对象为<code class="highlighter-rouge">nil</code>，此时关联策略也就无关紧要了。使用函数<code class="highlighter-rouge">objc_removeAssociatedObjects</code>可以断开所有关联。通常情况下不建议使用这个函数，因为他会断开所有关联。只有在需要把对象恢复到“原始状态”的时候才会使用这个函数。</p>
-
-<h2 id="实现uibutton传值">实现UIButton传值</h2>
-
-<p>通过btn传递两个实例对象<code class="highlighter-rouge">firstObject</code>和<code class="highlighter-rouge">secondObject</code>，创建button并关联对象及button的点击事件</p>
-
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">UIButton</span> <span class="o">*</span><span class="n">btn</span> <span class="o">=</span> <span class="c1">// create the button  </span>
-<span class="nf">objc_setAssociatedObject</span><span class="p">(</span><span class="n">btn</span><span class="p">,</span> <span class="s">"firstObject"</span><span class="p">,</span> <span class="n">someObject</span><span class="p">,</span> <span class="kt">OBJC_ASSOCIATION_RETAIN_NONATOMIC</span><span class="p">);</span>  
-<span class="nf">objc_setAssociatedObject</span><span class="p">(</span><span class="n">btn</span><span class="p">,</span> <span class="s">"secondObject"</span><span class="p">,</span> <span class="n">otherObject</span><span class="p">,</span> <span class="kt">OBJC_ASSOCIATION_RETAIN_NONATOMIC</span><span class="p">);</span>  
-<span class="p">[</span><span class="n">btn</span> <span class="nv">addTarget</span><span class="p">:</span><span class="k">self</span> <span class="nv">action</span><span class="p">:</span><span class="kd">@selector(click:)</span> <span class="nv">forControlEvents</span><span class="p">:</span><span class="kt">UIControlEventTouchUpInside</span><span class="p">];</span>  
-  
-<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">click</span><span class="p">:(</span><span class="kt">UIButton</span> <span class="o">*</span><span class="p">)</span><span class="n">sender</span>  
-<span class="p">{</span>  
-    <span class="n">id</span> <span class="n">first</span> <span class="o">=</span> <span class="nf">objc_getAssociatedObject</span><span class="p">(</span><span class="n">btn</span><span class="p">,</span> <span class="s">"firstObject"</span><span class="p">);</span>  
-    <span class="n">id</span> <span class="n">second</span> <span class="o">=</span> <span class="nf">objc_setAssociatedObject</span><span class="p">(</span><span class="n">btn</span><span class="p">,</span> <span class="s">"secondObject"</span><span class="p">);</span>  
-    <span class="c1">// etc.  </span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p>向以上方法那样，只要设置了关联，当把button传递给@selector的参数时，也顺便把另外两个参数也传递过去了。就类似设了button的两个属性，但是这种方法简单多了。</p>
-
-<ul>
-  <li>第一步: 设定关联<code class="highlighter-rouge">objc_setAssociatedObject(btn, "firstObject", someObject, OBJC_ASSOCIATION_RETAIN_NONATOMIC);</code>第一个参数：btn为被关联者(主体)，第二个参数：<code class="highlighter-rouge">firstObject</code>为指向关联的对象的指针(一般为一个<code class="highlighter-rouge">static</code>字符串)，第三个参数：关联的对象实例，第四个对象：关联的方式(有几种，类似设定.h文件属性时候的 <code class="highlighter-rouge">assign</code>,<code class="highlighter-rouge">retain</code>等)</li>
-  <li>第二步：得到关联的对象
-<code class="highlighter-rouge">id first = objc_getAssociatedObject(btn, "firstObject");</code>第一个参数：为被关联者第二个参数：为关联对象的指针。</li>
-</ul>
-
-<p>参考：<a href="http://stackoverflow.com">http://stackoverflow.com</a></p>
 
 
                 <hr style="visibility: hidden;">
@@ -292,19 +244,12 @@
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/2016/06/14/delegate-notification-KVO-selection/" data-toggle="tooltip" data-placement="top" title="delegate、notification、KVO如何选择">
+                        <a href="/2018/11/06/elegant-animation-plan-SVGA-Lottie/" data-toggle="tooltip" data-placement="top" title="优雅的动画实现方案SVGA、Lottie">
                         Previous<br>
-                        <span>delegate、notification、KVO如何选择</span>
+                        <span>优雅的动画实现方案SVGA、Lottie</span>
                         </a>
                     </li>
                     
-                    
-                    <li class="next">
-                        <a href="/2016/08/18/attention-of-using-Block/" data-toggle="tooltip" data-placement="top" title="使用Block需注意的问题">
-                        Next<br>
-                        <span>使用Block需注意的问题</span>
-                        </a>
-                    </li>
                     
                 </ul>
 
