@@ -213,30 +213,269 @@
 
 <p><strong>PDFView</strong></p>
 
-<blockquote>
-  <p>用于显示 PDF ，包括选择的内容，导航，缩放等功能。</p>
-</blockquote>
+<ul>
+  <li>用于显示 PDF ，包括选择的内容，导航，缩放等功能。</li>
+</ul>
 
 <p><strong>PDFDocument</strong></p>
 
-<blockquote>
-  <p>表示允许您写入、搜索和选择PDF数据的PDF数据或文件。</p>
-</blockquote>
+<ul>
+  <li>表示允许您写入、搜索和选择PDF数据的PDF数据或文件。</li>
+</ul>
 
 <p><strong>PDFPage</strong></p>
 
-<blockquote>
-  <p>呈现PDF数据，添加注释，获取页面文本等等。</p>
-</blockquote>
+<ul>
+  <li>呈现PDF数据，添加注释，获取页面文本等等。</li>
+</ul>
 
 <p><strong>PDFAnnotation</strong></p>
 
-<blockquote>
-  <p>PDF 中的附加内容，包括注释、链接、表单等。</p>
-</blockquote>
+<ul>
+  <li>PDF 中的附加内容，包括注释、链接、表单等。</li>
+</ul>
 
 <h2 id="实现一个简单的-pdf-阅读器">实现一个简单的 PDF 阅读器</h2>
 
+<p>让我看到你们的双手， put your hands up!</p>
+
+<h3 id="创建-pdfview">创建 PDFView</h3>
+
+<p>引入 <code class="highlighter-rouge">#import &lt;PDFKit/PDFKit.h&gt;</code> ，创建 PDFView ，创建之前，首先要创建 PDFDocument ，这里通过文件路径 URl 进行创建。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="kt">NSString</span> <span class="o">*</span><span class="n">pdfPath</span> <span class="o">=</span> <span class="p">[[</span><span class="kt">NSBundle</span> <span class="n">mainBundle</span><span class="p">]</span> <span class="nv">pathForResource</span><span class="p">:</span><span class="s">@"swift"</span> <span class="nv">ofType</span><span class="p">:</span><span class="s">@"pdf"</span><span class="p">];</span>
+    <span class="kt">NSURL</span> <span class="o">*</span><span class="n">pdfUrl</span> <span class="o">=</span> <span class="p">[</span><span class="kt">NSURL</span> <span class="nv">fileURLWithPath</span><span class="p">:</span><span class="n">pdfPath</span><span class="p">];</span>
+    <span class="kt">PDFDocument</span> <span class="o">*</span><span class="n">docunment</span> <span class="o">=</span> <span class="p">[[</span><span class="kt">PDFDocument</span> <span class="n">alloc</span><span class="p">]</span> <span class="nv">initWithURL</span><span class="p">:</span><span class="n">pdfUrl</span><span class="p">];</span>
+</code></pre></div></div>
+
+<p>创建 PDFView ，将 PDFDucument 对象赋给 PDFView。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">self</span><span class="o">.</span><span class="n">pdfView</span> <span class="o">=</span> <span class="p">[[</span><span class="kt">PDFView</span> <span class="n">alloc</span><span class="p">]</span> <span class="nv">initWithFrame</span><span class="p">:</span><span class="k">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">bounds</span><span class="p">];</span>
+    <span class="k">self</span><span class="o">.</span><span class="n">pdfView</span><span class="o">.</span><span class="n">document</span> <span class="o">=</span> <span class="n">docunment</span><span class="p">;</span>
+    <span class="k">self</span><span class="o">.</span><span class="n">pdfView</span><span class="o">.</span><span class="n">autoScales</span> <span class="o">=</span> <span class="kt">YES</span><span class="p">;</span>
+    <span class="k">self</span><span class="o">.</span><span class="n">pdfView</span><span class="o">.</span><span class="n">userInteractionEnabled</span> <span class="o">=</span> <span class="kt">YES</span><span class="p">;</span>
+    <span class="k">self</span><span class="o">.</span><span class="n">pdfView</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="p">[</span><span class="kt">UIColor</span> <span class="n">grayColor</span><span class="p">];</span>
+</code></pre></div></div>
+
+<p>至此，就实现了 PDF 的读取及显示。</p>
+
+<p><img src="https://ws4.sinaimg.cn/large/006tNbRwly1fxglxqxk7mj30ak0kw0vz.jpg" alt="" /></p>
+
+<h3 id="创建-pdfthumbnail">创建 PDFThumbnail</h3>
+
+<ul>
+  <li>PDF 缩略图的创建</li>
+</ul>
+
+<p>首先获取 PDFDocument 的属性 PDFPage ：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Returns a PDFPage object representing the page at index. Will raise an exception if index is out of bounds. Indices</span>
+<span class="c1">// are zero-based.</span>
+<span class="o">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="kt">PDFPage</span> <span class="o">*</span><span class="p">)</span><span class="nv">pageAtIndex</span><span class="p">:(</span><span class="kt">NSUInteger</span><span class="p">)</span><span class="n">index</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>通过 PDFPage 的对象方法，可以获取 PDF 的缩略图，这里需传入图片的 size：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Convenience function that returns an image of this page, with annotations, that fits the given size.</span>
+<span class="c1">// Note that the produced image is "size to fit": it retains the original page geometry. The size you give</span>
+<span class="c1">// may not match the size of the returned image, but the returned image is guaranteed to be equal or less.</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">PDFKitPlatformImage</span> <span class="o">*</span><span class="p">)</span><span class="nv">thumbnailOfSize</span><span class="p">:(</span><span class="kt">PDFSize</span><span class="p">)</span><span class="n">size</span> <span class="nv">forBox</span><span class="p">:(</span><span class="kt">PDFDisplayBox</span><span class="p">)</span><span class="n">box</span> <span class="kt">PDFKIT_AVAILABLE</span><span class="p">(</span><span class="mi">10_13</span><span class="p">,</span> <span class="mi">11_0</span><span class="p">);</span>
+</code></pre></div></div>
+<p>创建 collectionViewCell ，通过 collectionView 就可以实现一个大致的功能。</p>
+
+<p><img src="https://ws1.sinaimg.cn/large/006tNbRwly1fxgm7307rfj30ak0kw40z.jpg" alt="" /></p>
+
+<p><strong>点击跳转</strong></p>
+
+<p>获取 cell 的点击事件，取出所点击的 PDFPage 对象，用下述方法进行跳转：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Scrolls to page.</span>
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">goToPage</span><span class="p">:(</span><span class="kt">PDFPage</span> <span class="o">*</span><span class="p">)</span><span class="n">page</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="获取-pdf-的大纲-pdfoutline">获取 PDF 的大纲 PDFOutline</h3>
+
+<p>PDFOutline 是一个层级关系的对象，他表示 PDF 的大纲（也就是我们常用的书签）。每个 PDFOutline 对象都可通过 <code class="highlighter-rouge">childAtIndex:</code> 方法获取出他的孩子对象，<code class="highlighter-rouge">注意</code>，这里需要先判断 <code class="highlighter-rouge">numberOfChildren</code>，以确定该 outline 对象存在多少个孩子节点，避免下标超界引发的崩溃。</p>
+
+<p><strong>实现大纲功能</strong></p>
+
+<p>从 PDFDocument 中获取 PDFOutline</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">PDFOutline</span> <span class="o">*</span><span class="n">outline</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="n">document</span><span class="o">.</span><span class="n">outlineRoot</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>遍历 outline 孩子节点（默认只遍历一层）</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">setOutlineRoot</span><span class="p">:(</span><span class="kt">PDFOutline</span> <span class="o">*</span><span class="p">)</span><span class="n">outlineRoot</span>
+<span class="p">{</span>
+    <span class="n">_outlineRoot</span> <span class="o">=</span> <span class="n">outlineRoot</span><span class="p">;</span>
+    
+    <span class="k">for</span> <span class="p">(</span><span class="n">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">outlineRoot</span><span class="o">.</span><span class="n">numberOfChildren</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">PDFOutline</span> <span class="o">*</span><span class="n">outline</span> <span class="o">=</span> <span class="p">[</span><span class="n">outlineRoot</span> <span class="nv">childAtIndex</span><span class="p">:</span><span class="n">i</span><span class="p">];</span>
+        <span class="n">outline</span><span class="o">.</span><span class="n">isOpen</span> <span class="o">=</span> <span class="kt">NO</span><span class="p">;</span>
+        <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">arrData</span> <span class="nv">addObject</span><span class="p">:</span><span class="n">outline</span><span class="p">];</span>
+    <span class="p">}</span>
+    
+    <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">tableView</span> <span class="n">reloadData</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>当点击节点时，判断有无孩子节点，进行当前数组的新增或删除。</p>
+
+<blockquote>
+  <p><strong>插入节点</strong></p>
+
+  <p>这里只添加孩子节点中一层，不进行递归操作。</p>
+</blockquote>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">insertOulineWithParentOutline</span><span class="p">:(</span><span class="kt">PDFOutline</span> <span class="o">*</span><span class="p">)</span><span class="n">parentOutline</span>
+<span class="p">{</span>
+    <span class="kt">NSInteger</span> <span class="n">baseIndex</span> <span class="o">=</span> <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">arrData</span> <span class="nv">indexOfObject</span><span class="p">:</span><span class="n">parentOutline</span><span class="p">];</span>
+    
+    <span class="k">for</span> <span class="p">(</span><span class="n">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">parentOutline</span><span class="o">.</span><span class="n">numberOfChildren</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">PDFOutline</span> <span class="o">*</span><span class="n">tempOuline</span> <span class="o">=</span> <span class="p">[</span><span class="n">parentOutline</span> <span class="nv">childAtIndex</span><span class="p">:</span><span class="n">i</span><span class="p">];</span>
+        <span class="n">tempOuline</span><span class="o">.</span><span class="n">isOpen</span> <span class="o">=</span> <span class="kt">NO</span><span class="p">;</span>
+        <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">arrData</span> <span class="nv">insertObject</span><span class="p">:</span><span class="n">tempOuline</span> <span class="nv">atIndex</span><span class="p">:</span><span class="n">baseIndex</span> <span class="o">+</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p><strong>删除节点</strong></p>
+
+  <p>首先判断该节点下有无孩子节点，若无直接返回；</p>
+
+  <p>判断每个孩子节点是否还存在孩子节点，若有，则进行递归操作逐一进行删除。</p>
+
+  <p><code class="highlighter-rouge">注意</code>：此处是为了点击回收父节点时将该父节点下的所有子节点（不论层级）全部删除。</p>
+</blockquote>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">removeOutlineWithParentOuline</span><span class="p">:(</span><span class="kt">PDFOutline</span> <span class="o">*</span><span class="p">)</span><span class="n">parentOutline</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">parentOutline</span><span class="o">.</span><span class="n">numberOfChildren</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="k">for</span> <span class="p">(</span><span class="n">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">parentOutline</span><span class="o">.</span><span class="n">numberOfChildren</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">PDFOutline</span> <span class="o">*</span><span class="n">node</span> <span class="o">=</span> <span class="p">[</span><span class="n">parentOutline</span> <span class="nv">childAtIndex</span><span class="p">:</span><span class="n">i</span><span class="p">];</span>
+        
+        <span class="k">if</span> <span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">numberOfChildren</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">node</span><span class="o">.</span><span class="n">isOpen</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="p">[</span><span class="k">self</span> <span class="nv">removeOutlineWithParentOuline</span><span class="p">:</span><span class="n">node</span><span class="p">];</span>
+            
+            <span class="kt">NSInteger</span> <span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">arrData</span> <span class="nv">indexOfObject</span><span class="p">:</span><span class="n">node</span><span class="p">];</span>
+            
+            <span class="k">if</span> <span class="p">(</span><span class="n">index</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">arrData</span> <span class="nv">removeObjectAtIndex</span><span class="p">:</span><span class="n">index</span><span class="p">];</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">else</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">([</span><span class="k">self</span><span class="o">.</span><span class="n">arrData</span> <span class="nv">containsObject</span><span class="p">:</span><span class="n">node</span><span class="p">])</span>
+            <span class="p">{</span>
+                <span class="kt">NSInteger</span> <span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">arrData</span> <span class="nv">indexOfObject</span><span class="p">:</span><span class="n">node</span><span class="p">];</span>
+                
+                <span class="k">if</span> <span class="p">(</span><span class="n">index</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">arrData</span> <span class="nv">removeObjectAtIndex</span><span class="p">:</span><span class="n">index</span><span class="p">];</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p><strong>判断节点深度，一遍设置显示偏移量</strong></p>
+</blockquote>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">-</span> <span class="p">(</span><span class="kt">NSInteger</span><span class="p">)</span><span class="nv">findDepthWithOutline</span><span class="p">:(</span><span class="kt">PDFOutline</span> <span class="o">*</span><span class="p">)</span><span class="n">outline</span>
+<span class="p">{</span>
+    <span class="kt">NSInteger</span> <span class="n">depth</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="kt">PDFOutline</span> <span class="o">*</span><span class="n">tempOutline</span> <span class="o">=</span> <span class="n">outline</span><span class="p">;</span>
+    
+    <span class="k">while</span> <span class="p">(</span><span class="n">tempOutline</span><span class="o">.</span><span class="n">parent</span> <span class="o">!=</span> <span class="kc">nil</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">depth</span><span class="o">++</span><span class="p">;</span>
+        <span class="n">tempOutline</span> <span class="o">=</span> <span class="n">tempOutline</span><span class="o">.</span><span class="n">parent</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="n">depth</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><img src="https://ws1.sinaimg.cn/large/006tNbRwly1fxgo40qbtnj30ak0kw3zy.jpg" alt="" /></p>
+
+<h3 id="实现-pdf-搜索功能">实现 PDF 搜索功能</h3>
+
+<p>这里搜索功能主要靠下述方法实现</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Begins a find, searching the document for string.  Search results are handled via a </span>
+<span class="c1">// PDFDocumentDidFindMatchNotification or if the delegate implements -[didMatchString:]. Supported options are: </span>
+<span class="c1">// NSCaseInsensitiveSearch, NSLiteralSearch, and NSBackwardsSearch.</span>
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">beginFindString</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">string</span> <span class="nv">withOptions</span><span class="p">:(</span><span class="kt">NSStringCompareOptions</span><span class="p">)</span><span class="n">options</span><span class="p">;</span>
+</code></pre></div></div>
+<p>调用此方法之前，首先需将 PDFDocument 设置代理，通过 PDFDocument 的代理进行回调。获取 PDFSelection 对象，</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#pragma mark - --- PDFDocument Delegate ---</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">didMatchString</span><span class="p">:(</span><span class="kt">PDFSelection</span> <span class="o">*</span><span class="p">)</span><span class="n">instance</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">arrData</span> <span class="nv">addObject</span><span class="p">:</span><span class="n">instance</span><span class="p">];</span>
+    <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">tableView</span> <span class="n">reloadData</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>再根据 selection 对象显示搜索内容。</p>
+
+<p><img src="https://ws2.sinaimg.cn/large/006tNbRwly1fxgoiwncwuj30ak0kwgpp.jpg" alt="" /></p>
+
+<h3 id="pdf-缩放功能">PDF 缩放功能</h3>
+
+<p>调用下述方法即可对 PDFView 进行缩放，</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Zooming changes the scaling by root-2.</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nv">zoomIn</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">id</span><span class="p">)</span><span class="n">sender</span><span class="p">;</span>
+<span class="kd">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="kt">BOOL</span> <span class="n">canZoomIn</span><span class="p">;</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nv">zoomOut</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">id</span><span class="p">)</span><span class="n">sender</span><span class="p">;</span>
+<span class="kd">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="kt">BOOL</span> <span class="n">canZoomOut</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p><strong>实现双击缩放或还原：</strong></p>
+
+<p>这里通过设置 pdfView 的 scaleFactor 属性即可实现，<code class="highlighter-rouge">注意</code>：<code class="highlighter-rouge">scaleFactorForSizeToFit</code>属性是当前 PDF 充满屏幕的比例。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="n">doubleTapAction</span>
+<span class="p">{</span>   
+    <span class="k">if</span> <span class="p">(</span><span class="k">self</span><span class="o">.</span><span class="n">pdfView</span><span class="o">.</span><span class="n">scaleFactor</span> <span class="o">==</span> <span class="k">self</span><span class="o">.</span><span class="n">pdfView</span><span class="o">.</span><span class="n">scaleFactorForSizeToFit</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="p">[</span><span class="kt">UIView</span> <span class="nv">animateWithDuration</span><span class="p">:</span><span class="mf">0.2</span> <span class="nv">animations</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
+            <span class="k">self</span><span class="o">.</span><span class="n">pdfView</span><span class="o">.</span><span class="n">scaleFactor</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="n">pdfView</span><span class="o">.</span><span class="n">scaleFactorForSizeToFit</span> <span class="o">*</span> <span class="mi">4</span><span class="p">;</span>
+        <span class="p">}];</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="p">[</span><span class="kt">UIView</span> <span class="nv">animateWithDuration</span><span class="p">:</span><span class="mf">0.2</span> <span class="nv">animations</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
+            <span class="k">self</span><span class="o">.</span><span class="n">pdfView</span><span class="o">.</span><span class="n">scaleFactor</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="n">pdfView</span><span class="o">.</span><span class="n">scaleFactorForSizeToFit</span><span class="p">;</span>
+        <span class="p">}];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="demo">Demo</h2>
+
+<p>GitHub : <a href="https://github.com/japho/PDFDemo">https://github.com/japho/PDFDemo</a></p>
+
+<p>本文作者：<a href="https://japho.top">Japho</a></p>
+
+<p>本文原地址：<a href="https://japho.top/2018/11/21/guideline-of-pdfkit/">https://japho.top/2018/11/21/guideline-of-pdfkit/</a></p>
+
+<p><strong>未经本人同意请勿擅自转载，转载请注明出处。</strong></p>
 
 
                 <hr style="visibility: hidden;">
