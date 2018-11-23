@@ -4,7 +4,7 @@ title:      iOS PDFKit 开发指北
 subtitle:   Guideline of PDFKit on iOS 11
 date:       2018-11-21
 author:     Japho
-header-img: postimage/post-bg-20181121.jpg
+header-img: https://ws3.sinaimg.cn/large/006tNbRwly1fxi16ejbz4j31gs0o6b0j.jpg
 catalog:    true
 tags:
     - iOS
