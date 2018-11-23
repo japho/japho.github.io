@@ -4,7 +4,7 @@ title:      Objective-C 单例模式
 subtitle:   单例模式，不是说说而已
 date:       2016-11-01
 author:     Japho
-header-img: postimage/post-bg-unix-linux.jpg
+header-img: https://ws3.sinaimg.cn/large/006tNbRwly1fxi1qdtxyaj31gs0o676q.jpg
 catalog:    true
 tags:
     - iOS

@@ -4,7 +4,7 @@ title:      使用Block需注意的问题
 subtitle:   Block,了解一下？
 date:       2016-08-18
 author:     Japho
-header-img: postimage/post-bg-swift.jpg
+header-img: https://ws2.sinaimg.cn/large/006tNbRwly1fxi1t1ggo0j31h70phn0o.jpg
 catalog:    true
 tags:
     - iOS

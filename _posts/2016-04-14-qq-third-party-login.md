@@ -4,7 +4,7 @@ title:      iOS QQ第三方登录的实现
 subtitle:   基于QQ原生SDK开发实现
 date:       2016-04-14
 author:     Japho
-header-img: postimage/post-bg-ios9-web.jpg
+header-img: https://ws4.sinaimg.cn/large/006tNbRwly1fxi1vmy4boj31gs0o6dgj.jpg
 catalog:    true
 tags:
     - iOS

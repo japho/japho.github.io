@@ -4,7 +4,7 @@ title:      理解“块”这一概念
 subtitle:   《Effective Objective-C 2.0》读书笔记
 date:       2018-08-12
 author:     Japho
-header-img: postimage/post_computer.jpg
+header-img: https://ws1.sinaimg.cn/large/006tNbRwly1fxi1bm1wroj31gs0o67n1.jpg
 catalog:    true
 tags:
     - iOS

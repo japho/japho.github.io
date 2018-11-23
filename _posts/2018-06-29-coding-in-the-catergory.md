@@ -4,7 +4,7 @@ title:      编码习惯问题
 subtitle:   《Effective Objective-C 2.0》读书笔记
 date:       2018-06-29
 author:     Japho
-header-img: postimage/post-bg-digital-native.jpg
+header-img: https://ws4.sinaimg.cn/large/006tNbRwly1fxi1iri19sj31gs0o6myu.jpg
 catalog:    true
 tags:
     - iOS

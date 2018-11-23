@@ -4,7 +4,7 @@ title:      通过委托与数据源协议进行对象间的通信
 subtitle:   《Effective Objective-C 2.0》读书笔记
 date:       2018-06-27
 author:     Japho
-header-img: postimage/post-bg-e2e-ux.jpg
+header-img: https://ws1.sinaimg.cn/large/006tNbRwly1fxi1jnq3qpj31gs0o6q5n.jpg
 catalog:    true
 tags:
     - iOS

@@ -4,7 +4,7 @@ title:      在dealloc方法中只释放引用并解除监听
 subtitle:   《Effective Objective-C 2.0》读书笔记
 date:       2018-07-02
 author:     Japho
-header-img: postimage/post-bg-android.jpg
+header-img: https://ws2.sinaimg.cn/large/006tNbRwly1fxi1hibwtvj31gs0o6wfr.jpg
 catalog:    true
 tags:
     - iOS

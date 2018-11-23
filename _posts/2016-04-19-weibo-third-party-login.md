@@ -4,7 +4,7 @@ title:      iOS 微博第三方登录的实现
 subtitle:   基于微博原生SDK开发实现
 date:       2016-04-19
 author:     Japho
-header-img: postimage/post_computer.jpg
+header-img: https://ws1.sinaimg.cn/large/006tNbRwly1fxi1bm1wroj31gs0o67n1.jpg
 catalog:    true
 tags:
     - iOS

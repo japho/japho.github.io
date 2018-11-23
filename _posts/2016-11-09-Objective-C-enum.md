@@ -4,7 +4,7 @@ title:      Objective-C 枚举（位移枚举)
 subtitle:   枚举真的有这么简单？快！上车！
 date:       2016-11-09
 author:     Japho
-header-img: postimage/post-bg-debug.png
+header-img: https://ws3.sinaimg.cn/large/006tNbRwly1fxi1ob60b8j31md0sejrj.jpg
 catalog:    true
 tags:
     - iOS

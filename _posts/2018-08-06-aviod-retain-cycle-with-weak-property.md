@@ -4,7 +4,7 @@ title:      以弱引用避免保留环
 subtitle:   《Effective Objective-C 2.0》读书笔记
 date:       2018-08-06
 author:     Japho
-header-img: postimage/post-bg-desk.jpg
+header-img: https://ws3.sinaimg.cn/large/006tNbRwly1fxi1e93auaj30nk0ei0ud.jpg
 catalog:    true
 tags:
     - iOS

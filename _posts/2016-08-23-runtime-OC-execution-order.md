@@ -4,7 +4,7 @@ title:      runtime OC类执行顺序
 subtitle:   Runtime,了解一下？
 date:       2016-08-23
 author:     Japho
-header-img: postimage/post-bg-os-metro.jpg
+header-img: https://ws1.sinaimg.cn/large/006tNbRwly1fxi1sljo26j31gs0o6n0g.jpg
 catalog:    true
 tags:
     - iOS

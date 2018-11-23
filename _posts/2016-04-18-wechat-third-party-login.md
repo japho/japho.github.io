@@ -4,7 +4,7 @@ title:      iOS 微信第三方登录的实现
 subtitle:   原生微信SDK开发
 date:       2016-04-18
 author:     Japho
-header-img: postimage/post_img_wechat.jpg
+header-img: https://ws4.sinaimg.cn/large/006tNbRwly1fxi1uyyii2j31gs0o677c.jpg
 catalog: true
 tags:
     - iOS

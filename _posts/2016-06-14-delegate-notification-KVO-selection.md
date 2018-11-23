@@ -4,7 +4,7 @@ title:      delegate、notification、KVO如何选择
 subtitle:   
 date:       2016-06-14
 author:     Japho
-header-img: postimage/post-bg-re-vs-ng2.jpg
+header-img: https://ws4.sinaimg.cn/large/006tNbRwly1fxi1u2g6e7j31gs0o676q.jpg
 catalog:    true
 tags:
     - iOS

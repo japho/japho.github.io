@@ -4,7 +4,7 @@ title:      理解引用计数
 subtitle:   《Effective Objective-C 2.0》读书笔记
 date:       2018-07-15
 author:     Japho
-header-img: postimage/post-bg-2015.jpg
+header-img: https://ws2.sinaimg.cn/large/006tNbRwly1fxi1gfa392j31gs0o6jv6.jpg
 catalog:    true
 tags:
     - iOS

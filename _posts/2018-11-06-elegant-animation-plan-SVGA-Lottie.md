@@ -4,7 +4,7 @@ title:      优雅的动画实现方案SVGA、Lottie
 subtitle:   减少开发成本，跨平台实现复杂UE动画
 date:       2018-11-06
 author:     Japho
-header-img: postimage/post_pdf_kit.jpg
+header-img: https://ws3.sinaimg.cn/large/006tNbRwly1fxi17sirhpj31gs0o6dud.jpg
 catalog:    true
 tags:
     - iOS

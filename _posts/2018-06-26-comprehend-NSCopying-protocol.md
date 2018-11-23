@@ -4,7 +4,7 @@ title:      理解NSCopying协议
 subtitle:   《Effective Objective-C 2.0》读书笔记
 date:       2018-06-26
 author:     Japho
-header-img: postimage/post-bg-ioses.jpg
+header-img: https://ws2.sinaimg.cn/large/006tNbRwly1fxi1ln4wc9j31o00u0q8t.jpg
 catalog:    true
 tags:
     - iOS
