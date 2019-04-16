@@ -374,6 +374,7 @@ SVGA 的官方库中提供了替换图层的 API ，什么意思呢？
 //
 
 #import <UIKit/UIKit.h>
+#import "SVGAPlayer.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -492,6 +493,17 @@ typedef void (^JFAnimationResourceCompletionBlcok)(CGRect animationBounds, BOOL 
  */
 - (void)setAttributedText:(NSAttributedString *)attributedText forSVGAAnimationWithKey:(NSString *)key;
 
+
+/**
+ 设置SVGA动画中替换Layer
+ 
+ 解析SVGA资源文件：http://svga.io/svga-preview.html
+
+ @param drawingBlock 将自定义Layer添加至contentLayer上
+ @param key SVGA动画中替换layer的key
+ */
+- (void)setDrawingBlock:(SVGAPlayerDynamicDrawingBlock)drawingBlock forSVGAAnimationWithKey:(NSString *)key;
+
 @end
 
 NS_ASSUME_NONNULL_END
@@ -511,8 +523,7 @@ NS_ASSUME_NONNULL_END
 
 #import "JFAnimationView.h"
 #import "SVGA.h"
-#import "LOTAnimationView.h"
-#import "LOTAnimationCache.h"
+#import "Lottie.h"
 
 @interface JFAnimationView () <SVGAPlayerDelegate>
 
@@ -743,6 +754,14 @@ NS_ASSUME_NONNULL_END
     }
 }
 
+- (void)setDrawingBlock:(SVGAPlayerDynamicDrawingBlock)drawingBlock forSVGAAnimationWithKey:(NSString *)key
+{
+    if (self.animationType == AnimationTypeSVGA)
+    {
+        [self.svgaPlayer setDrawingBlock:drawingBlock forKey:key];
+    }
+}
+
 #pragma mark - --- SVGAPlayer Delegate ---
 
 - (void)svgaPlayerDidFinishedAnimation:(SVGAPlayer *)player
@@ -767,7 +786,7 @@ NS_ASSUME_NONNULL_END
     if (!_svgaPlayer)
     {
         _svgaPlayer = [[SVGAPlayer alloc] initWithFrame:self.bounds];
-        _svgaPlayer.contentMode = UIViewContentModeScaleAspectFit;
+        _svgaPlayer.contentMode = self.contentMode;
         _svgaPlayer.loops = 1;
         _svgaPlayer.clearsAfterStop = YES;
         _svgaPlayer.delegate = self;
@@ -791,7 +810,7 @@ NS_ASSUME_NONNULL_END
     if (!_lotAnimationView)
     {
         _lotAnimationView = [[LOTAnimationView alloc] initWithFrame:self.bounds];
-        _lotAnimationView.contentMode = UIViewContentModeScaleAspectFit;
+        _lotAnimationView.contentMode = self.contentMode;
     }
     
     return _lotAnimationView;
@@ -813,6 +832,8 @@ NS_ASSUME_NONNULL_END
 
 - (void)setContentMode:(UIViewContentMode)contentMode
 {
+    [super setContentMode:contentMode];
+    
     _lotAnimationView.contentMode = contentMode;
     _svgaPlayer.contentMode = contentMode;
 }
@@ -854,6 +875,8 @@ NS_ASSUME_NONNULL_END
 }
 
 @end
+
+
 ```
 
 ## 结语
