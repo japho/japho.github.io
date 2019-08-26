@@ -4,7 +4,7 @@ title:      iOS 自定义常见第三方分享
 subtitle:   基于原生SDK开发实现
 date:       2016-09-30
 author:     Japho
-header-img: https://ws4.sinaimg.cn/large/006tNbRwly1fxi1rhr9rwj31gs0o6js3.jpg
+header-img: postimage/post-bg-miui-ux.jpg
 catalog:    true
 tags:
     - iOS

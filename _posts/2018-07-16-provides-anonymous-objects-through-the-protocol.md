@@ -4,7 +4,7 @@ title:      通过协议提供匿名对象
 subtitle:   《Effective Objective-C 2.0》读书笔记
 date:       2018-07-16
 author:     Japho
-header-img: https://ws1.sinaimg.cn/large/006tNbRwly1fxi1bm1wroj31gs0o67n1.jpg
+header-img: postimage/post-bg-desk.jpg
 catalog:    true
 tags:
     - iOS

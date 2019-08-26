@@ -4,7 +4,7 @@ title:      UIButton中imageView和titleLabel的位置调整
 subtitle:   头大的问题终于解决了
 date:       2016-10-25
 author:     Japho
-header-img: https://ws2.sinaimg.cn/large/006tNbRwly1fxi1qxyd37j31gs0o60v1.jpg
+header-img: postimage/post-bg-rwd.jpg
 catalog:    true
 tags:
     - iOS

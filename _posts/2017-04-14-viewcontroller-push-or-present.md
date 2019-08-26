@@ -4,7 +4,7 @@ title:      判断当前viewcontroller是push还是present的方式显示
 subtitle:   妈妈再也不用担心我不会判断了
 date:       2017-04-14
 author:     Japho
-header-img: https://ws2.sinaimg.cn/large/006tNbRwly1fxi1mylw2uj30xc0higmm.jpg
+header-img: postimage/post-bg-iWatch.jpg
 catalog:    true
 tags:
     - iOS

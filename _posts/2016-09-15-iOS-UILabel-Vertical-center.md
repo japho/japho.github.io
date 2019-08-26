@@ -4,7 +4,7 @@ title:      iOS UILabel垂直居中
 subtitle:   解决UILabel默认顶格显示问题
 date:       2016-09-15
 author:     Japho
-header-img: https://ws3.sinaimg.cn/large/006tNbRwly1fxi1s0x00qj31gs0o60vr.jpg
+header-img: postimage/post-bg-universe.jpg
 catalog:    true
 tags:
     - iOS
