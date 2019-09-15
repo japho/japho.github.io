@@ -4,7 +4,7 @@ title:      UIButton传递多个参数的方法
 subtitle:   使用关联函数来解决这个问题
 date:       2016-07-16
 author:     Japho
-header-img: https://ws3.sinaimg.cn/large/006tNbRwly1fxi1i272c2j31ja0o6wk4.jpg
+header-img: postimage/post-bg-swift2.jpg
 catalog:    true
 tags:
     - iOS

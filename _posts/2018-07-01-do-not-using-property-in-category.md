@@ -4,7 +4,7 @@ title:      勿在分类中声明属性
 subtitle:   《Effective Objective-C 2.0》读书笔记
 date:       2018-07-01
 author:     Japho
-header-img: https://ws3.sinaimg.cn/large/006tNbRwly1fxi1i272c2j31ja0o6wk4.jpg
+header-img: postimage/post-bg-coffee.jpg
 catalog:    true
 tags:
     - iOS

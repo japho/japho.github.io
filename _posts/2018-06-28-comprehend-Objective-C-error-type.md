@@ -4,7 +4,7 @@ title:      理解Objective-C错误类型
 subtitle:   《Effective Objective-C 2.0》读书笔记
 date:       2018-06-28
 author:     Japho
-header-img: https://ws1.sinaimg.cn/large/006tNbRwly1fxi1jnq3qpj31gs0o6q5n.jpg
+header-img: postimage/post-bg-e2e-ux.jpg
 catalog:    true
 tags:
     - iOS

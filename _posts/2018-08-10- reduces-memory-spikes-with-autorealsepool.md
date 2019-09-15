@@ -4,7 +4,7 @@ title:      以“自动释放池块”降低内存峰值
 subtitle:   《Effective Objective-C 2.0》读书笔记
 date:       2018-08-10
 author:     Japho
-header-img: https://ws1.sinaimg.cn/large/006tNbRwly1fxi1bm1wroj31gs0o67n1.jpg
+header-img: postimage/post_computer.jpg
 catalog:    true
 tags:
     - iOS

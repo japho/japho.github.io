@@ -4,7 +4,7 @@ title:      如何查找当前的第一响应者
 subtitle:   不调用私有API查找第一响应者
 date:       2017-02-14
 author:     Japho
-header-img: https://ws2.sinaimg.cn/large/006tNbRwly1fxi1nglxwpj31gs0o60sw.jpg
+header-img: postimage/post-bg-miui6.jpg
 catalog:    true
 tags:
     - iOS
