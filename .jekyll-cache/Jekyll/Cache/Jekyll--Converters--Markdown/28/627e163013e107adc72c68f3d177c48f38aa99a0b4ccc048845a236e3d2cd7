@@ -1,0 +1,136 @@
+I"�Q<h3 id="前言">前言</h3>
+
+<p>在使用UIButton时，有时候需要调整按钮内部的imageView和titleLabel的位置和尺寸。在默认情况下，按钮内部的imageView和titleLabel的显示效果是图片在左文字在右，然后两者紧挨在一起构成组合居中显示。如下图：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1269906-d70a97d50e4aabe5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>我们可以使用<code class="highlighter-rouge">setImageEdgeInsets:</code>和<code class="highlighter-rouge">setTitleEdgeInsets:</code>方法来调整两者的位置。在使用这两个方法之前，我们首先要将<code class="highlighter-rouge">imageView</code>和<code class="highlighter-rouge">titleLabel</code>定位在UIButton的左上角位置，方便参照坐标调节位置。使用以下语句来定位(UIButton实例名为btn)：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[[</span><span class="n">btn</span> <span class="nv">setContentHorizontalAlignment</span><span class="p">:</span> <span class="kt">UIControlContentHorizontalAlignmentLeft</span><span class="p">];</span>  
+<span class="p">[</span><span class="n">btn</span> <span class="nv">setContentVerticalAlignment</span><span class="p">:</span> <span class="kt">UIControlContentVerticalAlignmentTop</span><span class="p">];</span> <span class="err"> </span>
+</code></pre></div></div>
+
+<p>另外需要说明，btn的高度为200、宽度为屏幕宽度，imageView的图片的原本尺寸为150x150，<code class="highlighter-rouge">titleLabel</code>使用了<code class="highlighter-rouge">sizeToFit：</code>方法。在定义后，我们分多种情况来讨论<code class="highlighter-rouge">imageView</code>和<code class="highlighter-rouge">titleLabel</code>的位置：</p>
+
+<h3 id="1正常情况">1、正常情况：</h3>
+
+<p>使用了上述的语句后，不进行任何操作，此时按钮的显示情况和坐标情况如下：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1269906-d1dcc04b88e252ac.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>imageView.x=0.000000, imageView.y=0.000000, imageView.width=150.000000, imageView.height=150.000000  
+titleLabel.x=150.000000, titleLabel.y=0.000000, titleLabel.width=180.500000, titleLabel.height=21.500000  
+</code></pre></div></div>
+
+<p>可以看到：<code class="highlighter-rouge">titleLabel</code>的x值是150，说明普通状态下，titleLabel的原点是(150 ,0)。</p>
+
+<h3 id="2将imageview居中将titlelabel左移至贴边">2、将imageView居中，将titleLabel左移至贴边：</h3>
+
+<p>使用以下语句来实现这种情况：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="n">btn</span> <span class="nv">setImageEdgeInsets</span><span class="p">:</span> <span class="kt">UIEdgeInsetsMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">btn</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="o">-</span><span class="n">btn</span><span class="o">.</span><span class="n">imageView</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="p">)</span><span class="o">*</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)];</span>  
+<span class="p">[</span><span class="n">btn</span> <span class="nv">setTitleEdgeInsets</span><span class="p">:</span> <span class="kt">UIEdgeInsetsMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">btn</span><span class="o">.</span><span class="n">imageView</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)];</span>  
+</code></pre></div></div>
+
+<p>此时按钮的显示情况和坐标情况如下：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1269906-bc9ac6ed11edadf9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>可以看到，imageView和titleLabel两者是有可能重叠的，并且titleLabel的x值确实是imageView的宽度。</p>
+
+<h3 id="3使imageview和titlelabel都居中">3、使imageView和titleLabel都居中：</h3>
+<p>使用以下语句来实现这种情况</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="n">btn</span> <span class="nv">setImageEdgeInsets</span><span class="p">:</span> <span class="kt">UIEdgeInsetsMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">btn</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="o">-</span><span class="n">btn</span><span class="o">.</span><span class="n">imageView</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="p">)</span><span class="o">*</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)];</span>  
+<span class="p">[</span><span class="n">btn</span> <span class="nv">setTitleEdgeInsets</span><span class="p">:</span> <span class="kt">UIEdgeInsetsMake</span><span class="p">(</span><span class="n">btn</span><span class="o">.</span><span class="n">imageView</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="p">(</span><span class="n">btn</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="o">-</span><span class="n">btn</span><span class="o">.</span><span class="n">titleLabel</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="p">)</span><span class="o">*</span><span class="mf">0.5</span><span class="o">-</span><span class="n">btn</span><span class="o">.</span><span class="n">imageView</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)];</span> 
+</code></pre></div></div>
+
+<p>此时按钮的显示情况和坐标情况如下：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1269906-41441c76574d6de6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>imageView.x=112.500000, imageView.y=0.000000, imageView.width=150.000000, imageView.height=150.000000  
+titleLabel.x=97.250000, titleLabel.y=150.000000, titleLabel.width=180.500000, titleLabel.height=21.500000  
+</code></pre></div></div>
+
+<p>此时一切正常，符合猜想。</p>
+
+<h3 id="4这时如果imageview的尺寸被压缩">4、这时如果imageView的尺寸被压缩：</h3>
+<p>使用以下语句来将imageView压缩成100x100：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define kImageWidth 100.  </span>
+<span class="p">[</span><span class="n">btn</span> <span class="nv">setImageEdgeInsets</span><span class="p">:</span> <span class="kt">UIEdgeInsetsMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">btn</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="o">-</span><span class="n">kImageWidth</span><span class="p">)</span><span class="o">*</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">btn</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span><span class="o">-</span><span class="n">kImageWidth</span><span class="p">,</span> <span class="p">(</span><span class="n">btn</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="o">-</span><span class="n">kImageWidth</span><span class="p">)</span><span class="o">*</span><span class="mf">0.5</span><span class="p">)];</span>  
+<span class="p">[</span><span class="n">btn</span> <span class="nv">setTitleEdgeInsets</span><span class="p">:</span> <span class="kt">UIEdgeInsetsMake</span><span class="p">(</span><span class="n">btn</span><span class="o">.</span><span class="n">imageView</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="p">(</span><span class="n">btn</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="o">-</span><span class="n">btn</span><span class="o">.</span><span class="n">titleLabel</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="p">)</span><span class="o">*</span><span class="mf">0.5</span><span class="o">-</span><span class="n">btn</span><span class="o">.</span><span class="n">imageView</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)];</span> <span class="err"> </span>
+</code></pre></div></div>
+
+<p>此时按钮的显示情况和坐标情况如下：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1269906-0c7894661b375130.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>imageView.x=137.500000, imageView.y=0.000000, imageView.width=100.000000, imageView.height=100.000000  
+titleLabel.x=147.250000, titleLabel.y=100.000000, titleLabel.width=180.500000, titleLabel.height=21.500000  
+</code></pre></div></div>
+
+<p>可以发现，问题出现了，此时titleLabel在水平方向上不再居中了。但是我们同时可以发现，titleLabel在垂直方向上的位置仍然是正确的，并且可以看到<code class="highlighter-rouge">titleLabel.y=100</code>。这说明在使用了<code class="highlighter-rouge">setImageEdgeInsets:</code>方法后，imageView的尺寸会被改变。</p>
+
+<p>那么为何titleLabel在水平方向上还会偏移呢？原因是这样的，我们一直把titleLabel的初始x值和imageView的宽度等同看待了。而在这里imageView的宽度变小了，但是titleLabel的初始x值仍然是等于缩小前的imageView的宽度的，我们却使用一个缩小后的imageView的宽度来代替titleLabel的初始x值，于是导致了偏移的出现。
+要处理这种情况，有两种方法：</p>
+
+<h3 id="5处理方法1先定义titlelabel再定义imageview">5、处理方法1，先定义titleLabel再定义imageView：</h3>
+
+<p>使用以下语句来实现这种情况：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define kImageWidth 100.  </span>
+<span class="p">[</span><span class="n">btn</span> <span class="nv">setTitleEdgeInsets</span><span class="p">:</span> <span class="kt">UIEdgeInsetsMake</span><span class="p">(</span><span class="n">kImageWidth</span><span class="p">,</span> <span class="p">(</span><span class="n">btn</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="o">-</span><span class="n">btn</span><span class="o">.</span><span class="n">titleLabel</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="p">)</span><span class="o">*</span><span class="mf">0.5</span><span class="o">-</span><span class="n">btn</span><span class="o">.</span><span class="n">imageView</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)];</span>  
+<span class="p">[</span><span class="n">btn</span> <span class="nv">setImageEdgeInsets</span><span class="p">:</span> <span class="kt">UIEdgeInsetsMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">btn</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="o">-</span><span class="n">kImageWidth</span><span class="p">)</span><span class="o">*</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">btn</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span><span class="o">-</span><span class="n">kImageWidth</span><span class="p">,</span> <span class="p">(</span><span class="n">btn</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="o">-</span><span class="n">kImageWidth</span><span class="p">)</span><span class="o">*</span><span class="mf">0.5</span><span class="p">)];</span>  
+</code></pre></div></div>
+
+<p>此时按钮的显示情况和坐标情况如下：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1269906-28f02915e069c005.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>imageView.x=137.500000, imageView.y=0.000000, imageView.width=100.000000, imageView.height=100.000000  
+titleLabel.x=97.250000, titleLabel.y=100.000000, titleLabel.width=180.500000, titleLabel.height=21.500000  
+</code></pre></div></div>
+
+<p>由于titleLabel在imageView被压缩前就使用了它的宽度来定位，所以能准确定位，也不会被之后的imageView压缩所影响。</p>
+
+<h3 id="6处理方法2先将imageview形变前的宽度记录下来">6、处理方法2，先将imageView形变前的宽度记录下来：</h3>
+
+<p>使用以下语句来实现这种情况：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define kImageWidth 100</span>
+<span class="kt">CGFloat</span> <span class="n">imageWidth</span> <span class="o">=</span> <span class="n">btn</span><span class="o">.</span><span class="n">imageView</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="p">;</span>
+<span class="p">[</span><span class="n">btn</span> <span class="nv">setImageEdgeInsets</span><span class="p">:</span> <span class="kt">UIEdgeInsetsMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">btn</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="o">-</span><span class="n">kImageWidth</span><span class="p">)</span><span class="o">*</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">btn</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span><span class="o">-</span><span class="n">kImageWidth</span><span class="p">,</span> <span class="p">(</span><span class="n">btn</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="o">-</span><span class="n">kImageWidth</span><span class="p">)</span><span class="o">*</span><span class="mf">0.5</span><span class="p">)];</span>
+<span class="p">[</span><span class="n">btn</span> <span class="nv">setTitleEdgeInsets</span><span class="p">:</span> <span class="kt">UIEdgeInsetsMake</span><span class="p">(</span><span class="n">btn</span><span class="o">.</span><span class="n">imageView</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="p">(</span><span class="n">btn</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="o">-</span><span class="n">btn</span><span class="o">.</span><span class="n">titleLabel</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="p">)</span><span class="o">*</span><span class="mf">0.5</span><span class="o">-</span><span class="n">imageWidth</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)];</span>
+</code></pre></div></div>
+
+<p>此时按钮的显示情况和坐标情况如下：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1269906-e7fa7263eef68b24.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>imageView.x=137.500000, imageView.y=0.000000, imageView.width=100.000000, imageView.height=100.000000  
+titleLabel.x=97.250000, titleLabel.y=100.000000, titleLabel.width=180.500000, titleLabel.height=21.500000  
+</code></pre></div></div>
+
+<p>先将imageView的宽度记录下来，用作titleLabel的初始x值，那么之后imageView的压缩就不会再影响到这个值了。</p>
+
+<h3 id="7另外如果想将imageview放大比如将imageview的宽度定为180那么会有以下情况">7、另外，如果想将imageView放大，比如将imageView的宽度定为180，那么会有以下情况：</h3>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1269906-3741758410282937.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>imageView.x=97.500000, imageView.y=0.000000, imageView.width=150.000000, imageView.height=150.000000  
+titleLabel.x=97.250000, titleLabel.y=150.000000, titleLabel.width=180.500000, titleLabel.height=21.500000  
+</code></pre></div></div>
+
+<p>可以发现，imageView的尺寸还是150x150，并没有没放大，反而imageView的居中受到了影响，产生偏移了。</p>
+
+<h3 id="8经过上面的测试可以得到以下结论">8、经过上面的测试，可以得到以下结论：</h3>
+
+<ul>
+  <li>(1)、在UIButton中，titleLabel的初始x值是imageView的宽度；</li>
+  <li>(2)、imageView可以被压缩；</li>
+  <li>(3)、当imageView被压缩后，imageView的宽度会变小，此时就不可以再用imageView的宽度来代替titleLabel的初始x值来调整位置了；</li>
+  <li>(4)、imageView不可以被放大。</li>
+</ul>
+:ET

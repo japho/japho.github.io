@@ -1,0 +1,63 @@
+I"<h2 id="何为单例模式">何为单例模式</h2>
+
+<blockquote>
+  <p>单例模式：保证一个类只有一个实例，并提供一个访问它的全局访问点。</p>
+</blockquote>
+
+<p>单例模式几乎是设计模式的最简单形式了。这一模式的意图是使得类的一个对象成为系统中的唯一实例。要实现这一点，可以从客户端对其进行实例化开始。因此需要用一种只允许生成对象类的唯一实例的机制，“阻止”所有想要生成对象的访问。我们可以用工厂方法来限制实例化过程。这个方法应该是个静态方法(类方法)，因为让类的实例去生成另一个唯一实例毫无意义。下图显示了简单单例模式的类结构。</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1269906-d495ab79932180ab.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<h2 id="何时使用单例模式">何时使用单例模式</h2>
+
+<blockquote>
+  <p><strong>在以下情形，应该考虑使用单例模式：</strong></p>
+
+  <p>1）类只能有一个实例，而且必须从一个为人熟知的访问点对其进行访问，比如工厂方法。</p>
+
+  <p>2）这个唯一的实例只能通过子类化进行扩展，而且扩展的对象不会破坏客户端代码。</p>
+</blockquote>
+
+<p>单例模式提供了一个为人熟知的访问点，供客户类为共享资源生成唯一实例，井通过它对共享资源进行访问。虽然静态的全局对象引用或类方法也可以提供全局访问点，但是全局对象无法防止类被实例化一次以上，而且类方法也缺少消除耦合的灵活性。</p>
+
+<p>静态全局变量保持着对类的实例的唯一引用，那些访问这个全局变量的类或方法，实际上是在和使用这个变量的其他类或方法共享着同一份副本。这听起来好像是我们在单例模式中想要的。如果在整个应用程序中都只使用同一个全局变量，那么似曾万事大吉，好做实际上井不需要单例模式。可是，要是团队中的某位老兄或者哪个顾问也定义了相同类型的静态变量，都会怎么样呢?那样在同一个应用程序中就会有两个相同的全局对象类型——因此全局变量并不真正解决问题。</p>
+
+<p>类方法提供了共享的服务，不用创建其对象就可以访问。资源的唯一实例可在类方法中维护。然而，如果类需要被子类化以提供更好的服务，这一方式就不够灵活。</p>
+
+<p>单例类提供创建与访问类的唯一对象的访问点，井保证它唯一、一致而且为人熟知。这一模式提供了灵活性，使其任何子类可以重载实例方法并且完全控制自身的对象创建，而不必修改客户端的代码。更好的是，父类中的实例实现可以处理动态对象创建。类的实际类型可以在运行时决定，以保证创建正确的对象。</p>
+
+<p>单例模式有个变通版本，其中的一个工厂方法总是返回同一实例，但可以分配并初始化额外的实例。</p>
+
+<p>#在Objective-C中实现单例模式</p>
+
+<p><strong>单例的写法常用的有两种方式：</strong></p>
+
+<ul>
+  <li>方式1、不考虑线程</li>
+</ul>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">static</span> <span class="kt">SingleCase</span> <span class="o">*</span><span class="n">manager</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">;</span>    
+     
+<span class="o">+</span> <span class="p">(</span><span class="kt">SingleCase</span> <span class="o">*</span><span class="p">)</span><span class="n">defaultManager</span> <span class="p">{</span>    
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">manager</span><span class="p">){</span>   
+        <span class="kt">SingleCase</span> <span class="o">=</span> <span class="p">[[</span><span class="k">self</span> <span class="n">alloc</span><span class="p">]</span> <span class="kd">init</span><span class="p">];</span>    
+        <span class="k">return</span> <span class="n">manager</span><span class="p">;</span>   
+        <span class="p">}</span>  
+<span class="p">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>方式2、考虑线程安全</li>
+</ul>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">+</span> <span class="p">(</span><span class="kt">SingleCase</span> <span class="o">*</span><span class="p">)</span><span class="n">sharedManager</span>    
+<span class="p">{</span>    
+        <span class="kd">static</span> <span class="kt">SingleCase</span> <span class="o">*</span><span class="kt">ManagerInstance</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">;</span>    
+        <span class="kd">static</span> <span class="n">dispatch_once_t</span> <span class="n">predicate</span><span class="p">;</span>    
+        <span class="nf">dispatch_once</span><span class="p">(</span><span class="o">&amp;</span><span class="n">predicate</span><span class="p">,</span> <span class="o">^</span><span class="p">{</span>    
+                <span class="kt">ManagerInstance</span> <span class="o">=</span> <span class="p">[[</span><span class="k">self</span> <span class="n">alloc</span><span class="p">]</span> <span class="kd">init</span><span class="p">];</span>     
+        <span class="p">});</span>    
+    <span class="k">return</span> <span class="kt">ManagerInstance</span><span class="p">;</span>    
+<span class="p">}</span>
+</code></pre></div></div>
+:ET
