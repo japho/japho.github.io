@@ -1,0 +1,13 @@
+I"�<p>在<code class="highlighter-rouge">try</code>块中，如果保留了某个对象，然后在释放之前抛出了异常，那么，除非<code class="highlighter-rouge">catch</code>块能够处理此问题，否则对象所占内存将泄露。</p>
+
+<p>虽说默认情况下不开启，但是ARC依然能生成这种安全处理异常所用的附加代码。<code class="highlighter-rouge">-fobjc-arc-exceptions</code>这个编译器标志用来开启此功能。默认不开启是因为，Objective-C代码中，只有当应用程序必须因异常终止时才会跑出异常。如果应用终止，是否会发生内存泄露就无关紧要了。</p>
+
+<p>如果手动管理引用计数，而且必须捕获异常，那么要设法保证所编写代码能把对象正确清理干净。若使用ARC而且必须捕获异常，则需要打开编译器的<code class="highlighter-rouge">-fobjc-arc-exceptions</code>标志。但是，重要的是，在发现大量异常捕获操作时，应该考虑重构代码，使用NSError错误信息传递法来取代异常。</p>
+
+<p><strong>要点：</strong></p>
+
+<ul>
+  <li>捕获异常时，一定要注意将<code class="highlighter-rouge">try</code>块内所创立的对象清理干净。</li>
+  <li>在默认情况下，ARC不会生成安全处理异常所需的清理代码。开启编译器标志后，可生成这种代码，不过会导致应用程序变大，而且会降低运行效率。</li>
+</ul>
+:ET

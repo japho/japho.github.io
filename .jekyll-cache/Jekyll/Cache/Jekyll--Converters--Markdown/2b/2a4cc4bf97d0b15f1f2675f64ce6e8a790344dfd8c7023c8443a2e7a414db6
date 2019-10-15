@@ -1,0 +1,247 @@
+I"�L<h3 id="前言">前言</h3>
+
+<blockquote>
+  <p>平时我们经常会在一些app的登录界面中见到第三方登录，一些应用中一般会使用一些类似<code class="highlighter-rouge">shareSDK</code>的集成平台，他们是将QQ、微信、微博等第三方进行了二次封装，灵活性不太高，其实直接集成也是比较容易的。今天就来简单的说一下QQ的第三方登录的集成。</p>
+</blockquote>
+
+<h3 id="注册开发者账号">注册开发者账号</h3>
+
+<p>腾讯开放平台 <a href="http://open.qq.com/">http://open.qq.com/</a></p>
+
+<h3 id="下载所需sdk">下载所需SDK</h3>
+
+<p>SDK下载地址：<a href="http://wiki.open.qq.com/wiki/mobile/SDK">http://wiki.open.qq.com/wiki/mobile/SDK</a>下载</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1269906-09d6d16aa6ade24b.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="下载SDK" /></p>
+
+<h3 id="sdk的目录结构">SDK的目录结构</h3>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1269906-c55d70eac31d40eb.png" alt="目录结构" /></p>
+
+<blockquote>
+  <p>sample：示例代码</p>
+
+  <ol>
+    <li><code class="highlighter-rouge">TencentOpenAPI.framework</code>打包了iOS SDK的头文件定义和具体实现。</li>
+    <li><code class="highlighter-rouge">TencentOpenApi_iOS_Bundle.bundle</code> 打包了iOS SDK需要的资源文件。</li>
+  </ol>
+</blockquote>
+
+<h3 id="创建项目导入sdk添加依赖库">创建项目导入SDK添加依赖库</h3>
+
+<ul>
+  <li>将<code class="highlighter-rouge">TencentOpenAPI.framework</code>和<code class="highlighter-rouge">TencentOpenApi_iOS_Bundle.bundle</code>拖入工程，注意勾选<code class="highlighter-rouge">copy items if needed</code></li>
+</ul>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1269906-51289c4fbecd86b8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="添加依赖库" /></p>
+
+<ul>
+  <li>
+    <p>点击<code class="highlighter-rouge">Project navigator</code> 点击<code class="highlighter-rouge">TARGETS</code> —&gt;  <code class="highlighter-rouge">General</code>  —&gt; <code class="highlighter-rouge">Linked Frameworks and Libraries</code></p>
+  </li>
+  <li>
+    <p>点击加号添加</p>
+  </li>
+</ul>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1269906-2b3492004d2d24be.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="添加依赖库" /></p>
+
+<ul>
+  <li>添加SDK依赖的系统库文件。分别是</li>
+</ul>
+
+<blockquote>
+  <p><code class="highlighter-rouge">”Security.framework”</code>,
+<code class="highlighter-rouge">“libiconv.dylib”</code>,
+<code class="highlighter-rouge">“SystemConfiguration.framework”</code>,
+<code class="highlighter-rouge">“CoreGraphics.Framework”</code>,
+<code class="highlighter-rouge">“libsqlite3.dylib”</code>,
+<code class="highlighter-rouge">“CoreTelephony.framework”</code>,
+<code class="highlighter-rouge">“libstdc++.dylib”</code>,
+<code class="highlighter-rouge">“libz.dylib”</code></p>
+</blockquote>
+
+<h3 id="修改工程配置属性">修改工程配置属性</h3>
+
+<ul>
+  <li>在工程配置中的<code class="highlighter-rouge">Build Settings</code>一栏中找到<code class="highlighter-rouge">Linking</code>配置区，给<code class="highlighter-rouge">Other Linker Flags</code>配置项添加属性值<code class="highlighter-rouge">-fobjc-arc</code></li>
+</ul>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1269906-b7c82914bc009b68.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="修改工程配置" /></p>
+
+<p>配置之后：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1269906-f570fc54824ffcfe.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="修改工程配置" /></p>
+
+<ul>
+  <li>在XCode中，选择你的工程设置项，选中<code class="highlighter-rouge">TARGETS</code>一栏，在“info”标签栏的<code class="highlighter-rouge">URL type</code>添加一条新的<code class="highlighter-rouge">URL scheme</code>，新的<code class="highlighter-rouge">scheme = tencent + appid</code>（例如你的<code class="highlighter-rouge">appid</code>是<code class="highlighter-rouge">123456</code> 则填入<code class="highlighter-rouge">tencent123456</code>） <code class="highlighter-rouge">identifier</code> 填写：<code class="highlighter-rouge">tencentopenapi</code>。</li>
+</ul>
+
+<p><code class="highlighter-rouge">注意：</code>此处的配置是实现应用间的跳转即跳转至QQ进行授权以及跳转回app进行其他的操作。</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1269906-cb563972e0817714.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="修改工程配置" /></p>
+
+<h3 id="创建应用">创建应用</h3>
+
+<p>在腾讯开发者平台中创建应用，获得<code class="highlighter-rouge">appId</code>及<code class="highlighter-rouge">appKey</code>，具体步骤详见开发中心，这里不再赘述。</p>
+
+<h3 id="开始添加代码">开始添加代码</h3>
+
+<p>做好了之前的步骤，现在开始添加调用授权的代码。</p>
+
+<p><code class="highlighter-rouge">AppDelegate.m:</code></p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="cp">#import "AppDelegate.h"  </span>
+<span class="cp">#import &lt;TencentOpenAPI/TencentOAuth.h&gt; //导入头文件  </span>
+  
+<span class="kd">@interface</span> <span class="kt">AppDelegate</span> <span class="p">()</span> <span class="o">&lt;</span><span class="kt">TencentSessionDelegate</span><span class="o">&gt;</span>  
+<span class="p">{</span>  
+    <span class="kt">TencentOAuth</span> <span class="o">*</span><span class="n">_tencentOAth</span><span class="p">;</span><span class="c1">//创建授权对象  </span>
+<span class="p">}</span>  
+<span class="kd">@end</span>  
+  
+<span class="kd">@implementation</span> <span class="kt">AppDelegate</span>  
+  
+  
+<span class="o">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nv">application</span><span class="p">:(</span><span class="kt">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="n">application</span> <span class="nv">didFinishLaunchingWithOptions</span><span class="p">:(</span><span class="kt">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="n">launchOptions</span> <span class="p">{</span>  
+    <span class="c1">// Override point for customization after application launch.  </span>
+      
+    <span class="n">_tencentOAth</span> <span class="o">=</span> <span class="p">[[</span><span class="kt">TencentOAuth</span> <span class="n">alloc</span><span class="p">]</span> <span class="nv">initWithAppId</span><span class="p">:</span><span class="s">@"这里填写你申请的appID"</span> <span class="nv">andDelegate</span><span class="p">:</span><span class="k">self</span><span class="p">];</span>  
+      
+    <span class="k">return</span> <span class="kt">YES</span><span class="p">;</span>  
+<span class="p">}</span>  
+  
+<span class="c1">//重写appDelegate中的回调方法  </span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nv">application</span><span class="p">:(</span><span class="kt">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="n">application</span> <span class="nv">openURL</span><span class="p">:(</span><span class="kt">NSURL</span> <span class="o">*</span><span class="p">)</span><span class="n">url</span> <span class="nv">sourceApplication</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">sourceApplication</span> <span class="nv">annotation</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="n">annotation</span> <span class="p">{</span>  
+      
+    <span class="k">return</span> <span class="p">[</span><span class="kt">TencentOAuth</span> <span class="kt">HandleOpenURL</span><span class="p">:</span><span class="n">url</span><span class="p">];</span>  
+<span class="p">}</span>  
+  
+<span class="o">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nv">application</span><span class="p">:(</span><span class="kt">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="n">application</span> <span class="nv">handleOpenURL</span><span class="p">:(</span><span class="kt">NSURL</span> <span class="o">*</span><span class="p">)</span><span class="n">url</span> <span class="p">{</span>  
+      
+    <span class="k">return</span> <span class="p">[</span><span class="kt">TencentOAuth</span> <span class="kt">HandleOpenURL</span><span class="p">:</span><span class="n">url</span><span class="p">];</span>  
+<span class="p">}</span>  
+
+
+</code></pre></div></div>
+
+<p>你所要调用第三方登录的controller</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="cp">#import "ViewController.h"  </span>
+<span class="cp">#import &lt;TencentOpenAPI/TencentOAuth.h&gt;  </span>
+  
+<span class="kd">@interface</span> <span class="kt">ViewController</span> <span class="p">()</span> <span class="o">&lt;</span><span class="kt">TencentSessionDelegate</span><span class="o">&gt;</span>  
+<span class="p">{</span>  
+    <span class="kt">TencentOAuth</span> <span class="o">*</span><span class="n">_tencentOAth</span><span class="p">;</span>  
+<span class="p">}</span>  
+<span class="kd">@end</span>  
+  
+<span class="kd">@implementation</span> <span class="kt">ViewController</span>  
+  
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="n">viewDidLoad</span> <span class="p">{</span>  
+    <span class="p">[</span><span class="k">super</span> <span class="n">viewDidLoad</span><span class="p">];</span>  
+    <span class="c1">// Do any additional setup after loading the view, typically from a nib.  </span>
+<span class="p">}</span>  
+  
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="n">didReceiveMemoryWarning</span> <span class="p">{</span>  
+    <span class="p">[</span><span class="k">super</span> <span class="n">didReceiveMemoryWarning</span><span class="p">];</span>  
+    <span class="c1">// Dispose of any resources that can be recreated.  </span>
+<span class="p">}</span>  
+  
+<span class="o">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nv">qqLogin</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="n">sender</span>  
+<span class="p">{</span>  
+    <span class="n">_tencentOAth</span> <span class="o">=</span> <span class="p">[[</span><span class="kt">TencentOAuth</span> <span class="n">alloc</span><span class="p">]</span> <span class="nv">initWithAppId</span><span class="p">:</span><span class="s">@"你所申请的appID"</span> <span class="nv">andDelegate</span><span class="p">:</span><span class="k">self</span><span class="p">];</span>  
+      
+    <span class="c1">//设置需要获取的权限列表，需要什么就写什么  </span>
+    <span class="kt">NSArray</span> <span class="o">*</span><span class="n">permissions</span> <span class="o">=</span> <span class="p">[</span><span class="kt">NSArray</span> <span class="nv">arrayWithObjects</span><span class="p">:</span><span class="s">@"get_user_info"</span><span class="p">,</span><span class="s">@"get_simple_userinfo"</span><span class="p">,</span><span class="s">@"add_t"</span><span class="p">,</span><span class="kc">nil</span><span class="p">];</span>  
+  
+    <span class="c1">//调用此方法开始跳转进行授权  </span>
+    <span class="p">[</span><span class="n">_tencentOAth</span> <span class="nv">authorize</span><span class="p">:</span><span class="n">permissions</span> <span class="nv">inSafari</span><span class="p">:</span><span class="kt">NO</span><span class="p">];</span>  
+<span class="p">}</span>  
+  
+<span class="err">#</span><span class="n">pragma</span> <span class="n">mark</span> <span class="o">--</span> <span class="kt">TencentSessionDelegate</span>  
+  
+<span class="c1">//登陆完成调用  </span>
+  
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="n">tencentDidLogin</span>  
+  
+<span class="p">{</span>  
+    <span class="k">if</span> <span class="p">(</span><span class="n">_tencentOAth</span><span class="o">.</span><span class="n">accessToken</span> <span class="o">&amp;&amp;</span><span class="mi">0</span> <span class="o">!=</span> <span class="p">[</span><span class="n">_tencentOAth</span><span class="o">.</span><span class="n">accessToken</span> <span class="n">length</span><span class="p">])</span>  
+    <span class="p">{</span>  
+        <span class="c1">//这里可获取accessToken,Access Token凭证，用于后续访问各开放接口  </span>
+        <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"accessToken %@"</span><span class="p">,</span><span class="n">_tencentOAth</span><span class="o">.</span><span class="n">accessToken</span><span class="p">);</span>  
+  
+        <span class="c1">//这里可获取openID,openId是用户授权登录后对该用户的唯一标识  </span>
+        <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"openId %@"</span><span class="p">,</span><span class="n">_tencentOAth</span><span class="o">.</span><span class="n">openId</span><span class="p">);</span>  
+          
+        <span class="c1">//获取用户信息  </span>
+        <span class="p">[</span><span class="n">_tencentOAth</span> <span class="n">getUserInfo</span><span class="p">];</span>  
+    <span class="p">}</span>  
+    <span class="k">else</span>  
+    <span class="p">{</span>  
+        <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"登录不成功没有获取accesstoken"</span><span class="p">);</span>  
+    <span class="p">}</span>  
+      
+<span class="p">}</span>  
+  
+  
+<span class="c1">//非网络错误导致登录失败：  </span>
+<span class="o">-</span><span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">tencentDidNotLogin</span><span class="p">:(</span><span class="kt">BOOL</span><span class="p">)</span><span class="n">cancelled</span>  
+  
+<span class="p">{</span>  
+      
+    <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"tencentDidNotLogin"</span><span class="p">);</span>  
+      
+    <span class="k">if</span> <span class="p">(</span><span class="n">cancelled</span><span class="p">)</span>  
+    <span class="p">{</span>  
+        <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"用户取消登录"</span><span class="p">);</span>  
+    <span class="p">}</span>  
+    <span class="k">else</span>  
+    <span class="p">{</span>  
+        <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"登录失败"</span><span class="p">);</span>  
+    <span class="p">}</span>  
+      
+<span class="p">}</span>  
+  
+<span class="c1">// 网络错误导致登录失败：  </span>
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="n">tencentDidNotNetWork</span>  
+  
+<span class="p">{</span>  
+    <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"tencentDidNotNetWork"</span><span class="p">);</span>  
+<span class="p">}</span>  
+  
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">getUserInfoResponse</span><span class="p">:(</span><span class="kt">APIResponse</span> <span class="o">*</span><span class="p">)</span><span class="n">response</span>  
+  
+<span class="p">{</span>  
+    <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"respons:%@"</span><span class="p">,</span><span class="n">response</span><span class="o">.</span><span class="n">jsonResponse</span><span class="p">);</span>  
+      
+    <span class="kt">NSData</span> <span class="o">*</span><span class="n">imageData</span> <span class="o">=</span> <span class="p">[</span><span class="kt">NSData</span> <span class="nv">dataWithContentsOfURL</span><span class="p">:[</span><span class="kt">NSURL</span> <span class="kt">URLWithString</span><span class="p">:</span><span class="n">response</span><span class="o">.</span><span class="n">jsonResponse</span><span class="p">[</span><span class="s">@"figureurl_2"</span><span class="p">]]];</span>  
+    <span class="kt">UIImage</span> <span class="o">*</span><span class="n">image</span> <span class="o">=</span> <span class="p">[</span><span class="kt">UIImage</span> <span class="nv">imageWithData</span><span class="p">:</span><span class="n">imageData</span> <span class="nv">scale</span><span class="p">:</span><span class="mi">1</span><span class="p">];</span>  
+    <span class="k">self</span><span class="o">.</span><span class="n">headerImageView</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="p">;</span>  
+      
+    <span class="k">self</span><span class="o">.</span><span class="n">nameLabel</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">jsonResponse</span><span class="p">[</span><span class="s">@"nickname"</span><span class="p">];</span>  
+    <span class="k">self</span><span class="o">.</span><span class="n">sexLabel</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">jsonResponse</span><span class="p">[</span><span class="s">@"gender"</span><span class="p">];</span>  
+    <span class="k">self</span><span class="o">.</span><span class="n">provinceLabel</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">jsonResponse</span><span class="p">[</span><span class="s">@"province"</span><span class="p">];</span>  
+    <span class="k">self</span><span class="o">.</span><span class="n">cityLabel</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">jsonResponse</span><span class="p">[</span><span class="s">@"city"</span><span class="p">];</span>  
+<span class="p">}</span>  
+  
+<span class="kd">@end</span>  
+
+
+</code></pre></div></div>
+
+<p><strong>具体步骤再来叙述一下：</strong></p>
+
+<ul>
+  <li>初始化TencentOAuth 对象 appid来自应用宝创建的应用， deletegate设置为self 记得要实现代理方法</li>
+  <li>设置需要获取的权限列表，需要什么就写什么</li>
+  <li>调用方法开始跳转进行授权 [_tencentOAth authorize:permissions inSafari:NO];</li>
+  <li>在tencentDidLogin代理中获取openId、acess_token</li>
+  <li>调用[_tencentOAth getUserInfo] 获取用户的信息</li>
+  <li>在 - (void)getUserInfoResponse:(APIResponse *)response 代理中获取用户的信息。</li>
+</ul>
+
+<p>至此，QQ的授权登录就算是基本的实现了，至于具体的其他注册逻辑就需要自己进行改写了。</p>
+:ET

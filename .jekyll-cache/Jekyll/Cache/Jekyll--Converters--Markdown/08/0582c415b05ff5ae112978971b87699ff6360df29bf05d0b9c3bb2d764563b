@@ -1,0 +1,106 @@
+I"�,<p>平时开发的时候可能会遇到这种问题：当一个UILabel的frame的高度设置的过大时，发现UILabel是垂直居中的，有的需求是需要将这个Label垂直向上显示，之前的办法是计算出label.text的字体所占用的frame大小，根据这个大小再重新设置label的frame值，未免有些麻烦，前阵子封装了个自定义label实现的垂直居中的设置。废话不多说，上代码。</p>
+
+<p><code class="highlighter-rouge">JFLabel.h</code></p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  </span>
+<span class="c1">//  JFLabel.h  </span>
+<span class="c1">//  BobcareDoctorApp  </span>
+<span class="c1">//  </span>
+<span class="c1">//  Created by Japho on 16/2/25.  </span>
+<span class="c1">//  Copyright © 2016年 com.01wisdom. All rights reserved.  </span>
+<span class="c1">//  </span>
+  
+<span class="cp">#import &lt;UIKit/UIKit.h&gt;  </span>
+  
+<span class="n">typedef</span> <span class="kd">enum</span>  
+<span class="p">{</span>  
+    <span class="kt">VerticalAlignmentTop</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="c1">// default  </span>
+    <span class="kt">VerticalAlignmentMiddle</span><span class="p">,</span>  
+    <span class="kt">VerticalAlignmentBottom</span><span class="p">,</span>  
+<span class="p">}</span> <span class="kt">VerticalAlignment</span><span class="p">;</span>  
+  
+<span class="kd">@interface</span> <span class="kt">JFLabel</span> <span class="p">:</span> <span class="kt">UILabel</span>  
+<span class="p">{</span>  
+      
+<span class="kd">@private</span>  
+      
+    <span class="kt">VerticalAlignment</span> <span class="n">_verticalAlignment</span><span class="p">;</span>  
+<span class="p">}</span>  
+  
+<span class="kd">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="kt">VerticalAlignment</span> <span class="n">verticalAlignment</span><span class="p">;</span>  
+  
+<span class="kd">@end</span>  
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">JFLabel.m</code></p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  </span>
+<span class="c1">//  JFLabel.m  </span>
+<span class="c1">//  BobcareDoctorApp  </span>
+<span class="c1">//  </span>
+<span class="c1">//  Created by Japho on 16/2/25.  </span>
+<span class="c1">//  Copyright © 2016年 com.01wisdom. All rights reserved.  </span>
+<span class="c1">//  </span>
+  
+<span class="cp">#import "JFLabel.h"  </span>
+  
+<span class="kd">@implementation</span> <span class="kt">JFLabel</span>  
+  
+<span class="kd">@synthesize</span> <span class="n">verticalAlignment</span> <span class="o">=</span> <span class="n">verticalAlignment_</span><span class="p">;</span>   
+  
+<span class="o">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="nv">initWithFrame</span><span class="p">:(</span><span class="kt">CGRect</span><span class="p">)</span><span class="n">frame</span> <span class="p">{</span>  
+    <span class="k">if</span> <span class="p">(</span><span class="k">self</span> <span class="o">=</span> <span class="p">[</span><span class="k">super</span> <span class="nv">initWithFrame</span><span class="p">:</span><span class="n">frame</span><span class="p">])</span> <span class="p">{</span>  
+        <span class="k">self</span><span class="o">.</span><span class="n">verticalAlignment</span> <span class="o">=</span> <span class="kt">VerticalAlignmentMiddle</span><span class="p">;</span>  
+    <span class="p">}</span>  
+    <span class="k">return</span> <span class="k">self</span><span class="p">;</span>  
+<span class="p">}</span>  
+  
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">setVerticalAlignment</span><span class="p">:(</span><span class="kt">VerticalAlignment</span><span class="p">)</span><span class="n">verticalAlignment</span> <span class="p">{</span>  
+    <span class="n">verticalAlignment_</span> <span class="o">=</span> <span class="n">verticalAlignment</span><span class="p">;</span>  
+    <span class="p">[</span><span class="k">self</span> <span class="n">setNeedsDisplay</span><span class="p">];</span>  
+<span class="p">}</span>  
+  
+<span class="o">-</span> <span class="p">(</span><span class="kt">CGRect</span><span class="p">)</span><span class="nv">textRectForBounds</span><span class="p">:(</span><span class="kt">CGRect</span><span class="p">)</span><span class="n">bounds</span> <span class="nv">limitedToNumberOfLines</span><span class="p">:(</span><span class="kt">NSInteger</span><span class="p">)</span><span class="n">numberOfLines</span> <span class="p">{</span>  
+    <span class="kt">CGRect</span> <span class="n">textRect</span> <span class="o">=</span> <span class="p">[</span><span class="k">super</span> <span class="nv">textRectForBounds</span><span class="p">:</span><span class="n">bounds</span> <span class="nv">limitedToNumberOfLines</span><span class="p">:</span><span class="n">numberOfLines</span><span class="p">];</span>  
+    <span class="k">switch</span> <span class="p">(</span><span class="k">self</span><span class="o">.</span><span class="n">verticalAlignment</span><span class="p">)</span> <span class="p">{</span>  
+        <span class="k">case</span> <span class="kt">VerticalAlignmentTop</span><span class="p">:</span>  
+            <span class="n">textRect</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">bounds</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">y</span><span class="p">;</span>  
+            <span class="k">break</span><span class="p">;</span>  
+        <span class="k">case</span> <span class="kt">VerticalAlignmentBottom</span><span class="p">:</span>  
+            <span class="n">textRect</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">bounds</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span> <span class="o">-</span> <span class="n">textRect</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span><span class="p">;</span>  
+            <span class="k">break</span><span class="p">;</span>  
+        <span class="k">case</span> <span class="kt">VerticalAlignmentMiddle</span><span class="p">:</span>  
+            <span class="c1">// Fall through.  </span>
+        <span class="k">default</span><span class="p">:</span>  
+            <span class="n">textRect</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">bounds</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="p">(</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span> <span class="o">-</span> <span class="n">textRect</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">;</span>  
+    <span class="p">}</span>  
+    <span class="k">return</span> <span class="n">textRect</span><span class="p">;</span>  
+<span class="p">}</span>  
+  
+<span class="o">-</span><span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">drawTextInRect</span><span class="p">:(</span><span class="kt">CGRect</span><span class="p">)</span><span class="n">requestedRect</span> <span class="p">{</span>  
+    <span class="kt">CGRect</span> <span class="n">actualRect</span> <span class="o">=</span> <span class="p">[</span><span class="k">self</span> <span class="nv">textRectForBounds</span><span class="p">:</span><span class="n">requestedRect</span> <span class="nv">limitedToNumberOfLines</span><span class="p">:</span><span class="k">self</span><span class="o">.</span><span class="n">numberOfLines</span><span class="p">];</span>  
+    <span class="p">[</span><span class="k">super</span> <span class="nv">drawTextInRect</span><span class="p">:</span><span class="n">actualRect</span><span class="p">];</span>  
+<span class="p">}</span>  
+  
+<span class="kd">@end</span>
+</code></pre></div></div>
+
+<p>封装的类继承自UILabel，需要设置垂直居中时直接设置属性就可以了。
+调用示例代码：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">-</span> <span class="p">(</span><span class="kt">JFLabel</span> <span class="o">*</span><span class="p">)</span><span class="n">titleLabel</span>  
+<span class="p">{</span>  
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">_titleLabel</span><span class="p">)</span>  
+    <span class="p">{</span>  
+        <span class="n">_titleLabel</span> <span class="o">=</span> <span class="p">[[</span><span class="kt">JFLabel</span> <span class="n">alloc</span><span class="p">]</span> <span class="nv">initWithFrame</span><span class="p">:</span><span class="kt">CGRectMake</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="kt">SCREEN_WIDTH</span> <span class="o">-</span> <span class="kt">CASE_IMAGE_VIEW_WIDTH</span> <span class="o">-</span> <span class="mi">15</span> <span class="o">-</span> <span class="mi">20</span> <span class="o">-</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">40</span><span class="p">)];</span>  
+        <span class="n">_titleLabel</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s">@"测试垂直居中文字"</span><span class="p">;</span>  
+        <span class="n">_titleLabel</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="p">[</span><span class="kt">UIFont</span> <span class="nv">systemFontOfSize</span><span class="p">:</span><span class="mi">16</span><span class="p">];</span>  
+        <span class="n">_titleLabel</span><span class="o">.</span><span class="n">numberOfLines</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>  
+        <span class="n">_titleLabel</span><span class="o">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="p">[</span><span class="kt">UIColor</span> <span class="n">blackColor</span><span class="p">];</span>  
+        <span class="n">_titleLabel</span><span class="o">.</span><span class="n">verticalAlignment</span> <span class="o">=</span> <span class="kt">VerticalAlignmentTop</span><span class="p">;</span><span class="c1">//垂直居中  </span>
+    <span class="p">}</span>  
+      
+    <span class="k">return</span> <span class="n">_titleLabel</span><span class="p">;</span>  
+<span class="p">}</span>
+</code></pre></div></div>
+:ET

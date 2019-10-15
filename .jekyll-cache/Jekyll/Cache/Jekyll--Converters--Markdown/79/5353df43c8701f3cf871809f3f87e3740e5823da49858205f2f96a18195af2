@@ -1,0 +1,21 @@
+I".	<p>通过<code class="highlighter-rouge">presentviewcontroller</code>的方式显示的<code class="highlighter-rouge">viewcontroller</code>不会存入<code class="highlighter-rouge">self.navigationController.viewControllers</code>数组中。而通过push方式显示的<code class="highlighter-rouge">viewcontroller</code>会存在该数组的最后。</p>
+
+<p>代码如下：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">NSArray</span> <span class="o">*</span><span class="n">viewcontrollers</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="n">navigationController</span><span class="o">.</span><span class="n">viewControllers</span><span class="p">;</span>    
+    
+<span class="k">if</span> <span class="p">(</span><span class="n">viewcontrollers</span><span class="o">.</span><span class="n">count</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span>     
+<span class="p">{</span>    
+    <span class="k">if</span> <span class="p">([</span><span class="n">viewcontrollers</span> <span class="nv">objectAtIndex</span><span class="p">:</span><span class="n">viewcontrollers</span><span class="o">.</span><span class="n">count</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="k">self</span><span class="p">)</span>     
+    <span class="p">{</span>    
+        <span class="c1">//push方式    </span>
+        <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">navigationController</span> <span class="nv">popViewControllerAnimated</span><span class="p">:</span><span class="kt">YES</span><span class="p">];</span>    
+    <span class="p">}</span>    
+<span class="p">}</span>    
+<span class="k">else</span>    
+<span class="p">{</span>    
+    <span class="c1">//present方式    </span>
+    <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">navigationController</span> <span class="nv">dismissViewControllerAnimated</span><span class="p">:</span><span class="kt">YES</span> <span class="nv">completion</span><span class="p">:</span><span class="kc">nil</span><span class="p">];</span>    
+<span class="p">}</span>
+</code></pre></div></div>
+:ET

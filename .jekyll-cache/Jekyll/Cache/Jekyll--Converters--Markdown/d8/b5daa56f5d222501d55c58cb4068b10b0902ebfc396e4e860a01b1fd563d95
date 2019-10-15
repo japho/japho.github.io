@@ -1,0 +1,362 @@
+I"[�<h2 id="前言">前言</h2>
+
+<p>平时经常会遇到做第三分享的需求，相信大家好多都使用的集成的分享平台shareSDK、友盟分享等。他们其实是对各种第三方平台进行了二次封装，有时需求只要求做其中一种平台的分享的时候其实像shareSDK这种集成环境就有些显得比较冗余了，因为他集成了很多的平台，用户可自定义程度不高，使得自己的程序会变得很臃肿，今天就把自己的干货拿出来，来讲一讲自定义的第三方分享。
+下面主要讲一下目前应用比较广的，QQ、微信、微博的分享。</p>
+
+<h2 id="集成sdk">集成SDK</h2>
+
+<p>首先要集成你要做分享平台的SDK，和相应环境的配置，这些配置在我之前的博客中都有所提及，我就不在这里再次叙述了</p>
+
+<ul>
+  <li>微博SDK的集成：<a href="http://www.jianshu.com/p/c166d424866e">微博SDK集成</a></li>
+  <li>QQ SDK集成：<a href="http://www.jianshu.com/p/567d39aeac80">QQ SDK集成</a></li>
+  <li>微信SDK集成：<a href="http://www.jianshu.com/p/92902fecb861">微信SDK集成</a></li>
+</ul>
+
+<p>注意在集成SDK后需要在<code class="highlighter-rouge">Appdelegate</code>中进行注册</p>
+
+<h2 id="微博的分享">微博的分享</h2>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">+</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">weiboShareLinkWithUrl</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">url</span> <span class="nv">title</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">title</span> <span class="nv">description</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">description</span> <span class="nv">andPicUrl</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">picUrl</span>  
+<span class="p">{</span>  
+    <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"调用了微博"</span><span class="p">);</span>  
+      
+    <span class="kt">AppDelegate</span> <span class="o">*</span><span class="n">myDelegate</span> <span class="o">=</span><span class="p">(</span><span class="kt">AppDelegate</span><span class="o">*</span><span class="p">)[[</span><span class="kt">UIApplication</span> <span class="n">sharedApplication</span><span class="p">]</span> <span class="n">delegate</span><span class="p">];</span>  
+      
+    <span class="kt">WBAuthorizeRequest</span> <span class="o">*</span><span class="n">authRequest</span> <span class="o">=</span> <span class="p">[</span><span class="kt">WBAuthorizeRequest</span> <span class="n">request</span><span class="p">];</span>  
+    <span class="n">authRequest</span><span class="o">.</span><span class="n">redirectURI</span> <span class="o">=</span> <span class="s">@"这里填写你申请微博应用时的回调网址"</span><span class="p">;</span>  
+    <span class="n">authRequest</span><span class="o">.</span><span class="n">scope</span> <span class="o">=</span> <span class="s">@"all"</span><span class="p">;</span>  
+      
+    <span class="kt">WBMessageObject</span> <span class="o">*</span><span class="n">message</span> <span class="o">=</span> <span class="p">[</span><span class="kt">WBMessageObject</span> <span class="n">message</span><span class="p">];</span>  
+      
+    <span class="c1">//设置分享的标题  </span>
+    <span class="n">message</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">title</span><span class="p">;</span>  
+      
+    <span class="kt">WBWebpageObject</span> <span class="o">*</span><span class="n">webpage</span> <span class="o">=</span> <span class="p">[</span><span class="kt">WBWebpageObject</span> <span class="n">object</span><span class="p">];</span>  
+    <span class="n">webpage</span><span class="o">.</span><span class="n">objectID</span> <span class="o">=</span> <span class="s">@"identifier1"</span><span class="p">;</span>  
+    <span class="n">webpage</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span><span class="p">;</span>  
+    <span class="n">webpage</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">description</span><span class="p">;</span>  
+      
+    <span class="c1">//设置分享出去显示的图片  </span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">picUrl</span><span class="o">.</span><span class="n">length</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">picUrl</span> <span class="o">==</span> <span class="kc">nil</span><span class="p">)</span>  
+    <span class="p">{</span>  
+        <span class="n">webpage</span><span class="o">.</span><span class="n">thumbnailData</span> <span class="o">=</span> <span class="p">[</span><span class="kt">NSData</span> <span class="nv">dataWithContentsOfFile</span><span class="p">:[[</span><span class="kt">NSBundle</span> <span class="n">mainBundle</span><span class="p">]</span> <span class="nv">pathForResource</span><span class="p">:</span><span class="s">@"icon_share"</span> <span class="nv">ofType</span><span class="p">:</span><span class="s">@"png"</span><span class="p">]];</span>  
+    <span class="p">}</span>  
+    <span class="k">else</span>  
+    <span class="p">{</span>  
+        <span class="n">webpage</span><span class="o">.</span><span class="n">thumbnailData</span> <span class="o">=</span> <span class="p">[</span><span class="kt">NSData</span> <span class="nv">dataWithContentsOfURL</span><span class="p">:[</span><span class="kt">NSURL</span> <span class="kt">URLWithString</span><span class="p">:</span><span class="n">picUrl</span><span class="p">]];</span>  
+    <span class="p">}</span>  
+    <span class="n">webpage</span><span class="o">.</span><span class="n">webpageUrl</span> <span class="o">=</span> <span class="n">url</span><span class="p">;</span>  
+    <span class="n">message</span><span class="o">.</span><span class="n">mediaObject</span> <span class="o">=</span> <span class="n">webpage</span><span class="p">;</span>  
+      
+    <span class="kt">WBSendMessageToWeiboRequest</span> <span class="o">*</span><span class="n">request</span> <span class="o">=</span> <span class="p">[</span><span class="kt">WBSendMessageToWeiboRequest</span> <span class="nv">requestWithMessage</span><span class="p">:</span><span class="n">message</span> <span class="nv">authInfo</span><span class="p">:</span><span class="n">authRequest</span> <span class="nv">access_token</span><span class="p">:</span><span class="n">myDelegate</span><span class="o">.</span><span class="n">wbtoken</span><span class="p">];</span>  
+    <span class="n">request</span><span class="o">.</span><span class="n">userInfo</span> <span class="o">=</span> <span class="err">@</span><span class="p">{</span><span class="s">@"ShareMessageFrom"</span><span class="p">:</span> <span class="s">@"SendMessageToWeiboViewController"</span><span class="p">,</span>  
+                         <span class="s">@"Other_Info_1"</span><span class="p">:</span> <span class="p">[</span><span class="kt">NSNumber</span> <span class="nv">numberWithInt</span><span class="p">:</span><span class="mi">123</span><span class="p">],</span>  
+                         <span class="s">@"Other_Info_2"</span><span class="p">:</span> <span class="err">@</span><span class="p">[</span><span class="s">@"obj1"</span><span class="p">,</span> <span class="s">@"obj2"</span><span class="p">],</span>  
+                         <span class="s">@"Other_Info_3"</span><span class="p">:</span> <span class="err">@</span><span class="p">{</span><span class="s">@"key1"</span><span class="p">:</span> <span class="s">@"obj1"</span><span class="p">,</span> <span class="s">@"key2"</span><span class="p">:</span> <span class="s">@"obj2"</span><span class="p">}};</span>  
+      
+    <span class="c1">//调用此方法进行分享  </span>
+    <span class="p">[</span><span class="kt">WeiboSDK</span> <span class="nv">sendRequest</span><span class="p">:</span><span class="n">request</span><span class="p">];</span>  
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="qq的分享">QQ的分享</h2>
+
+<p>QQ的分享分为分享给QQ好友和分享到QQ空间，这里首先定义一个枚举类型来区分是哪一种分享</p>
+
+<p>在分享工具类的头文件里：</p>
+
+<p><code class="highlighter-rouge">JFTools.h</code></p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">typedef</span> <span class="nv">enum</span> <span class="p">:</span> <span class="kt">NSUInteger</span> <span class="p">{</span>  
+    <span class="kt">QQShare_Friends</span><span class="p">,</span>  
+    <span class="kt">QQShare_Qzone</span><span class="p">,</span>  
+<span class="p">}</span> <span class="kt">QQShare_Type</span><span class="p">;</span>  
+</code></pre></div></div>
+
+<p>然后实现分享方法：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">+</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">qqShareLinkWithScene</span><span class="p">:(</span><span class="kt">QQShare_Type</span><span class="p">)</span><span class="n">scene</span> <span class="nv">url</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">url</span> <span class="nv">title</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">title</span> <span class="nv">andDescription</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">description</span>  
+<span class="p">{</span>  
+    <span class="kt">NSURL</span> <span class="o">*</span><span class="n">shareUrl</span> <span class="o">=</span> <span class="p">[</span><span class="kt">NSURL</span> <span class="kt">URLWithString</span><span class="p">:</span><span class="n">url</span><span class="p">];</span>  
+      
+    <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"调用了QQ"</span><span class="p">);</span>  
+      
+    <span class="kt">NSString</span> <span class="o">*</span><span class="n">picUrl</span> <span class="o">=</span> <span class="s">@"这里填写你要分享出图的图片链接"</span><span class="p">;</span>  
+    <span class="kt">NSURL</span> <span class="o">*</span><span class="n">imageUrl</span> <span class="o">=</span> <span class="p">[</span><span class="kt">NSURL</span> <span class="kt">URLWithString</span><span class="p">:</span><span class="n">picUrl</span><span class="p">];</span>  
+   
+    <span class="c1">//通过QQAPIObject来创建将要分享的对象     </span>
+    <span class="kt">QQApiObject</span> <span class="o">*</span><span class="n">newsObj</span> <span class="o">=</span> <span class="p">[</span><span class="kt">QQApiNewsObject</span> <span class="nv">objectWithURL</span><span class="p">:</span><span class="n">shareUrl</span> <span class="nv">title</span><span class="p">:</span><span class="n">title</span> <span class="nv">description</span><span class="p">:</span><span class="n">description</span> <span class="nv">previewImageURL</span><span class="p">:</span><span class="n">imageUrl</span> <span class="nv">targetContentType</span><span class="p">:</span><span class="kt">QQApiURLTargetTypeNews</span><span class="p">];</span>  
+    <span class="c1">//设置分享Req对象  </span>
+    <span class="kt">SendMessageToQQReq</span> <span class="o">*</span><span class="n">req</span> <span class="o">=</span> <span class="p">[</span><span class="kt">SendMessageToQQReq</span> <span class="nv">reqWithContent</span><span class="p">:</span><span class="n">newsObj</span><span class="p">];</span>  
+      
+    <span class="k">switch</span> <span class="p">(</span><span class="n">scene</span><span class="p">)</span>  
+    <span class="p">{</span>  
+            <span class="c1">//分享给QQ好友  </span>
+        <span class="k">case</span> <span class="kt">QQShare_Friends</span><span class="p">:</span>  
+        <span class="p">{</span>  
+            <span class="p">[</span><span class="kt">QQApiInterface</span> <span class="nv">sendReq</span><span class="p">:</span><span class="n">req</span><span class="p">];</span>  
+            <span class="k">break</span><span class="p">;</span>  
+        <span class="p">}</span>  
+            <span class="c1">//分享给QQ空间  </span>
+        <span class="k">case</span> <span class="kt">QQShare_Qzone</span><span class="p">:</span>  
+        <span class="p">{</span>  
+            <span class="p">[</span><span class="kt">QQApiInterface</span> <span class="kt">SendReqToQZone</span><span class="p">:</span><span class="n">req</span><span class="p">];</span>  
+            <span class="k">break</span><span class="p">;</span>  
+        <span class="p">}</span>  
+        <span class="k">default</span><span class="p">:</span>  
+            <span class="k">break</span><span class="p">;</span>  
+    <span class="p">}</span>  
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="微信的分享">微信的分享</h2>
+
+<p>微信的分享也同QQ一样，是分为分享微信好友和分享微信朋友圈，这里只要引入微信的头文件就可以了，微信官方SDK已经声明了所需要用的枚举了，无需我们再进行设置了。</p>
+
+<p>用以下代码实现分享：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">+</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">wechatShareLinkWithScene</span><span class="p">:(</span><span class="n">int</span><span class="p">)</span><span class="n">scene</span> <span class="nv">url</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">url</span> <span class="nv">title</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">title</span> <span class="nv">andDescription</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">description</span>  
+<span class="p">{</span>  
+    <span class="c1">//封装mediaMessage对象  </span>
+    <span class="kt">WXMediaMessage</span> <span class="o">*</span><span class="n">message</span> <span class="o">=</span> <span class="p">[</span><span class="kt">WXMediaMessage</span> <span class="n">message</span><span class="p">];</span>  
+      
+    <span class="c1">//设置微信分享的title  </span>
+    <span class="p">[</span><span class="n">message</span> <span class="nv">setTitle</span><span class="p">:</span><span class="n">title</span><span class="p">];</span>  
+    <span class="c1">//设置分享描述内容  </span>
+    <span class="p">[</span><span class="n">message</span> <span class="nv">setDescription</span><span class="p">:</span><span class="n">description</span><span class="p">];</span>  
+    <span class="c1">//设置分享所需图片  </span>
+    <span class="p">[</span><span class="n">message</span> <span class="nv">setThumbImage</span><span class="p">:[</span><span class="kt">UIImage</span> <span class="nv">imageNamed</span><span class="p">:</span><span class="s">@"icon_share"</span><span class="p">]];</span>  
+      
+    <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"调用了微信"</span><span class="p">);</span>  
+      
+    <span class="c1">//封装WXWebpageObject对象  </span>
+    <span class="kt">WXWebpageObject</span> <span class="o">*</span><span class="n">ext</span> <span class="o">=</span> <span class="p">[</span><span class="kt">WXWebpageObject</span> <span class="n">object</span><span class="p">];</span>  
+    <span class="n">ext</span><span class="o">.</span><span class="n">webpageUrl</span> <span class="o">=</span> <span class="n">url</span><span class="p">;</span>  
+      
+    <span class="n">message</span><span class="o">.</span><span class="n">mediaObject</span> <span class="o">=</span> <span class="n">ext</span><span class="p">;</span>  
+      
+    <span class="c1">//发送请求  </span>
+    <span class="kt">SendMessageToWXReq</span><span class="o">*</span> <span class="n">req</span> <span class="o">=</span> <span class="p">[[</span><span class="kt">SendMessageToWXReq</span> <span class="n">alloc</span><span class="p">]</span> <span class="kd">init</span><span class="p">];</span>  
+    <span class="n">req</span><span class="o">.</span><span class="n">bText</span> <span class="o">=</span> <span class="kt">NO</span><span class="p">;</span>  
+    <span class="n">req</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="n">message</span><span class="p">;</span>  
+    <span class="n">req</span><span class="o">.</span><span class="n">scene</span> <span class="o">=</span> <span class="n">scene</span><span class="p">;</span>  
+      
+    <span class="p">[</span><span class="kt">WXApi</span> <span class="nv">sendReq</span><span class="p">:</span><span class="n">req</span><span class="p">];</span>  
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>这样就实现了简单的分享，一般的需求几乎都可以满足，是不是很简单。</p>
+
+<h2 id="总结下">总结下</h2>
+
+<p>首先集成你准备分享平台的SDK，然后进行Appdelegate的注册，然后实现分享，这里需要注意下，微信和微博分享的图片是传本地图片，QQ是要传图片的链接，(这里要吐槽下，不理解传链接有什么用)。</p>
+
+<p>既然分享就要分享的彻底点，下面po出博主自己封装的分享工具类，如有不足之处还请大家多提意见😏</p>
+
+<p><code class="highlighter-rouge">JFShareTool.h</code></p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  </span>
+<span class="c1">//  JFShareTool.h  </span>
+<span class="c1">//  BobcareDoctorApp  </span>
+<span class="c1">//  </span>
+<span class="c1">//  Created by wangjifeng on 15/11/13.  </span>
+<span class="c1">//  Copyright © 2015年 com.01wisdom. All rights reserved.  </span>
+<span class="c1">//  </span>
+  
+<span class="cp">#import &lt;Foundation/Foundation.h&gt;  </span>
+  
+<span class="n">typedef</span> <span class="nv">enum</span> <span class="p">:</span> <span class="kt">NSUInteger</span> <span class="p">{</span>  
+    <span class="kt">QQShare_Friends</span><span class="p">,</span>  
+    <span class="kt">QQShare_Qzone</span><span class="p">,</span>  
+<span class="p">}</span> <span class="kt">QQShare_Type</span><span class="p">;</span>  
+  
+<span class="kd">@interface</span> <span class="kt">JFShareTool</span> <span class="p">:</span> <span class="kt">NSObject</span>  
+  
+<span class="cm">/** 
+*  分享链接给微信 
+* 
+*  @param scene       场景 
+*  @param url         url 
+*  @param description 描述 
+*/</span>  
+<span class="o">+</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">wechatShareLinkWithScene</span><span class="p">:(</span><span class="n">int</span><span class="p">)</span><span class="n">scene</span> <span class="nv">url</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">url</span> <span class="nv">title</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">title</span> <span class="nv">andDescription</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">description</span><span class="p">;</span>  
+  
+<span class="cm">/** 
+ *  分享链接给QQ 
+ * 
+ *  @param scene 场景 
+ *  @param url   url 
+ *  @param description 描述 
+ */</span>  
+<span class="o">+</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">qqShareLinkWithScene</span><span class="p">:(</span><span class="kt">QQShare_Type</span><span class="p">)</span><span class="n">scene</span> <span class="nv">url</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">url</span> <span class="nv">title</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">title</span> <span class="nv">andDescription</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">description</span><span class="p">;</span>  
+  
+<span class="cm">/** 
+ *  分享链接给微博 
+ * 
+ *  @param url         链接 
+ *  @param description 描述 
+ */</span>  
+<span class="o">+</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">weiboShareLinkWithUrl</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">url</span> <span class="nv">title</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">title</span> <span class="nv">description</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">description</span> <span class="nv">andPicUrl</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">picUrl</span><span class="p">;</span>  
+  
+<span class="kd">@end</span>
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">JFShareTool.m</code></p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  </span>
+<span class="c1">//  JFShareTool.m  </span>
+<span class="c1">//  BobcareDoctorApp  </span>
+<span class="c1">//  </span>
+<span class="c1">//  Created by wangjifeng on 15/11/13.  </span>
+<span class="c1">//  Copyright © 2015年 com.01wisdom. All rights reserved.  </span>
+<span class="c1">//  </span>
+  
+<span class="cp">#import "JFShareTool.h"  </span>
+<span class="cp">#import "WXApi.h"  </span>
+<span class="cp">#import &lt;UIKit/UIKit.h&gt;  </span>
+<span class="cp">#import &lt;TencentOpenAPI/QQApiInterface.h&gt;  </span>
+<span class="cp">#import "WeiboSDK.h"  </span>
+<span class="cp">#import "AppDelegate.h"  </span>
+  
+<span class="kd">@implementation</span> <span class="kt">JFShareTool</span>  
+  
+<span class="o">+</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">wechatShareLinkWithScene</span><span class="p">:(</span><span class="n">int</span><span class="p">)</span><span class="n">scene</span> <span class="nv">url</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">url</span> <span class="nv">title</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">title</span> <span class="nv">andDescription</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">description</span>  
+<span class="p">{</span>  
+    <span class="c1">//封装mediaMessage对象  </span>
+    <span class="kt">WXMediaMessage</span> <span class="o">*</span><span class="n">message</span> <span class="o">=</span> <span class="p">[</span><span class="kt">WXMediaMessage</span> <span class="n">message</span><span class="p">];</span>  
+      
+    <span class="p">[</span><span class="n">message</span> <span class="nv">setTitle</span><span class="p">:</span><span class="n">title</span><span class="p">];</span>  
+    <span class="p">[</span><span class="n">message</span> <span class="nv">setDescription</span><span class="p">:</span><span class="n">description</span><span class="p">];</span>  
+    <span class="p">[</span><span class="n">message</span> <span class="nv">setThumbImage</span><span class="p">:[</span><span class="kt">UIImage</span> <span class="nv">imageNamed</span><span class="p">:</span><span class="s">@"icon_share"</span><span class="p">]];</span>  
+      
+    <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"调用了微信"</span><span class="p">);</span>  
+      
+    <span class="c1">//封装WXWebpageObject对象  </span>
+    <span class="kt">WXWebpageObject</span> <span class="o">*</span><span class="n">ext</span> <span class="o">=</span> <span class="p">[</span><span class="kt">WXWebpageObject</span> <span class="n">object</span><span class="p">];</span>  
+    <span class="n">ext</span><span class="o">.</span><span class="n">webpageUrl</span> <span class="o">=</span> <span class="n">url</span><span class="p">;</span>  
+      
+    <span class="n">message</span><span class="o">.</span><span class="n">mediaObject</span> <span class="o">=</span> <span class="n">ext</span><span class="p">;</span>  
+      
+    <span class="c1">//发送请求  </span>
+    <span class="kt">SendMessageToWXReq</span><span class="o">*</span> <span class="n">req</span> <span class="o">=</span> <span class="p">[[</span><span class="kt">SendMessageToWXReq</span> <span class="n">alloc</span><span class="p">]</span> <span class="kd">init</span><span class="p">];</span>  
+    <span class="n">req</span><span class="o">.</span><span class="n">bText</span> <span class="o">=</span> <span class="kt">NO</span><span class="p">;</span>  
+    <span class="n">req</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="n">message</span><span class="p">;</span>  
+    <span class="n">req</span><span class="o">.</span><span class="n">scene</span> <span class="o">=</span> <span class="n">scene</span><span class="p">;</span>  
+      
+    <span class="p">[</span><span class="kt">WXApi</span> <span class="nv">sendReq</span><span class="p">:</span><span class="n">req</span><span class="p">];</span>  
+<span class="p">}</span>  
+  
+<span class="o">+</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">qqShareLinkWithScene</span><span class="p">:(</span><span class="kt">QQShare_Type</span><span class="p">)</span><span class="n">scene</span> <span class="nv">url</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">url</span> <span class="nv">title</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">title</span> <span class="nv">andDescription</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">description</span>  
+<span class="p">{</span>  
+    <span class="kt">NSURL</span> <span class="o">*</span><span class="n">shareUrl</span> <span class="o">=</span> <span class="p">[</span><span class="kt">NSURL</span> <span class="kt">URLWithString</span><span class="p">:</span><span class="n">url</span><span class="p">];</span>  
+      
+    <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"调用了QQ"</span><span class="p">);</span>  
+      
+    <span class="kt">NSString</span> <span class="o">*</span><span class="n">picUrl</span> <span class="o">=</span> <span class="s">@"http://file.bmob.cn/M02/B3/F9/oYYBAFZSehaAdoeSAABBZ_Q9h-U696.png"</span><span class="p">;</span>  
+    <span class="kt">NSURL</span> <span class="o">*</span><span class="n">imageUrl</span> <span class="o">=</span> <span class="p">[</span><span class="kt">NSURL</span> <span class="kt">URLWithString</span><span class="p">:</span><span class="n">picUrl</span><span class="p">];</span>  
+      
+    <span class="kt">QQApiObject</span> <span class="o">*</span><span class="n">newsObj</span> <span class="o">=</span> <span class="p">[</span><span class="kt">QQApiNewsObject</span> <span class="nv">objectWithURL</span><span class="p">:</span><span class="n">shareUrl</span> <span class="nv">title</span><span class="p">:</span><span class="n">title</span> <span class="nv">description</span><span class="p">:</span><span class="n">description</span> <span class="nv">previewImageURL</span><span class="p">:</span><span class="n">imageUrl</span> <span class="nv">targetContentType</span><span class="p">:</span><span class="kt">QQApiURLTargetTypeNews</span><span class="p">];</span>  
+    <span class="kt">SendMessageToQQReq</span> <span class="o">*</span><span class="n">req</span> <span class="o">=</span> <span class="p">[</span><span class="kt">SendMessageToQQReq</span> <span class="nv">reqWithContent</span><span class="p">:</span><span class="n">newsObj</span><span class="p">];</span>  
+      
+    <span class="k">switch</span> <span class="p">(</span><span class="n">scene</span><span class="p">)</span>  
+    <span class="p">{</span>  
+            <span class="c1">//分享给QQ好友  </span>
+        <span class="k">case</span> <span class="kt">QQShare_Friends</span><span class="p">:</span>  
+        <span class="p">{</span>  
+            <span class="p">[</span><span class="kt">QQApiInterface</span> <span class="nv">sendReq</span><span class="p">:</span><span class="n">req</span><span class="p">];</span>  
+            <span class="k">break</span><span class="p">;</span>  
+        <span class="p">}</span>  
+            <span class="c1">//分享给QQ空间  </span>
+        <span class="k">case</span> <span class="kt">QQShare_Qzone</span><span class="p">:</span>  
+        <span class="p">{</span>  
+            <span class="p">[</span><span class="kt">QQApiInterface</span> <span class="kt">SendReqToQZone</span><span class="p">:</span><span class="n">req</span><span class="p">];</span>  
+            <span class="k">break</span><span class="p">;</span>  
+        <span class="p">}</span>  
+        <span class="k">default</span><span class="p">:</span>  
+            <span class="k">break</span><span class="p">;</span>  
+    <span class="p">}</span>  
+<span class="p">}</span>  
+  
+<span class="o">+</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">weiboShareLinkWithUrl</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">url</span> <span class="nv">title</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">title</span> <span class="nv">description</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">description</span> <span class="nv">andPicUrl</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">picUrl</span>  
+<span class="p">{</span>  
+    <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"调用了微博"</span><span class="p">);</span>  
+      
+    <span class="kt">AppDelegate</span> <span class="o">*</span><span class="n">myDelegate</span> <span class="o">=</span><span class="p">(</span><span class="kt">AppDelegate</span><span class="o">*</span><span class="p">)[[</span><span class="kt">UIApplication</span> <span class="n">sharedApplication</span><span class="p">]</span> <span class="n">delegate</span><span class="p">];</span>  
+      
+    <span class="kt">WBAuthorizeRequest</span> <span class="o">*</span><span class="n">authRequest</span> <span class="o">=</span> <span class="p">[</span><span class="kt">WBAuthorizeRequest</span> <span class="n">request</span><span class="p">];</span>  
+    <span class="n">authRequest</span><span class="o">.</span><span class="n">redirectURI</span> <span class="o">=</span> <span class="s">@"http://www.bobcare.com"</span><span class="p">;</span>  
+    <span class="n">authRequest</span><span class="o">.</span><span class="n">scope</span> <span class="o">=</span> <span class="s">@"all"</span><span class="p">;</span>  
+      
+    <span class="kt">WBMessageObject</span> <span class="o">*</span><span class="n">message</span> <span class="o">=</span> <span class="p">[</span><span class="kt">WBMessageObject</span> <span class="n">message</span><span class="p">];</span>  
+      
+    <span class="n">message</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">title</span><span class="p">;</span>  
+      
+    <span class="kt">WBWebpageObject</span> <span class="o">*</span><span class="n">webpage</span> <span class="o">=</span> <span class="p">[</span><span class="kt">WBWebpageObject</span> <span class="n">object</span><span class="p">];</span>  
+    <span class="n">webpage</span><span class="o">.</span><span class="n">objectID</span> <span class="o">=</span> <span class="s">@"identifier1"</span><span class="p">;</span>  
+    <span class="n">webpage</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span><span class="p">;</span>  
+    <span class="n">webpage</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">description</span><span class="p">;</span>  
+      
+    <span class="k">if</span> <span class="p">(</span><span class="n">picUrl</span><span class="o">.</span><span class="n">length</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">picUrl</span> <span class="o">==</span> <span class="kc">nil</span><span class="p">)</span>  
+    <span class="p">{</span>  
+        <span class="n">webpage</span><span class="o">.</span><span class="n">thumbnailData</span> <span class="o">=</span> <span class="p">[</span><span class="kt">NSData</span> <span class="nv">dataWithContentsOfFile</span><span class="p">:[[</span><span class="kt">NSBundle</span> <span class="n">mainBundle</span><span class="p">]</span> <span class="nv">pathForResource</span><span class="p">:</span><span class="s">@"icon_share"</span> <span class="nv">ofType</span><span class="p">:</span><span class="s">@"png"</span><span class="p">]];</span>  
+    <span class="p">}</span>  
+    <span class="k">else</span>  
+    <span class="p">{</span>  
+        <span class="n">webpage</span><span class="o">.</span><span class="n">thumbnailData</span> <span class="o">=</span> <span class="p">[</span><span class="kt">NSData</span> <span class="nv">dataWithContentsOfURL</span><span class="p">:[</span><span class="kt">NSURL</span> <span class="kt">URLWithString</span><span class="p">:</span><span class="n">picUrl</span><span class="p">]];</span>  
+    <span class="p">}</span>  
+    <span class="n">webpage</span><span class="o">.</span><span class="n">webpageUrl</span> <span class="o">=</span> <span class="n">url</span><span class="p">;</span>  
+    <span class="n">message</span><span class="o">.</span><span class="n">mediaObject</span> <span class="o">=</span> <span class="n">webpage</span><span class="p">;</span>  
+      
+    <span class="kt">WBSendMessageToWeiboRequest</span> <span class="o">*</span><span class="n">request</span> <span class="o">=</span> <span class="p">[</span><span class="kt">WBSendMessageToWeiboRequest</span> <span class="nv">requestWithMessage</span><span class="p">:</span><span class="n">message</span> <span class="nv">authInfo</span><span class="p">:</span><span class="n">authRequest</span> <span class="nv">access_token</span><span class="p">:</span><span class="n">myDelegate</span><span class="o">.</span><span class="n">wbtoken</span><span class="p">];</span>  
+    <span class="n">request</span><span class="o">.</span><span class="n">userInfo</span> <span class="o">=</span> <span class="err">@</span><span class="p">{</span><span class="s">@"ShareMessageFrom"</span><span class="p">:</span> <span class="s">@"SendMessageToWeiboViewController"</span><span class="p">,</span>  
+                         <span class="s">@"Other_Info_1"</span><span class="p">:</span> <span class="p">[</span><span class="kt">NSNumber</span> <span class="nv">numberWithInt</span><span class="p">:</span><span class="mi">123</span><span class="p">],</span>  
+                         <span class="s">@"Other_Info_2"</span><span class="p">:</span> <span class="err">@</span><span class="p">[</span><span class="s">@"obj1"</span><span class="p">,</span> <span class="s">@"obj2"</span><span class="p">],</span>  
+                         <span class="s">@"Other_Info_3"</span><span class="p">:</span> <span class="err">@</span><span class="p">{</span><span class="s">@"key1"</span><span class="p">:</span> <span class="s">@"obj1"</span><span class="p">,</span> <span class="s">@"key2"</span><span class="p">:</span> <span class="s">@"obj2"</span><span class="p">}};</span>  
+      
+    <span class="p">[</span><span class="kt">WeiboSDK</span> <span class="nv">sendRequest</span><span class="p">:</span><span class="n">request</span><span class="p">];</span>  
+<span class="p">}</span>  
+  
+<span class="kd">@end</span>
+</code></pre></div></div>
+
+<p>调用示例：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">shareViewButtonClick</span><span class="p">:(</span><span class="kt">CustomShareType</span><span class="p">)</span><span class="n">shareType</span>  
+<span class="p">{</span>  
+    <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"%s"</span><span class="p">,</span><span class="n">__func__</span><span class="p">);</span>  
+    <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"%lu"</span><span class="p">,(</span><span class="n">unsigned</span> <span class="n">long</span><span class="p">)</span><span class="n">shareType</span><span class="p">);</span>  
+      
+    <span class="k">switch</span> <span class="p">(</span><span class="n">shareType</span><span class="p">)</span>  
+    <span class="p">{</span>  
+        <span class="k">case</span> <span class="kt">ShareType_Weixin_Friend</span><span class="p">:</span>  
+        <span class="p">{</span>  
+            <span class="p">[</span><span class="kt">JFShareTool</span> <span class="nv">wechatShareLinkWithScene</span><span class="p">:</span><span class="kt">WXSceneSession</span> <span class="nv">url</span><span class="p">:</span><span class="n">url</span> <span class="nv">title</span><span class="p">:</span><span class="n">_shareTitle</span> <span class="nv">andDescription</span><span class="p">:</span><span class="n">_shareContent</span><span class="p">];</span>  
+            <span class="k">break</span><span class="p">;</span>  
+        <span class="p">}</span>  
+        <span class="k">case</span> <span class="kt">ShareType_Weixin_Circle</span><span class="p">:</span>  
+        <span class="p">{</span>  
+            <span class="p">[</span><span class="kt">JFShareTool</span> <span class="nv">wechatShareLinkWithScene</span><span class="p">:</span><span class="kt">WXSceneTimeline</span> <span class="nv">url</span><span class="p">:</span><span class="n">url</span> <span class="nv">title</span><span class="p">:</span><span class="n">_shareTitle</span> <span class="nv">andDescription</span><span class="p">:</span><span class="n">_shareContent</span><span class="p">];</span>  
+            <span class="k">break</span><span class="p">;</span>  
+        <span class="p">}</span>  
+        <span class="k">case</span> <span class="kt">ShareType_Weibo</span><span class="p">:</span>  
+        <span class="p">{</span>  
+            <span class="p">[</span><span class="kt">JFShareTool</span> <span class="nv">weiboShareLinkWithUrl</span><span class="p">:</span><span class="n">url</span> <span class="nv">title</span><span class="p">:</span><span class="n">_shareTitle</span> <span class="nv">description</span><span class="p">:</span><span class="n">_shareContent</span> <span class="nv">andPicUrl</span><span class="p">:</span><span class="kc">nil</span><span class="p">];</span>  
+            <span class="k">break</span><span class="p">;</span>  
+        <span class="p">}</span>  
+        <span class="k">case</span> <span class="kt">ShareType_QQ_Zone</span><span class="p">:</span>  
+        <span class="p">{</span>  
+            <span class="p">[</span><span class="kt">JFShareTool</span> <span class="nv">qqShareLinkWithScene</span><span class="p">:</span><span class="kt">QQShare_Qzone</span> <span class="nv">url</span><span class="p">:</span><span class="n">url</span> <span class="nv">title</span><span class="p">:</span><span class="n">_shareTitle</span> <span class="nv">andDescription</span><span class="p">:</span><span class="n">_shareContent</span><span class="p">];</span>  
+            <span class="k">break</span><span class="p">;</span>  
+        <span class="p">}</span>  
+        <span class="k">case</span> <span class="kt">ShareType_QQ_Friend</span><span class="p">:</span>  
+        <span class="p">{</span>  
+            <span class="p">[</span><span class="kt">JFShareTool</span> <span class="nv">qqShareLinkWithScene</span><span class="p">:</span><span class="kt">QQShare_Friends</span> <span class="nv">url</span><span class="p">:</span><span class="n">url</span> <span class="nv">title</span><span class="p">:</span><span class="n">_shareTitle</span> <span class="nv">andDescription</span><span class="p">:</span><span class="n">_shareContent</span><span class="p">];</span>  
+            <span class="k">break</span><span class="p">;</span>  
+        <span class="p">}</span>  
+        <span class="k">default</span><span class="p">:</span>  
+            <span class="k">break</span><span class="p">;</span>  
+    <span class="p">}</span>  
+<span class="p">}</span>
+</code></pre></div></div>
+:ET

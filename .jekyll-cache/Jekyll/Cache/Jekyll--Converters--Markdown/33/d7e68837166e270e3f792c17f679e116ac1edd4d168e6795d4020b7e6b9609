@@ -1,0 +1,26 @@
+I"�	<p>协议定义了一系列方法，遵从此协议的对象应该实现他们。于是，我们可以用协议把自己所写的API中的实现细节隐藏起来，将返回对象设计为遵从此协议的纯id类型。这样，想要隐藏的类名就不会出现在API之中，若接口背后有多个不同的类，而你不想指明具体使用哪个类，那么可以考虑使用这个方法，因为有时候这些类可能会变，有时候他们无法容纳于标准的类集成体系中，因而不能以某个公共基类来统一表示。</p>
+
+<p>这个概念通常称为“<strong>匿名对象</strong>”，例如</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@property (nonatomic, weak) id&lt;PersonDelegate&gt; delegate;
+</code></pre></div></div>
+
+<p>由于该属性的类型是 <code class="highlighter-rouge">id&lt;PersonDelegate&gt;</code> ，实际上任何类的对象都能充当这一属性，即便该类不继承自<code class="highlighter-rouge">NSObject</code>也可以，只要遵循<code class="highlighter-rouge">PersonDelegate</code>协议就可以。对于具备此属性的类来说，<code class="highlighter-rouge">delegate</code>就是“匿名的”。</p>
+
+<p><code class="highlighter-rouge">NSDictionary</code>也可以说明这个概念。字典中，键的标准内存管理语义是“设置时拷贝”，而值的语义是“设置时保留”。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)setObject:(id)object forKey:(id&lt;NSCopying&gt;)key;
+</code></pre></div></div>
+
+<p>键的参数类型为<code class="highlighter-rouge">id&lt;NSCopying&gt;</code>，作为参数值的对象，可以是任何类型。只要遵循NSCopying协议就可以。</p>
+
+<p>有时候对象类型并不重要，重要的是对象有没有实现某些方法。在这种情况下，也可以用这些“匿名类型”来表达这一概念。即便实现代码总是使用固定的类，还是可能会把它写成遵循某些协议的匿名类型，以表示类型在此处并不重要。</p>
+
+<p><strong>要点：</strong></p>
+
+<ul>
+  <li>协议可在某种程度上提供匿名类型。具体的对象类型可以淡化成遵从某协议的id类型，协议里规定了对象所应实现的方法。</li>
+  <li>使用匿名对象来隐藏类型名称（或者类名）</li>
+  <li>如果具体类型不重要，重要的是对象能够响应（定义在协议里的）特定方法，那么可使用匿名对象来表示。</li>
+</ul>
+:ET

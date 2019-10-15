@@ -202,7 +202,7 @@
 				<p>有时候总是有需求来获取当前的第一响应者，例如让TextField收键盘，隐藏视图等等操作都需要获取当前的第一响应者，那么该如何获取呢？</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">UIWindow</span> <span class="o">*</span><span class="n">keyWindow</span> <span class="o">=</span> <span class="p">[[</span><span class="kt">UIApplication</span> <span class="n">sharedApplication</span><span class="p">]</span> <span class="n">keyWindow</span><span class="p">];</span>  
-<span class="kt">UIView</span> <span class="o">*</span><span class="n">firstResponder</span> <span class="o">=</span> <span class="p">[</span><span class="n">keyWindow</span> <span class="nv">performSelector</span><span class="p">:</span><span class="kd">@selector(firstResponder)</span><span class="p">];</span>  
+<span class="kt">UIView</span> <span class="o">*</span><span class="n">firstResponder</span> <span class="o">=</span> <span class="p">[</span><span class="n">keyWindow</span> <span class="nv">performSelector</span><span class="p">:</span><span class="kd">@selector</span><span class="p">(</span><span class="n">firstResponder</span><span class="p">)];</span>  
   
 <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"%@"</span><span class="p">,</span><span class="n">firstResponder</span><span class="p">);</span>
 </code></pre></div></div>
@@ -250,7 +250,7 @@
   
 <span class="o">+</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">currentFirstResponder</span> <span class="p">{</span>  
     <span class="n">currentFirstResponder</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">;</span>  
-    <span class="p">[[</span><span class="kt">UIApplication</span> <span class="n">sharedApplication</span><span class="p">]</span> <span class="nv">sendAction</span><span class="p">:</span><span class="kd">@selector(findFirstResponder:)</span> <span class="nv">to</span><span class="p">:</span><span class="kc">nil</span> <span class="nv">from</span><span class="p">:</span><span class="kc">nil</span> <span class="nv">forEvent</span><span class="p">:</span><span class="kc">nil</span><span class="p">];</span>  
+    <span class="p">[[</span><span class="kt">UIApplication</span> <span class="n">sharedApplication</span><span class="p">]</span> <span class="nv">sendAction</span><span class="p">:</span><span class="kd">@selector</span><span class="p">(</span><span class="nv">findFirstResponder</span><span class="p">:)</span> <span class="nv">to</span><span class="p">:</span><span class="kc">nil</span> <span class="nv">from</span><span class="p">:</span><span class="kc">nil</span> <span class="nv">forEvent</span><span class="p">:</span><span class="kc">nil</span><span class="p">];</span>  
     <span class="k">return</span> <span class="n">currentFirstResponder</span><span class="p">;</span>  
 <span class="p">}</span>  
   
