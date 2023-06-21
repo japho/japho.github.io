@@ -239,7 +239,7 @@
   <li>
     <p>使用代码进行布局
 当涉及到比较复杂的UI布局的时候，可以考虑使用这种布局方式，按大家平时的习惯来。这里需要注意一下，如果需要使用代码布局的话需要修改一下plist文件。
-首先将原有<code class="highlighter-rouge">NSExtensionMainStoryboard</code>字段删除，添加字段<code class="highlighter-rouge">NSExtensionPrincipalClass</code>，value是你所写的controller的名称，一般默认的都是<code class="highlighter-rouge">TodayViewController</code></p>
+首先将原有<code class="language-plaintext highlighter-rouge">NSExtensionMainStoryboard</code>字段删除，添加字段<code class="language-plaintext highlighter-rouge">NSExtensionPrincipalClass</code>，value是你所写的controller的名称，一般默认的都是<code class="language-plaintext highlighter-rouge">TodayViewController</code></p>
   </li>
 </ul>
 
@@ -249,7 +249,7 @@
 
 <p><strong>1. 设置Widget的size</strong></p>
 
-<p>iOS10之后，Widget支持展开及折叠两种展现方式，通过设置<code class="highlighter-rouge">widgetLargestAvailableDisplayMode</code>属性可以让Widget程序实现展开布局。如下：</p>
+<p>iOS10之后，Widget支持展开及折叠两种展现方式，通过设置<code class="language-plaintext highlighter-rouge">widgetLargestAvailableDisplayMode</code>属性可以让Widget程序实现展开布局。如下：</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="n">viewDidLoad</span> <span class="p">{</span>
@@ -289,7 +289,7 @@
 
 <p><strong>3. iOS10之前，视图原点默认存在一个间距，可以实现以下方法来调整视图间距</strong></p>
 
-<p><code class="highlighter-rouge">注：</code>该方法在iOS10之后被遗弃，iOS10默认不存在间距。</p>
+<p><code class="language-plaintext highlighter-rouge">注：</code>该方法在iOS10之后被遗弃，iOS10默认不存在间距。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="o">-</span> <span class="p">(</span><span class="kt">UIEdgeInsets</span><span class="p">)</span><span class="nv">widgetMarginInsetsForProposedMarginInsets</span><span class="p">:(</span><span class="kt">UIEdgeInsets</span><span class="p">)</span><span class="n">defaultMarginInsets</span>
@@ -303,7 +303,7 @@
 <h3 id="应用唤醒">应用唤醒</h3>
 <p>本来想叫应用间跳转的，想想还是这个名字比较高大上些😏</p>
 
-<p>如下，配置url scheme，这个定义的时候尽量不要和其他用用冲突，笔者定义的为<code class="highlighter-rouge">WidgetDemo</code>。这样，通过访问<code class="highlighter-rouge">WidgetDemo://</code>就可以实现应用唤醒了。代码如下：</p>
+<p>如下，配置url scheme，这个定义的时候尽量不要和其他用用冲突，笔者定义的为<code class="language-plaintext highlighter-rouge">WidgetDemo</code>。这样，通过访问<code class="language-plaintext highlighter-rouge">WidgetDemo://</code>就可以实现应用唤醒了。代码如下：</p>
 
 <p><img src="http://upload-images.jianshu.io/upload_images/1269906-69f262be69293ae0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
 
@@ -361,7 +361,7 @@
 
 <blockquote>
   <p>以下是我们比较常用的软件的url scheme，有兴趣的同学们可以试一试：
-<code class="highlighter-rouge">QQ mqq://
+<code class="language-plaintext highlighter-rouge">QQ mqq://
 微信 weixin://
 淘宝taobao://
 微博 sinaweibo://
@@ -383,7 +383,7 @@
   <li><strong>使用NSUserDefault</strong></li>
 </ul>
 
-<p>这里不能使用<code class="highlighter-rouge">[NSUserDefaults standardUserDefaults];</code>方法来初始化NSUserDefault对象，正像之前所说，由于沙盒机制，拓展应用是不允许访问宿主应用的沙盒路径的，因此上述用法是不对的，需要搭配app group完成实例化UserDefaults。正确的使用方式如下：</p>
+<p>这里不能使用<code class="language-plaintext highlighter-rouge">[NSUserDefaults standardUserDefaults];</code>方法来初始化NSUserDefault对象，正像之前所说，由于沙盒机制，拓展应用是不允许访问宿主应用的沙盒路径的，因此上述用法是不对的，需要搭配app group完成实例化UserDefaults。正确的使用方式如下：</p>
 
 <p><strong>写入数据</strong></p>
 
@@ -546,7 +546,7 @@
                     <div class="tags">
         				
                             
-                				<a href="/tags/#iOS" title="iOS" rel="31">
+                				<a href="/tags/#iOS" title="iOS" rel="32">
                                     iOS
                                 </a>
                             
@@ -680,7 +680,7 @@
                     
                 </ul>
                 <p class="copyright text-muted">
-                    Copyright &copy; Japho Blog 2020
+                    Copyright &copy; Japho Blog 2023
                     <br>
                     <!-- Theme on <a href="hhttps://github.com/japho/japho.github.io.git">GitHub</a> |
                     <iframe

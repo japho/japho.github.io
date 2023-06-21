@@ -1,4 +1,4 @@
-I".	<p>通过<code class="highlighter-rouge">presentviewcontroller</code>的方式显示的<code class="highlighter-rouge">viewcontroller</code>不会存入<code class="highlighter-rouge">self.navigationController.viewControllers</code>数组中。而通过push方式显示的<code class="highlighter-rouge">viewcontroller</code>会存在该数组的最后。</p>
+I"z	<p>通过<code class="language-plaintext highlighter-rouge">presentviewcontroller</code>的方式显示的<code class="language-plaintext highlighter-rouge">viewcontroller</code>不会存入<code class="language-plaintext highlighter-rouge">self.navigationController.viewControllers</code>数组中。而通过push方式显示的<code class="language-plaintext highlighter-rouge">viewcontroller</code>会存在该数组的最后。</p>
 
 <p>代码如下：</p>
 

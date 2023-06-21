@@ -213,14 +213,14 @@
 
 <h3 id="配置url-scheme">配置URL scheme</h3>
 
-<p>在Xcode中，选择你的工程设置项，选中<code class="highlighter-rouge">TARGETS</code>一栏，在<code class="highlighter-rouge">info</code>标签栏的<code class="highlighter-rouge">URL type</code>添加<code class="highlighter-rouge">URL scheme</code>为你所注册的应用程序id（如下图所示），此步为配置应用间的跳转。</p>
+<p>在Xcode中，选择你的工程设置项，选中<code class="language-plaintext highlighter-rouge">TARGETS</code>一栏，在<code class="language-plaintext highlighter-rouge">info</code>标签栏的<code class="language-plaintext highlighter-rouge">URL type</code>添加<code class="language-plaintext highlighter-rouge">URL scheme</code>为你所注册的应用程序id（如下图所示），此步为配置应用间的跳转。</p>
 
 <p><img src="http://upload-images.jianshu.io/upload_images/1269906-c20b3c9b67a92432.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="配置Url Scheme" /></p>
 
 <h2 id="开始编写代码">开始编写代码</h2>
 
 <ul>
-  <li>在<code class="highlighter-rouge">Appdelegate.h</code>中引用微信文件，声明遵循代理。</li>
+  <li>在<code class="language-plaintext highlighter-rouge">Appdelegate.h</code>中引用微信文件，声明遵循代理。</li>
 </ul>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
@@ -237,7 +237,7 @@
 </code></pre></div></div>
 
 <ul>
-  <li><code class="highlighter-rouge">注册SDK</code>要使你的程序启动后微信终端能响应你的程序，必须在代码中向微信终端注册你的id。（在 <code class="highlighter-rouge">AppDelegate</code> 的 <code class="highlighter-rouge">didFinishLaunchingWithOptions</code> 函数中向微信注册<code class="highlighter-rouge">id</code>）。</li>
+  <li><code class="language-plaintext highlighter-rouge">注册SDK</code>要使你的程序启动后微信终端能响应你的程序，必须在代码中向微信终端注册你的id。（在 <code class="language-plaintext highlighter-rouge">AppDelegate</code> 的 <code class="language-plaintext highlighter-rouge">didFinishLaunchingWithOptions</code> 函数中向微信注册<code class="language-plaintext highlighter-rouge">id</code>）。</li>
 </ul>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
@@ -253,7 +253,7 @@
 </code></pre></div></div>
 
 <ul>
-  <li>重写<code class="highlighter-rouge">AppDelegate</code>的<code class="highlighter-rouge">handleOpenURL</code>和<code class="highlighter-rouge">openURL</code>方法</li>
+  <li>重写<code class="language-plaintext highlighter-rouge">AppDelegate</code>的<code class="language-plaintext highlighter-rouge">handleOpenURL</code>和<code class="language-plaintext highlighter-rouge">openURL</code>方法</li>
 </ul>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
@@ -276,9 +276,9 @@
 </ul>
 
 <blockquote>
-  <p><code class="highlighter-rouge">scope</code> : 应用授权作用域，如获取用户个人信息则填写<code class="highlighter-rouge">snsapi_userinfo</code></p>
+  <p><code class="language-plaintext highlighter-rouge">scope</code> : 应用授权作用域，如获取用户个人信息则填写<code class="language-plaintext highlighter-rouge">snsapi_userinfo</code></p>
 
-  <p><code class="highlighter-rouge">state</code> : 用于保持请求和回调的状态，授权请求后原样带回给第三方。该参数可用于防止csrf攻击（跨站请求伪造攻击），建议第三方带上该参数，可设置为简单的随机数加session进行校验（非必填）。</p>
+  <p><code class="language-plaintext highlighter-rouge">state</code> : 用于保持请求和回调的状态，授权请求后原样带回给第三方。该参数可用于防止csrf攻击（跨站请求伪造攻击），建议第三方带上该参数，可设置为简单的随机数加session进行校验（非必填）。</p>
 </blockquote>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
@@ -297,7 +297,7 @@
 </code></pre></div></div>
 
 <ul>
-  <li>在<code class="highlighter-rouge">Appdelegate</code>中实现微信的代理，获取微信返回的<code class="highlighter-rouge">code</code>，这里我使用了通知的方法来调用登录<code class="highlighter-rouge">controller</code>中的相应才做，也可以使用代理、<code class="highlighter-rouge">KVO</code>等方式来实现。</li>
+  <li>在<code class="language-plaintext highlighter-rouge">Appdelegate</code>中实现微信的代理，获取微信返回的<code class="language-plaintext highlighter-rouge">code</code>，这里我使用了通知的方法来调用登录<code class="language-plaintext highlighter-rouge">controller</code>中的相应才做，也可以使用代理、<code class="language-plaintext highlighter-rouge">KVO</code>等方式来实现。</li>
 </ul>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
@@ -360,7 +360,7 @@
 
 <p><strong>具体步骤：</strong></p>
 
-<p>刚刚我们已经在<code class="highlighter-rouge">appdelegate</code>中微信的代理中获取到了<code class="highlighter-rouge">code</code>，下面直接来进行第二步，根据<code class="highlighter-rouge">code</code>获取<code class="highlighter-rouge">accessToken</code>和<code class="highlighter-rouge">openId</code>：
+<p>刚刚我们已经在<code class="language-plaintext highlighter-rouge">appdelegate</code>中微信的代理中获取到了<code class="language-plaintext highlighter-rouge">code</code>，下面直接来进行第二步，根据<code class="language-plaintext highlighter-rouge">code</code>获取<code class="language-plaintext highlighter-rouge">accessToken</code>和<code class="language-plaintext highlighter-rouge">openId</code>：
 参照微信开放平台官方文档：</p>
 
 <p><img src="http://upload-images.jianshu.io/upload_images/1269906-afc238a8d21aac3e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
@@ -396,12 +396,12 @@
 
 </code></pre></div></div>
 
-<p>现在已经获取了微信的<code class="highlighter-rouge">accessToken</code>和<code class="highlighter-rouge">openId</code>，就可以请求相应的微信接口了。
+<p>现在已经获取了微信的<code class="language-plaintext highlighter-rouge">accessToken</code>和<code class="language-plaintext highlighter-rouge">openId</code>，就可以请求相应的微信接口了。
 参照文档，我们使用以下接口：</p>
 
 <p><img src="http://upload-images.jianshu.io/upload_images/1269906-4350c96c94ce8487.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
 
-<p>使用这个接口就可以获取用户信息了，然后调用自己的方法进行登录，这里可以使用<code class="highlighter-rouge">openId</code>当做账号，他是每个微信用户唯一对应的<code class="highlighter-rouge">id</code></p>
+<p>使用这个接口就可以获取用户信息了，然后调用自己的方法进行登录，这里可以使用<code class="language-plaintext highlighter-rouge">openId</code>当做账号，他是每个微信用户唯一对应的<code class="language-plaintext highlighter-rouge">id</code></p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">getWechatUserInfoWithAccessToken</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">accessToken</span> <span class="nv">openId</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">openId</span>  
@@ -524,7 +524,7 @@
                     <div class="tags">
         				
                             
-                				<a href="/tags/#iOS" title="iOS" rel="31">
+                				<a href="/tags/#iOS" title="iOS" rel="32">
                                     iOS
                                 </a>
                             
@@ -658,7 +658,7 @@
                     
                 </ul>
                 <p class="copyright text-muted">
-                    Copyright &copy; Japho Blog 2020
+                    Copyright &copy; Japho Blog 2023
                     <br>
                     <!-- Theme on <a href="hhttps://github.com/japho/japho.github.io.git">GitHub</a> |
                     <iframe

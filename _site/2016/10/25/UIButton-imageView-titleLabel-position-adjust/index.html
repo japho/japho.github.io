@@ -205,13 +205,13 @@
 
 <p><img src="http://upload-images.jianshu.io/upload_images/1269906-d70a97d50e4aabe5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
 
-<p>我们可以使用<code class="highlighter-rouge">setImageEdgeInsets:</code>和<code class="highlighter-rouge">setTitleEdgeInsets:</code>方法来调整两者的位置。在使用这两个方法之前，我们首先要将<code class="highlighter-rouge">imageView</code>和<code class="highlighter-rouge">titleLabel</code>定位在UIButton的左上角位置，方便参照坐标调节位置。使用以下语句来定位(UIButton实例名为btn)：</p>
+<p>我们可以使用<code class="language-plaintext highlighter-rouge">setImageEdgeInsets:</code>和<code class="language-plaintext highlighter-rouge">setTitleEdgeInsets:</code>方法来调整两者的位置。在使用这两个方法之前，我们首先要将<code class="language-plaintext highlighter-rouge">imageView</code>和<code class="language-plaintext highlighter-rouge">titleLabel</code>定位在UIButton的左上角位置，方便参照坐标调节位置。使用以下语句来定位(UIButton实例名为btn)：</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[[</span><span class="n">btn</span> <span class="nv">setContentHorizontalAlignment</span><span class="p">:</span> <span class="kt">UIControlContentHorizontalAlignmentLeft</span><span class="p">];</span>  
 <span class="p">[</span><span class="n">btn</span> <span class="nv">setContentVerticalAlignment</span><span class="p">:</span> <span class="kt">UIControlContentVerticalAlignmentTop</span><span class="p">];</span> <span class="err"> </span>
 </code></pre></div></div>
 
-<p>另外需要说明，btn的高度为200、宽度为屏幕宽度，imageView的图片的原本尺寸为150x150，<code class="highlighter-rouge">titleLabel</code>使用了<code class="highlighter-rouge">sizeToFit：</code>方法。在定义后，我们分多种情况来讨论<code class="highlighter-rouge">imageView</code>和<code class="highlighter-rouge">titleLabel</code>的位置：</p>
+<p>另外需要说明，btn的高度为200、宽度为屏幕宽度，imageView的图片的原本尺寸为150x150，<code class="language-plaintext highlighter-rouge">titleLabel</code>使用了<code class="language-plaintext highlighter-rouge">sizeToFit：</code>方法。在定义后，我们分多种情况来讨论<code class="language-plaintext highlighter-rouge">imageView</code>和<code class="language-plaintext highlighter-rouge">titleLabel</code>的位置：</p>
 
 <h3 id="1正常情况">1、正常情况：</h3>
 
@@ -219,11 +219,11 @@
 
 <p><img src="http://upload-images.jianshu.io/upload_images/1269906-d1dcc04b88e252ac.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>imageView.x=0.000000, imageView.y=0.000000, imageView.width=150.000000, imageView.height=150.000000  
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>imageView.x=0.000000, imageView.y=0.000000, imageView.width=150.000000, imageView.height=150.000000  
 titleLabel.x=150.000000, titleLabel.y=0.000000, titleLabel.width=180.500000, titleLabel.height=21.500000  
 </code></pre></div></div>
 
-<p>可以看到：<code class="highlighter-rouge">titleLabel</code>的x值是150，说明普通状态下，titleLabel的原点是(150 ,0)。</p>
+<p>可以看到：<code class="language-plaintext highlighter-rouge">titleLabel</code>的x值是150，说明普通状态下，titleLabel的原点是(150 ,0)。</p>
 
 <h3 id="2将imageview居中将titlelabel左移至贴边">2、将imageView居中，将titleLabel左移至贴边：</h3>
 
@@ -250,7 +250,7 @@ titleLabel.x=150.000000, titleLabel.y=0.000000, titleLabel.width=180.500000, 
 
 <p><img src="http://upload-images.jianshu.io/upload_images/1269906-41441c76574d6de6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>imageView.x=112.500000, imageView.y=0.000000, imageView.width=150.000000, imageView.height=150.000000  
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>imageView.x=112.500000, imageView.y=0.000000, imageView.width=150.000000, imageView.height=150.000000  
 titleLabel.x=97.250000, titleLabel.y=150.000000, titleLabel.width=180.500000, titleLabel.height=21.500000  
 </code></pre></div></div>
 
@@ -268,11 +268,11 @@ titleLabel.x=97.250000, titleLabel.y=150.000000, titleLabel.width=180.500000,�
 
 <p><img src="http://upload-images.jianshu.io/upload_images/1269906-0c7894661b375130.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>imageView.x=137.500000, imageView.y=0.000000, imageView.width=100.000000, imageView.height=100.000000  
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>imageView.x=137.500000, imageView.y=0.000000, imageView.width=100.000000, imageView.height=100.000000  
 titleLabel.x=147.250000, titleLabel.y=100.000000, titleLabel.width=180.500000, titleLabel.height=21.500000  
 </code></pre></div></div>
 
-<p>可以发现，问题出现了，此时titleLabel在水平方向上不再居中了。但是我们同时可以发现，titleLabel在垂直方向上的位置仍然是正确的，并且可以看到<code class="highlighter-rouge">titleLabel.y=100</code>。这说明在使用了<code class="highlighter-rouge">setImageEdgeInsets:</code>方法后，imageView的尺寸会被改变。</p>
+<p>可以发现，问题出现了，此时titleLabel在水平方向上不再居中了。但是我们同时可以发现，titleLabel在垂直方向上的位置仍然是正确的，并且可以看到<code class="language-plaintext highlighter-rouge">titleLabel.y=100</code>。这说明在使用了<code class="language-plaintext highlighter-rouge">setImageEdgeInsets:</code>方法后，imageView的尺寸会被改变。</p>
 
 <p>那么为何titleLabel在水平方向上还会偏移呢？原因是这样的，我们一直把titleLabel的初始x值和imageView的宽度等同看待了。而在这里imageView的宽度变小了，但是titleLabel的初始x值仍然是等于缩小前的imageView的宽度的，我们却使用一个缩小后的imageView的宽度来代替titleLabel的初始x值，于是导致了偏移的出现。
 要处理这种情况，有两种方法：</p>
@@ -290,7 +290,7 @@ titleLabel.x=147.250000, titleLabel.y=100.000000, titleLabel.width=180.500000,
 
 <p><img src="http://upload-images.jianshu.io/upload_images/1269906-28f02915e069c005.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>imageView.x=137.500000, imageView.y=0.000000, imageView.width=100.000000, imageView.height=100.000000  
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>imageView.x=137.500000, imageView.y=0.000000, imageView.width=100.000000, imageView.height=100.000000  
 titleLabel.x=97.250000, titleLabel.y=100.000000, titleLabel.width=180.500000, titleLabel.height=21.500000  
 </code></pre></div></div>
 
@@ -310,7 +310,7 @@ titleLabel.x=97.250000, titleLabel.y=100.000000, titleLabel.width=180.500000,�
 
 <p><img src="http://upload-images.jianshu.io/upload_images/1269906-e7fa7263eef68b24.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>imageView.x=137.500000, imageView.y=0.000000, imageView.width=100.000000, imageView.height=100.000000  
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>imageView.x=137.500000, imageView.y=0.000000, imageView.width=100.000000, imageView.height=100.000000  
 titleLabel.x=97.250000, titleLabel.y=100.000000, titleLabel.width=180.500000, titleLabel.height=21.500000  
 </code></pre></div></div>
 
@@ -320,7 +320,7 @@ titleLabel.x=97.250000, titleLabel.y=100.000000, titleLabel.width=180.500000,�
 
 <p><img src="http://upload-images.jianshu.io/upload_images/1269906-3741758410282937.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>imageView.x=97.500000, imageView.y=0.000000, imageView.width=150.000000, imageView.height=150.000000  
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>imageView.x=97.500000, imageView.y=0.000000, imageView.width=150.000000, imageView.height=150.000000  
 titleLabel.x=97.250000, titleLabel.y=150.000000, titleLabel.width=180.500000, titleLabel.height=21.500000  
 </code></pre></div></div>
 
@@ -417,7 +417,7 @@ titleLabel.x=97.250000, titleLabel.y=150.000000, titleLabel.width=180.500000,�
                     <div class="tags">
         				
                             
-                				<a href="/tags/#iOS" title="iOS" rel="31">
+                				<a href="/tags/#iOS" title="iOS" rel="32">
                                     iOS
                                 </a>
                             
@@ -551,7 +551,7 @@ titleLabel.x=97.250000, titleLabel.y=150.000000, titleLabel.width=180.500000,�
                     
                 </ul>
                 <p class="copyright text-muted">
-                    Copyright &copy; Japho Blog 2020
+                    Copyright &copy; Japho Blog 2023
                     <br>
                     <!-- Theme on <a href="hhttps://github.com/japho/japho.github.io.git">GitHub</a> |
                     <iframe

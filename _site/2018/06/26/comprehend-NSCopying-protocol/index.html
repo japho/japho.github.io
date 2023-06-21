@@ -203,16 +203,16 @@
 
 				<p>在需要拷贝对象时，要通过copy方法来完成，如果想令自己创建的类支持拷贝操作，那就需要实现NSCopying协议，次协议只有一个方法：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (id)copyWithZone:(NSZone *)zone;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (id)copyWithZone:(NSZone *)zone;
 </code></pre></div></div>
 
 <p><strong>关于zone</strong></p>
 
-<p>开发时，会根据<code class="highlighter-rouge">zone</code>把内存分成不同的“区”，不过现在默认程序只有一个区：“默认区”，尽管必须实现此方法，不必担心<code class="highlighter-rouge">zone</code>参数。注意，这里的<code class="highlighter-rouge">copy</code>是由<code class="highlighter-rouge">NSObject</code>实现的，会以“默认区”为参数调用<code class="highlighter-rouge">copyWithZone:</code>，所以需要实现的是<code class="highlighter-rouge">copyWithZone:</code>方法，而非覆写<code class="highlighter-rouge">copy</code>。</p>
+<p>开发时，会根据<code class="language-plaintext highlighter-rouge">zone</code>把内存分成不同的“区”，不过现在默认程序只有一个区：“默认区”，尽管必须实现此方法，不必担心<code class="language-plaintext highlighter-rouge">zone</code>参数。注意，这里的<code class="language-plaintext highlighter-rouge">copy</code>是由<code class="language-plaintext highlighter-rouge">NSObject</code>实现的，会以“默认区”为参数调用<code class="language-plaintext highlighter-rouge">copyWithZone:</code>，所以需要实现的是<code class="language-plaintext highlighter-rouge">copyWithZone:</code>方法，而非覆写<code class="language-plaintext highlighter-rouge">copy</code>。</p>
 
 <p><strong>一般的：</strong></p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//特殊需要
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//特殊需要
 @implentation Person
 {
 NSMutableSet *_friends;
@@ -230,34 +230,34 @@ return copy;
 
 </code></pre></div></div>
 
-<p>使用“-&gt;”语法，因为这里<code class="highlighter-rouge">friends</code>变量并非属性，只是内部存在的一个成员变量。</p>
+<p>使用“-&gt;”语法，因为这里<code class="language-plaintext highlighter-rouge">friends</code>变量并非属性，只是内部存在的一个成员变量。</p>
 
-<p>这里拷贝了<code class="highlighter-rouge">friends</code>变量是防止原始数据修改后，导致新的复制过去的数据也会变化。若set对象是不可变的，这里则无需进行复制。</p>
+<p>这里拷贝了<code class="language-plaintext highlighter-rouge">friends</code>变量是防止原始数据修改后，导致新的复制过去的数据也会变化。若set对象是不可变的，这里则无需进行复制。</p>
 
-<p>若要实现<code class="highlighter-rouge">mutableCopy</code>方法，同样的，遵守<code class="highlighter-rouge">NSMutableCopying</code>协议，实现<code class="highlighter-rouge">mutableCopyWithZone:</code>，
-无论当前实例是否可变，若需要可变版本的拷贝，则调用<code class="highlighter-rouge">mutableCopy</code>，同理，需要不可变的拷贝，调用<code class="highlighter-rouge">copy</code>来获取。</p>
+<p>若要实现<code class="language-plaintext highlighter-rouge">mutableCopy</code>方法，同样的，遵守<code class="language-plaintext highlighter-rouge">NSMutableCopying</code>协议，实现<code class="language-plaintext highlighter-rouge">mutableCopyWithZone:</code>，
+无论当前实例是否可变，若需要可变版本的拷贝，则调用<code class="language-plaintext highlighter-rouge">mutableCopy</code>，同理，需要不可变的拷贝，调用<code class="language-plaintext highlighter-rouge">copy</code>来获取。</p>
 
 <p><strong>对于NSArry &amp;&amp; NSMutableArray</strong></p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[NSMutableArray copy] =&gt; NSArray
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[NSMutableArray copy] =&gt; NSArray
 [NSArray mutableCopy] =&gt; NSMutableArray
 </code></pre></div></div>
 
 <p><strong>编写拷贝时，需考虑一个问题：应该执行“深拷贝”还是“浅拷贝”？</strong></p>
 
-<p><strong>深拷贝：</strong>在拷贝对象自身时，将其底层数据也一并的复制过来。<code class="highlighter-rouge">Foundation</code>框架中所有的<code class="highlighter-rouge">collection</code>类在默认的情况下都执行浅拷贝，也就是说，只拷贝其容器本身，而不复制其中的数据。原因在于：容器内的对象未必都能拷贝，而调用者也未必想在拷贝容器时一并拷贝其中的每一个对象。</p>
+<p><strong>深拷贝：</strong>在拷贝对象自身时，将其底层数据也一并的复制过来。<code class="language-plaintext highlighter-rouge">Foundation</code>框架中所有的<code class="language-plaintext highlighter-rouge">collection</code>类在默认的情况下都执行浅拷贝，也就是说，只拷贝其容器本身，而不复制其中的数据。原因在于：容器内的对象未必都能拷贝，而调用者也未必想在拷贝容器时一并拷贝其中的每一个对象。</p>
 
-<p>一般情况下，遵循系统框架的模式，对于自定义的类，以浅拷贝的方式实现<code class="highlighter-rouge">copyWithZone:</code>方法，必要的话，也可以增加一个深拷贝的方法。</p>
+<p>一般情况下，遵循系统框架的模式，对于自定义的类，以浅拷贝的方式实现<code class="language-plaintext highlighter-rouge">copyWithZone:</code>方法，必要的话，也可以增加一个深拷贝的方法。</p>
 
-<p>例如<code class="highlighter-rouge">NSSet</code>类：</p>
+<p>例如<code class="language-plaintext highlighter-rouge">NSSet</code>类：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (id)initWithSet:(NSArray *)array copyItems:(BOOL)copyItems;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (id)initWithSet:(NSArray *)array copyItems:(BOOL)copyItems;
 </code></pre></div></div>
-<p>若<code class="highlighter-rouge">copyItems</code>为<code class="highlighter-rouge">YES</code>执行深拷贝。</p>
+<p>若<code class="language-plaintext highlighter-rouge">copyItems</code>为<code class="language-plaintext highlighter-rouge">YES</code>执行深拷贝。</p>
 
 <p>例如刚才的例子：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (id)deepCopy
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (id)deepCopy
 {
 Person *copy = [[[self class] allocWithZone:zone] initWithFirstName:first andLastName:last];
 
@@ -268,13 +268,13 @@ return copy;
 }
 </code></pre></div></div>
 
-<p>因为没有专门的深拷贝协议，所以具体执行方式有每个类来确定。只需决定自己缩写的类是有需要提供深拷贝方法就可以了。不要假定遵从了<code class="highlighter-rouge">NSCopying</code>协议的对象都会深拷贝。在绝大多数的情况下，都是执行浅拷贝的。如果需要在某个对象上执行深拷贝，那么除非另有说明，否则，要么找到能够找到执行深拷贝的相关方法，要么自己实现相关拷贝方法。</p>
+<p>因为没有专门的深拷贝协议，所以具体执行方式有每个类来确定。只需决定自己缩写的类是有需要提供深拷贝方法就可以了。不要假定遵从了<code class="language-plaintext highlighter-rouge">NSCopying</code>协议的对象都会深拷贝。在绝大多数的情况下，都是执行浅拷贝的。如果需要在某个对象上执行深拷贝，那么除非另有说明，否则，要么找到能够找到执行深拷贝的相关方法，要么自己实现相关拷贝方法。</p>
 
 <p><strong>要点</strong></p>
 
 <ul>
-  <li>若想令自己所写的类具有拷贝功能，则需实现<code class="highlighter-rouge">NSCopying</code>协议。</li>
-  <li>如果自定义的对象分为可变版本与不可变版本，那么就要同时实现<code class="highlighter-rouge">NSCopying</code> &amp;&amp; <code class="highlighter-rouge">NSMutableCopying</code>协议。</li>
+  <li>若想令自己所写的类具有拷贝功能，则需实现<code class="language-plaintext highlighter-rouge">NSCopying</code>协议。</li>
+  <li>如果自定义的对象分为可变版本与不可变版本，那么就要同时实现<code class="language-plaintext highlighter-rouge">NSCopying</code> &amp;&amp; <code class="language-plaintext highlighter-rouge">NSMutableCopying</code>协议。</li>
   <li>复制对象时需决定采用深拷贝还是浅拷贝，一般情况下尽量执行浅拷贝。</li>
   <li>如果所写的对象需要深拷贝，那么可以考虑新增一个专门执行深拷贝的方法。</li>
 </ul>
@@ -362,7 +362,7 @@ return copy;
                     <div class="tags">
         				
                             
-                				<a href="/tags/#iOS" title="iOS" rel="31">
+                				<a href="/tags/#iOS" title="iOS" rel="32">
                                     iOS
                                 </a>
                             
@@ -496,7 +496,7 @@ return copy;
                     
                 </ul>
                 <p class="copyright text-muted">
-                    Copyright &copy; Japho Blog 2020
+                    Copyright &copy; Japho Blog 2023
                     <br>
                     <!-- Theme on <a href="hhttps://github.com/japho/japho.github.io.git">GitHub</a> |
                     <iframe

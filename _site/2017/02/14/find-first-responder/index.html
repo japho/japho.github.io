@@ -207,13 +207,13 @@
 <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"%@"</span><span class="p">,</span><span class="n">firstResponder</span><span class="p">);</span>
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">注意：</code>这个方法虽然简单，但是调用了私有API在平时调试的时候可以使用这种方法，但是打包上线的时候需要把该方法屏蔽掉，不然极有可能被打回。</p>
+<p><code class="language-plaintext highlighter-rouge">注意：</code>这个方法虽然简单，但是调用了私有API在平时调试的时候可以使用这种方法，但是打包上线的时候需要把该方法屏蔽掉，不然极有可能被打回。</p>
 
 <p>下面介绍下现在公认比较好的一种方法：</p>
 
-<p>建立分类<code class="highlighter-rouge">UIResponder+FirstResponder</code></p>
+<p>建立分类<code class="language-plaintext highlighter-rouge">UIResponder+FirstResponder</code></p>
 
-<p><code class="highlighter-rouge">UIResponder+FirstResponder.h</code></p>
+<p><code class="language-plaintext highlighter-rouge">UIResponder+FirstResponder.h</code></p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  </span>
 <span class="c1">//  UIResponder+FirstResponder.h  </span>
@@ -232,7 +232,7 @@
 <span class="kd">@end</span>
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">UIResponder+FirstResponder.m</code></p>
+<p><code class="language-plaintext highlighter-rouge">UIResponder+FirstResponder.m</code></p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  </span>
 <span class="c1">//  UIResponder+FirstResponder.m  </span>
@@ -343,7 +343,7 @@
                     <div class="tags">
         				
                             
-                				<a href="/tags/#iOS" title="iOS" rel="31">
+                				<a href="/tags/#iOS" title="iOS" rel="32">
                                     iOS
                                 </a>
                             
@@ -477,7 +477,7 @@
                     
                 </ul>
                 <p class="copyright text-muted">
-                    Copyright &copy; Japho Blog 2020
+                    Copyright &copy; Japho Blog 2023
                     <br>
                     <!-- Theme on <a href="hhttps://github.com/japho/japho.github.io.git">GitHub</a> |
                     <iframe

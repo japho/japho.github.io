@@ -201,11 +201,11 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-				<p>ARC下默认情况非“异常安全”，如果抛出异常，本应在作用域末尾释放的对象将不会进行自动释放了。若想生成“异常安全”代码，通过设置编译器的标志来实现，不过将引入一些额外代码，在不抛出异常时，也会照样执行这部分代码。这里需要打开的标志叫做  <code class="highlighter-rouge">-fobjc-arc-exceptions</code></p>
+				<p>ARC下默认情况非“异常安全”，如果抛出异常，本应在作用域末尾释放的对象将不会进行自动释放了。若想生成“异常安全”代码，通过设置编译器的标志来实现，不过将引入一些额外代码，在不抛出异常时，也会照样执行这部分代码。这里需要打开的标志叫做  <code class="language-plaintext highlighter-rouge">-fobjc-arc-exceptions</code></p>
 
-<p>Objective-C现在所采用的方法是：在极其罕见的情况下抛出异常，异常抛出之后，无需考虑回复问题，而此时应用程序退出。异常只应该应用于极其严重的错误上。在处理“不那么严重的错误”时，Objective-C使用的编程范式为：令方法返回0/nil，或者使用<code class="highlighter-rouge">NSError</code>。</p>
+<p>Objective-C现在所采用的方法是：在极其罕见的情况下抛出异常，异常抛出之后，无需考虑回复问题，而此时应用程序退出。异常只应该应用于极其严重的错误上。在处理“不那么严重的错误”时，Objective-C使用的编程范式为：令方法返回0/nil，或者使用<code class="language-plaintext highlighter-rouge">NSError</code>。</p>
 
-<p><code class="highlighter-rouge">NSError</code>更加灵活，因为经由此对象，可以把导致错误的原因回报给调用者。<code class="highlighter-rouge">NSError</code>主要封装了三条信息</p>
+<p><code class="language-plaintext highlighter-rouge">NSError</code>更加灵活，因为经由此对象，可以把导致错误的原因回报给调用者。<code class="language-plaintext highlighter-rouge">NSError</code>主要封装了三条信息</p>
 
 <ul>
   <li>Error domain（错误范围，字符串类型）</li>
@@ -233,23 +233,23 @@
   <p>有关于该错误的额外信息</p>
 </blockquote>
 
-<p>设计API时，<code class="highlighter-rouge">NSError</code>一般是通过委托模式来传递错误，例如：</p>
+<p>设计API时，<code class="language-plaintext highlighter-rouge">NSError</code>一般是通过委托模式来传递错误，例如：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-  (void)connection:(NSURLConnection  *)connection didFailWithError:(NSError  *)error
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-  (void)connection:(NSURLConnection  *)connection didFailWithError:(NSError  *)error
 {
 }
 </code></pre></div></div>
 
 <p>当发生错误时，会调用此方法进行处理，委托方法不一定需要实现，交给开发人员进行判断。</p>
 
-<p><code class="highlighter-rouge">NSError</code>另一种常用方法：经由“输出参数”返回给调用者，</p>
+<p><code class="language-plaintext highlighter-rouge">NSError</code>另一种常用方法：经由“输出参数”返回给调用者，</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-  (BOOL)doSomething:(NSError  **)error
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-  (BOOL)doSomething:(NSError  **)error
 </code></pre></div></div>
 
-<p>传递给方法的参数是一个指针，二该指针又指向另外一个指针，这个指针指向<code class="highlighter-rouge">NSError</code>对象，也可以把它当成<code class="highlighter-rouge">NSError</code>对象的指针，如此，该方法不仅能有普通的返回值，还可以经由“输出参数”把<code class="highlighter-rouge">NSError</code>对象回传给调用者。</p>
+<p>传递给方法的参数是一个指针，二该指针又指向另外一个指针，这个指针指向<code class="language-plaintext highlighter-rouge">NSError</code>对象，也可以把它当成<code class="language-plaintext highlighter-rouge">NSError</code>对象的指针，如此，该方法不仅能有普通的返回值，还可以经由“输出参数”把<code class="language-plaintext highlighter-rouge">NSError</code>对象回传给调用者。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSError  *error =  nil;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSError  *error =  nil;
 BOOl  rect =  [obj doSomething:&amp;error];
 if (error) 
 {
@@ -257,20 +257,20 @@ if (error)
 }
 </code></pre></div></div>
 
-<p>方法会返回布尔值，若关注具体错误，处理经由“输出参数”所返回的错误对象；若不关注，则可以给<code class="highlighter-rouge">error</code>传入<code class="highlighter-rouge">nil</code></p>
+<p>方法会返回布尔值，若关注具体错误，处理经由“输出参数”所返回的错误对象；若不关注，则可以给<code class="language-plaintext highlighter-rouge">error</code>传入<code class="language-plaintext highlighter-rouge">nil</code></p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>BOOl  rect =  [obj doSomething:nil];
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>BOOl  rect =  [obj doSomething:nil];
 if (rect)
 {
 //存在错误，但不获取错误对象
 }
 </code></pre></div></div>
 
-<p>实际上，在使用ARC时，编译器会把<code class="highlighter-rouge">NSError ** </code>转换成<code class="highlighter-rouge">NSError *__autoreleasing *</code>，指针所指向的对象在方法执行完毕之后就会释放掉，所以这个对象必须是自动释放，因为<code class="highlighter-rouge">doSomething:</code>方法不能保证调用者在方法中创建的<code class="highlighter-rouge">NSError</code>释放掉，所以这里要加上<code class="highlighter-rouge">autorelease</code></p>
+<p>实际上，在使用ARC时，编译器会把<code class="language-plaintext highlighter-rouge">NSError ** </code>转换成<code class="language-plaintext highlighter-rouge">NSError *__autoreleasing *</code>，指针所指向的对象在方法执行完毕之后就会释放掉，所以这个对象必须是自动释放，因为<code class="language-plaintext highlighter-rouge">doSomething:</code>方法不能保证调用者在方法中创建的<code class="language-plaintext highlighter-rouge">NSError</code>释放掉，所以这里要加上<code class="language-plaintext highlighter-rouge">autorelease</code></p>
 
 <p><strong>传递“输出参数”</strong></p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-  (BOOL)doSomething:(NSError  **)error
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-  (BOOL)doSomething:(NSError  **)error
 {
 if (/* there was an error*/)
 {
@@ -287,7 +287,7 @@ return YES;
 }
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">*error</code>为<code class="highlighter-rouge">error</code>参数“解引用”，使<code class="highlighter-rouge">error</code>的指针指向新的<code class="highlighter-rouge">NSError</code>对象，注意：在解引用之前需保证<code class="highlighter-rouge">error</code>参数不能为<code class="highlighter-rouge">nil</code>，会因为空指针解引用会导致段错误，使应用崩溃。</p>
+<p><code class="language-plaintext highlighter-rouge">*error</code>为<code class="language-plaintext highlighter-rouge">error</code>参数“解引用”，使<code class="language-plaintext highlighter-rouge">error</code>的指针指向新的<code class="language-plaintext highlighter-rouge">NSError</code>对象，注意：在解引用之前需保证<code class="language-plaintext highlighter-rouge">error</code>参数不能为<code class="language-plaintext highlighter-rouge">nil</code>，会因为空指针解引用会导致段错误，使应用崩溃。</p>
 
 <p>错误码一般使用枚举类型。</p>
 
@@ -295,7 +295,7 @@ return YES;
 
 <ul>
   <li>只有发生了可使整个应用程序崩溃的严重错误时，才使用异常。</li>
-  <li>在错误不那么严重的情况下，可以指派委托方法（<code class="highlighter-rouge">delegate</code>）来处理错误。也可以把错误信息放在<code class="highlighter-rouge">NSError</code>对象里，经由“输出参数”返回给调用者。</li>
+  <li>在错误不那么严重的情况下，可以指派委托方法（<code class="language-plaintext highlighter-rouge">delegate</code>）来处理错误。也可以把错误信息放在<code class="language-plaintext highlighter-rouge">NSError</code>对象里，经由“输出参数”返回给调用者。</li>
 </ul>
 
 
@@ -381,7 +381,7 @@ return YES;
                     <div class="tags">
         				
                             
-                				<a href="/tags/#iOS" title="iOS" rel="31">
+                				<a href="/tags/#iOS" title="iOS" rel="32">
                                     iOS
                                 </a>
                             
@@ -515,7 +515,7 @@ return YES;
                     
                 </ul>
                 <p class="copyright text-muted">
-                    Copyright &copy; Japho Blog 2020
+                    Copyright &copy; Japho Blog 2023
                     <br>
                     <!-- Theme on <a href="hhttps://github.com/japho/japho.github.io.git">GitHub</a> |
                     <iframe

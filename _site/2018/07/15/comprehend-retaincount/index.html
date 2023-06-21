@@ -205,21 +205,21 @@
 
 <h3 id="引用计数工作原理">引用计数工作原理</h3>
 
-<p>引用计数的架构下，对象有个计数器，用以表示当前有多少事物想令此对象存活下去，在Objective-C中叫做“引用计数”。<code class="highlighter-rouge">NSObject</code>协议中声明了一下三个方法用于操作计数器，以递增或递减引用计数。</p>
+<p>引用计数的架构下，对象有个计数器，用以表示当前有多少事物想令此对象存活下去，在Objective-C中叫做“引用计数”。<code class="language-plaintext highlighter-rouge">NSObject</code>协议中声明了一下三个方法用于操作计数器，以递增或递减引用计数。</p>
 
 <ul>
-  <li><code class="highlighter-rouge">retain</code> 递增引用计数；</li>
-  <li><code class="highlighter-rouge">release</code> 递减引用计数；</li>
-  <li><code class="highlighter-rouge">autorelease</code> 待稍后清理“自动释放池”时，再去递减其引用计数。</li>
+  <li><code class="language-plaintext highlighter-rouge">retain</code> 递增引用计数；</li>
+  <li><code class="language-plaintext highlighter-rouge">release</code> 递减引用计数；</li>
+  <li><code class="language-plaintext highlighter-rouge">autorelease</code> 待稍后清理“自动释放池”时，再去递减其引用计数。</li>
 </ul>
 
-<p>查看引用计数的方法叫做<code class="highlighter-rouge">retainCount</code>。</p>
+<p>查看引用计数的方法叫做<code class="language-plaintext highlighter-rouge">retainCount</code>。</p>
 
-<p>对象在创建出来时，其引用计数至少为1，若想继续存活，则调用<code class="highlighter-rouge">retain</code>方法。要是某部分代码不再调用此对象，不想令其存活，则调用<code class="highlighter-rouge">release</code>或<code class="highlighter-rouge">autorelease</code>方法。当引用计数为0时，对象就会被回收。这时，系统会将其占用的内存标记为“可重用”（<code class="highlighter-rouge">reuse</code>）。此时所有指向该对象的引用都变得无效了。</p>
+<p>对象在创建出来时，其引用计数至少为1，若想继续存活，则调用<code class="language-plaintext highlighter-rouge">retain</code>方法。要是某部分代码不再调用此对象，不想令其存活，则调用<code class="language-plaintext highlighter-rouge">release</code>或<code class="language-plaintext highlighter-rouge">autorelease</code>方法。当引用计数为0时，对象就会被回收。这时，系统会将其占用的内存标记为“可重用”（<code class="language-plaintext highlighter-rouge">reuse</code>）。此时所有指向该对象的引用都变得无效了。</p>
 
 <p>下列代码：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSMutableArray *array = [[NSMutableArray alloc] init];
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSMutableArray *array = [[NSMutableArray alloc] init];
 NSNumber *number = [[NSNumber alloc] initWithNumber:1337];
 [array addObject:number];
 [number release];
@@ -227,21 +227,21 @@ NSNumber *number = [[NSNumber alloc] initWithNumber:1337];
 [array release];
 </code></pre></div></div>
 
-<p>由于上述代码调用了<code class="highlighter-rouge">release</code>，所以在ARC下无法编译。在<code class="highlighter-rouge">Objective-C</code>中，调用<code class="highlighter-rouge">alloc</code>方法所返回的对象由调用者所有。也就是说，调用者，已通过alloc方法表达了相对该对象继续存活的意愿。这里可以肯定此时引用计数一定大于1。
-创建完成后，把<code class="highlighter-rouge">number</code>加入数组中，调用<code class="highlighter-rouge">addObject:</code>方法时，数组也会在<code class="highlighter-rouge">number</code>上调用<code class="highlighter-rouge">retain</code>方法，以继续保留此对象。此时，引用计数至少为2。接下来，代码不再需要<code class="highlighter-rouge">number</code>对象了，于是将其释放，此时引用计数至少为1，这样就不能照常使用<code class="highlighter-rouge">number</code>变量了。调用<code class="highlighter-rouge">release</code>之后，已经无法保证所指对象是否仍然存活。不过这里我们知道<code class="highlighter-rouge">array</code>还对<code class="highlighter-rouge">number</code>存在引用。但是不要假设这一对象一定存活，也就是说，不要编写下列代码：</p>
+<p>由于上述代码调用了<code class="language-plaintext highlighter-rouge">release</code>，所以在ARC下无法编译。在<code class="language-plaintext highlighter-rouge">Objective-C</code>中，调用<code class="language-plaintext highlighter-rouge">alloc</code>方法所返回的对象由调用者所有。也就是说，调用者，已通过alloc方法表达了相对该对象继续存活的意愿。这里可以肯定此时引用计数一定大于1。
+创建完成后，把<code class="language-plaintext highlighter-rouge">number</code>加入数组中，调用<code class="language-plaintext highlighter-rouge">addObject:</code>方法时，数组也会在<code class="language-plaintext highlighter-rouge">number</code>上调用<code class="language-plaintext highlighter-rouge">retain</code>方法，以继续保留此对象。此时，引用计数至少为2。接下来，代码不再需要<code class="language-plaintext highlighter-rouge">number</code>对象了，于是将其释放，此时引用计数至少为1，这样就不能照常使用<code class="language-plaintext highlighter-rouge">number</code>变量了。调用<code class="language-plaintext highlighter-rouge">release</code>之后，已经无法保证所指对象是否仍然存活。不过这里我们知道<code class="language-plaintext highlighter-rouge">array</code>还对<code class="language-plaintext highlighter-rouge">number</code>存在引用。但是不要假设这一对象一定存活，也就是说，不要编写下列代码：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSMutableArray *array = [[NSMutableArray alloc] init];
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSMutableArray *array = [[NSMutableArray alloc] init];
 NSNumber *number = [[NSNumber alloc] initWithNumber:1337];
 [array addObject:number];
 [number release];
 NSLog(@"number = %@",number);
 </code></pre></div></div>
 
-<p>上述代码仍可执行，但如果调用<code class="highlighter-rouge">release</code>之后，基于某种原因，引用计数变为0，那么<code class="highlighter-rouge">number</code>对象所占有内存也会被回收，这样，再去调用<code class="highlighter-rouge">NSLog</code>就可能造成崩溃。这里只是说“可能”，并不是“一定”，因为对象所占有的内存在“解除分配”之后，只是放回“可用内存池”（<code class="highlighter-rouge">avaiable pool</code>）。如果执行<code class="highlighter-rouge">NSLog</code>时尚未覆写对象内存，那么该对象仍然有效，这是程序并不会崩溃，不过过早释放对象而造成的bug将会很难调试。</p>
+<p>上述代码仍可执行，但如果调用<code class="language-plaintext highlighter-rouge">release</code>之后，基于某种原因，引用计数变为0，那么<code class="language-plaintext highlighter-rouge">number</code>对象所占有内存也会被回收，这样，再去调用<code class="language-plaintext highlighter-rouge">NSLog</code>就可能造成崩溃。这里只是说“可能”，并不是“一定”，因为对象所占有的内存在“解除分配”之后，只是放回“可用内存池”（<code class="language-plaintext highlighter-rouge">avaiable pool</code>）。如果执行<code class="language-plaintext highlighter-rouge">NSLog</code>时尚未覆写对象内存，那么该对象仍然有效，这是程序并不会崩溃，不过过早释放对象而造成的bug将会很难调试。</p>
 
-<p>为了避免在不经意间使用了无效对象，一般调用完<code class="highlighter-rouge">release</code>之后都会进行清空指针。这就能保证不会出现可能指向无效指针对象的指针。（悬挂指针）。例如：</p>
+<p>为了避免在不经意间使用了无效对象，一般调用完<code class="language-plaintext highlighter-rouge">release</code>之后都会进行清空指针。这就能保证不会出现可能指向无效指针对象的指针。（悬挂指针）。例如：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSNumber *number = [[NSNumber alloc] initWithNumber:1337];
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSNumber *number = [[NSNumber alloc] initWithNumber:1337];
 [array addObject:number];
 [number release];
 number = nil;
@@ -249,9 +249,9 @@ number = nil;
 
 <h3 id="属性存取方法中的内存管理">属性存取方法中的内存管理</h3>
 
-<p>访问属性时，会用到相关实例变量的<code class="highlighter-rouge">getter</code>方法及<code class="highlighter-rouge">setter</code>方法。若属性为<code class="highlighter-rouge">strong</code>关系，则设置的属性值会保留，例如：</p>
+<p>访问属性时，会用到相关实例变量的<code class="language-plaintext highlighter-rouge">getter</code>方法及<code class="language-plaintext highlighter-rouge">setter</code>方法。若属性为<code class="language-plaintext highlighter-rouge">strong</code>关系，则设置的属性值会保留，例如：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)setFoo:(id)foo
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)setFoo:(id)foo
 {
 [foo retain];
 [_foo release];
@@ -263,8 +263,8 @@ _foo = foo;
 
 <h3 id="自动释放池">自动释放池</h3>
 
-<p>调用<code class="highlighter-rouge">releas</code>e会立刻递减对象的保留计数，有时可能令系统回收此对象，然后有时候改为调用<code class="highlighter-rouge">autorelease</code>，此方法会在稍后递减计数，通常是在下一次“事件循环”时递减，不过也可能会更早。
-<code class="highlighter-rouge">autoreleas</code>e能延长对象生命周期，使其在跨越方法调用便捷后依然可以存活一段时间。</p>
+<p>调用<code class="language-plaintext highlighter-rouge">releas</code>e会立刻递减对象的保留计数，有时可能令系统回收此对象，然后有时候改为调用<code class="language-plaintext highlighter-rouge">autorelease</code>，此方法会在稍后递减计数，通常是在下一次“事件循环”时递减，不过也可能会更早。
+<code class="language-plaintext highlighter-rouge">autoreleas</code>e能延长对象生命周期，使其在跨越方法调用便捷后依然可以存活一段时间。</p>
 
 <h3 id="循环引用">循环引用</h3>
 
@@ -359,7 +359,7 @@ _foo = foo;
                     <div class="tags">
         				
                             
-                				<a href="/tags/#iOS" title="iOS" rel="31">
+                				<a href="/tags/#iOS" title="iOS" rel="32">
                                     iOS
                                 </a>
                             
@@ -493,7 +493,7 @@ _foo = foo;
                     
                 </ul>
                 <p class="copyright text-muted">
-                    Copyright &copy; Japho Blog 2020
+                    Copyright &copy; Japho Blog 2023
                     <br>
                     <!-- Theme on <a href="hhttps://github.com/japho/japho.github.io.git">GitHub</a> |
                     <iframe

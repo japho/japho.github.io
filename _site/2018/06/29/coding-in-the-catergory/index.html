@@ -205,10 +205,10 @@
 
 <p>当类中方法及实现过多的时候，可以考虑用Objective-C的“分类”机制，把代码按逻辑划分到几个分区中。通过分类机制，可以把类代码分成很多个易于管理的小块，以便单独检视。此外，使用分类还有一个原因，就是便于调试。对于某个分类中的所有方法来说，分类名称都会出现在其符号中，例如</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- [Person(FriendShip)  addFriend:]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- [Person(FriendShip)  addFriend:]
 </code></pre></div></div>
 
-<p>编写程序库时，可以考虑创建<code class="highlighter-rouge">private</code>分类，经常会遇到一些方法，这些方法不是公共的API，但却非常适合在程序库内部使用，此时应该创建爱你<code class="highlighter-rouge">private</code>分类，如果程序中某些地方要用到这些方法，就引入这个分类文件。二分类的头文件不随程序库一并公开，于是，该代码库的使用者不会知晓库里还有这些私有方法。</p>
+<p>编写程序库时，可以考虑创建<code class="language-plaintext highlighter-rouge">private</code>分类，经常会遇到一些方法，这些方法不是公共的API，但却非常适合在程序库内部使用，此时应该创建爱你<code class="language-plaintext highlighter-rouge">private</code>分类，如果程序中某些地方要用到这些方法，就引入这个分类文件。二分类的头文件不随程序库一并公开，于是，该代码库的使用者不会知晓库里还有这些私有方法。</p>
 
 <p><strong>要点：</strong></p>
 
@@ -223,7 +223,7 @@
 
 <p>例如</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@interface NSString  (ABC_HTTP)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@interface NSString  (ABC_HTTP)
 
 - (NSString  *)abc_urlEncodedString;
 
@@ -242,10 +242,10 @@
 <p><strong>要点：</strong></p>
 
 <ul>
-  <li>通过<code class="highlighter-rouge">class-continuation</code>分类向类中新增实例变量。</li>
-  <li>如果某属性在主接口中声明为“只读”，而类内部又要用<code class="highlighter-rouge">setter</code>方法修改次数性，那么就在“<code class="highlighter-rouge">class-continuation</code>分类”中将其扩展为“可读写”。</li>
-  <li>把私有方法的原型声明在“<code class="highlighter-rouge">class-continuation</code>分类”中。</li>
-  <li>若想使用类所遵循的协议而不为人所知，则可于“<code class="highlighter-rouge">class-continuation</code>分类”中声明。</li>
+  <li>通过<code class="language-plaintext highlighter-rouge">class-continuation</code>分类向类中新增实例变量。</li>
+  <li>如果某属性在主接口中声明为“只读”，而类内部又要用<code class="language-plaintext highlighter-rouge">setter</code>方法修改次数性，那么就在“<code class="language-plaintext highlighter-rouge">class-continuation</code>分类”中将其扩展为“可读写”。</li>
+  <li>把私有方法的原型声明在“<code class="language-plaintext highlighter-rouge">class-continuation</code>分类”中。</li>
+  <li>若想使用类所遵循的协议而不为人所知，则可于“<code class="language-plaintext highlighter-rouge">class-continuation</code>分类”中声明。</li>
 </ul>
 
 <h2 id="用僵尸对象调试内存管理问题">用“僵尸对象”调试内存管理问题</h2>
@@ -253,8 +253,8 @@
 <p><strong>要点：</strong></p>
 
 <ul>
-  <li>系统在回收对象时，可以不将其真正的回收，而是把它转化为僵尸对象。通过环境变量<code class="highlighter-rouge">NSZombieEnabled</code>可开启此功能。</li>
-  <li>系统会修改对象的<code class="highlighter-rouge">isa</code>指针，令其指向特殊的僵尸类，从而使该对象变为僵尸对象。僵尸类能够响应所有的选择子，响应方式为：打印一条包含消息内容及其接受者的消息，然后终止应用程序。</li>
+  <li>系统在回收对象时，可以不将其真正的回收，而是把它转化为僵尸对象。通过环境变量<code class="language-plaintext highlighter-rouge">NSZombieEnabled</code>可开启此功能。</li>
+  <li>系统会修改对象的<code class="language-plaintext highlighter-rouge">isa</code>指针，令其指向特殊的僵尸类，从而使该对象变为僵尸对象。僵尸类能够响应所有的选择子，响应方式为：打印一条包含消息内容及其接受者的消息，然后终止应用程序。</li>
 </ul>
 
 <h2 id="不要使用retaincount">不要使用retainCount</h2>
@@ -273,17 +273,17 @@
 
 <h2 id="为常用的块类型创建typedef">为常用的块类型创建typedef</h2>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>return_type (^block_name)(parameters)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>return_type (^block_name)(parameters)
 </code></pre></div></div>
 
 <p>为了隐藏复杂的块类型，需要用到C语言中名为类型定义的特性。例如：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>typedef int (^EOCSomeBlock)(BOOL  flag,  int value);
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>typedef int (^EOCSomeBlock)(BOOL  flag,  int value);
 </code></pre></div></div>
 
 <p>声明变量时，把名称放在类型中间，并在前面加上“^”符号。以下来创建变量，直接使用新类型即可：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>EOCSomeBlock  block =  ^(BOOL  flag,  int value){
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>EOCSomeBlock  block =  ^(BOOL  flag,  int value){
 //Impementation
 }
 </code></pre></div></div>
@@ -291,16 +291,16 @@
 <p><strong>要点：</strong></p>
 
 <ul>
-  <li>以<code class="highlighter-rouge">typedef</code>重新定义块类型，可令块变量用起来更加简单。</li>
+  <li>以<code class="language-plaintext highlighter-rouge">typedef</code>重新定义块类型，可令块变量用起来更加简单。</li>
   <li>定义新类型时应遵从现有的命名习惯，勿使其名称与别的类型冲突。</li>
-  <li>不妨为同一块签名定义多个类型别名。如果需要重构的代码使用了块类型的某个别名，那么只需修改相应<code class="highlighter-rouge">typedef</code>中的块签名即可，无需改动其他<code class="highlighter-rouge">typedef</code>。</li>
+  <li>不妨为同一块签名定义多个类型别名。如果需要重构的代码使用了块类型的某个别名，那么只需修改相应<code class="language-plaintext highlighter-rouge">typedef</code>中的块签名即可，无需改动其他<code class="language-plaintext highlighter-rouge">typedef</code>。</li>
 </ul>
 
 <h2 id="用handler块来降低代码分散程度">用handler块来降低代码分散程度</h2>
 
-<p>编写代码时，经常会遇到一种范式，就是“异步执行任务”。异步方法执行完任务后，需要以某种手段通知代码。实现这种功能有很多方法，常用技巧是委托协议令关注此事件的对象遵从该协议。对象成为<code class="highlighter-rouge">delegate</code>之后，就可以在相关事件发生时得到通知了。</p>
+<p>编写代码时，经常会遇到一种范式，就是“异步执行任务”。异步方法执行完任务后，需要以某种手段通知代码。实现这种功能有很多方法，常用技巧是委托协议令关注此事件的对象遵从该协议。对象成为<code class="language-plaintext highlighter-rouge">delegate</code>之后，就可以在相关事件发生时得到通知了。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#import &lt;Foundation/Foundation.h&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#import &lt;Foundation/Foundation.h&gt;
 
 @class EOCNetWorkFetcher;
 @protocol EOCNetWorkFetcherDelegate &lt;NSObject&gt;
@@ -316,7 +316,7 @@
 
 <p>其他类调用：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)fetchFooData{
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)fetchFooData{
 NSURL *url = [[NSURL alloc] initWithString:@"http://www.xvideos.com"];
 EOCNetWorkFetcher *fetcher = [[EOCNetWorkFetcher alloc] initWithURL:url];
 fetcher.delegate = self;
@@ -411,7 +411,7 @@ _fetcherFooData = data;
                     <div class="tags">
         				
                             
-                				<a href="/tags/#iOS" title="iOS" rel="31">
+                				<a href="/tags/#iOS" title="iOS" rel="32">
                                     iOS
                                 </a>
                             
@@ -545,7 +545,7 @@ _fetcherFooData = data;
                     
                 </ul>
                 <p class="copyright text-muted">
-                    Copyright &copy; Japho Blog 2020
+                    Copyright &copy; Japho Blog 2023
                     <br>
                     <!-- Theme on <a href="hhttps://github.com/japho/japho.github.io.git">GitHub</a> |
                     <iframe

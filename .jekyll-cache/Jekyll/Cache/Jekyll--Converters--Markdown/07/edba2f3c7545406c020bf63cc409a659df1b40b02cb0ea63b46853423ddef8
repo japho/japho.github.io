@@ -1,6 +1,6 @@
-I"�&<h2 id="前言">前言</h2>
+I"*(<h2 id="前言">前言</h2>
 
-<p>在平时开发时经常会要遇到通过button的绑定值来做逻辑处理以区分不同的button，通常使用tag来区分，但是当需要传多个值的时候这就比较麻烦了，通常考虑用全局变量来传值，今天来介绍另一种给<code class="highlighter-rouge">UIButton</code>传值的方法——关联函数。下面来简单介绍下关联。</p>
+<p>在平时开发时经常会要遇到通过button的绑定值来做逻辑处理以区分不同的button，通常使用tag来区分，但是当需要传多个值的时候这就比较麻烦了，通常考虑用全局变量来传值，今天来介绍另一种给<code class="language-plaintext highlighter-rouge">UIButton</code>传值的方法——关联函数。下面来简单介绍下关联。</p>
 
 <h2 id="关联">关联</h2>
 
@@ -15,7 +15,7 @@
 
 <h2 id="创建关联">创建关联</h2>
 
-<p>创建关联要使用到Objective-C的运行时函数：<code class="highlighter-rouge">objc_setAssociatedObject</code>来把一个对象与另外一个对象进行关联。该函数需要四个参数：源对象，关键字，关联的对象和一个关联策略。当然，此处的关键字和关联策略是需要进一步讨论的。</p>
+<p>创建关联要使用到Objective-C的运行时函数：<code class="language-plaintext highlighter-rouge">objc_setAssociatedObject</code>来把一个对象与另外一个对象进行关联。该函数需要四个参数：源对象，关键字，关联的对象和一个关联策略。当然，此处的关键字和关联策略是需要进一步讨论的。</p>
 
 <ul>
   <li>关键字是一个void类型的指针。每一个关联的关键字必须是唯一的。通常都是会采用静态变量来作为关键字。</li>
@@ -23,8 +23,8 @@
 </ul>
 
 <p>下面的代码展示了如何把一个字符串关联到一个数组上。
-注意使用时导入头文件<code class="highlighter-rouge"> &lt;objc/runtime.h&gt;</code>
-<code class="highlighter-rouge">objc_setAssociatedObject</code>需要四个参数：源对象，关键字，关联的对象和一个关联策略。</p>
+注意使用时导入头文件<code class="language-plaintext highlighter-rouge"> &lt;objc/runtime.h&gt;</code>
+<code class="language-plaintext highlighter-rouge">objc_setAssociatedObject</code>需要四个参数：源对象，关键字，关联的对象和一个关联策略。</p>
 
 <blockquote>
   <p>1、源对象alert</p>
@@ -33,7 +33,7 @@
 
   <p>3、关联的对象 sender</p>
 
-  <p>4、关键策略  <code class="highlighter-rouge">OBJC_ASSOCIATION_RETAIN_NONATOMIC</code></p>
+  <p>4、关键策略  <code class="language-plaintext highlighter-rouge">OBJC_ASSOCIATION_RETAIN_NONATOMIC</code></p>
 </blockquote>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">static</span> <span class="n">char</span> <span class="n">overviewKey</span><span class="p">;</span>    
@@ -44,23 +44,23 @@
 
 <h2 id="获取关联对象">获取关联对象</h2>
 
-<p>获取相关联的对象时使用Objective-C函数<code class="highlighter-rouge">objc_getAssociatedObject</code>。接着上面的代码，我们可以使用如下代码来获取与array相关联的字符串：</p>
+<p>获取相关联的对象时使用Objective-C函数<code class="language-plaintext highlighter-rouge">objc_getAssociatedObject</code>。接着上面的代码，我们可以使用如下代码来获取与array相关联的字符串：</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">NSString</span> <span class="o">*</span> <span class="n">associatedObject</span> <span class="o">=</span> <span class="p">(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nf">objc_getAssociatedObject</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">oveviewKey</span><span class="p">);</span>
 </code></pre></div></div>
 
 <h2 id="断开关联">断开关联</h2>
 
-<p>断开关联是使用<code class="highlighter-rouge">objc_setAssociatedObject</code>函数，传入<code class="highlighter-rouge">nil</code>值即可。接着上面的程序，我们可以使用如下的代码来断开字符串<code class="highlighter-rouge">overview</code>和<code class="highlighter-rouge">arry</code>之间的关联</p>
+<p>断开关联是使用<code class="language-plaintext highlighter-rouge">objc_setAssociatedObject</code>函数，传入<code class="language-plaintext highlighter-rouge">nil</code>值即可。接着上面的程序，我们可以使用如下的代码来断开字符串<code class="language-plaintext highlighter-rouge">overview</code>和<code class="language-plaintext highlighter-rouge">arry</code>之间的关联</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">objc_setAssociatedObject</span><span class="p">(</span><span class="n">array</span><span class="p">,</span><span class="err"> </span><span class="o">&amp;</span><span class="n">overviewKey</span><span class="p">,</span><span class="err"> </span><span class="kc">nil</span><span class="p">,</span><span class="err"> </span><span class="kt">OBJC_ASSOCIATION_ASSIGN</span><span class="p">);</span>
 </code></pre></div></div>
 
-<p>其中，被关联的对象为<code class="highlighter-rouge">nil</code>，此时关联策略也就无关紧要了。使用函数<code class="highlighter-rouge">objc_removeAssociatedObjects</code>可以断开所有关联。通常情况下不建议使用这个函数，因为他会断开所有关联。只有在需要把对象恢复到“原始状态”的时候才会使用这个函数。</p>
+<p>其中，被关联的对象为<code class="language-plaintext highlighter-rouge">nil</code>，此时关联策略也就无关紧要了。使用函数<code class="language-plaintext highlighter-rouge">objc_removeAssociatedObjects</code>可以断开所有关联。通常情况下不建议使用这个函数，因为他会断开所有关联。只有在需要把对象恢复到“原始状态”的时候才会使用这个函数。</p>
 
 <h2 id="实现uibutton传值">实现UIButton传值</h2>
 
-<p>通过btn传递两个实例对象<code class="highlighter-rouge">firstObject</code>和<code class="highlighter-rouge">secondObject</code>，创建button并关联对象及button的点击事件</p>
+<p>通过btn传递两个实例对象<code class="language-plaintext highlighter-rouge">firstObject</code>和<code class="language-plaintext highlighter-rouge">secondObject</code>，创建button并关联对象及button的点击事件</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">UIButton</span> <span class="o">*</span><span class="n">btn</span> <span class="o">=</span> <span class="c1">// create the button  </span>
 <span class="nf">objc_setAssociatedObject</span><span class="p">(</span><span class="n">btn</span><span class="p">,</span> <span class="s">"firstObject"</span><span class="p">,</span> <span class="n">someObject</span><span class="p">,</span> <span class="kt">OBJC_ASSOCIATION_RETAIN_NONATOMIC</span><span class="p">);</span>  
@@ -78,9 +78,9 @@
 <p>向以上方法那样，只要设置了关联，当把button传递给@selector的参数时，也顺便把另外两个参数也传递过去了。就类似设了button的两个属性，但是这种方法简单多了。</p>
 
 <ul>
-  <li>第一步: 设定关联<code class="highlighter-rouge">objc_setAssociatedObject(btn, "firstObject", someObject, OBJC_ASSOCIATION_RETAIN_NONATOMIC);</code>第一个参数：btn为被关联者(主体)，第二个参数：<code class="highlighter-rouge">firstObject</code>为指向关联的对象的指针(一般为一个<code class="highlighter-rouge">static</code>字符串)，第三个参数：关联的对象实例，第四个对象：关联的方式(有几种，类似设定.h文件属性时候的 <code class="highlighter-rouge">assign</code>,<code class="highlighter-rouge">retain</code>等)</li>
+  <li>第一步: 设定关联<code class="language-plaintext highlighter-rouge">objc_setAssociatedObject(btn, "firstObject", someObject, OBJC_ASSOCIATION_RETAIN_NONATOMIC);</code>第一个参数：btn为被关联者(主体)，第二个参数：<code class="language-plaintext highlighter-rouge">firstObject</code>为指向关联的对象的指针(一般为一个<code class="language-plaintext highlighter-rouge">static</code>字符串)，第三个参数：关联的对象实例，第四个对象：关联的方式(有几种，类似设定.h文件属性时候的 <code class="language-plaintext highlighter-rouge">assign</code>,<code class="language-plaintext highlighter-rouge">retain</code>等)</li>
   <li>第二步：得到关联的对象
-<code class="highlighter-rouge">id first = objc_getAssociatedObject(btn, "firstObject");</code>第一个参数：为被关联者第二个参数：为关联对象的指针。</li>
+<code class="language-plaintext highlighter-rouge">id first = objc_getAssociatedObject(btn, "firstObject");</code>第一个参数：为被关联者第二个参数：为关联对象的指针。</li>
 </ul>
 
 <p>参考：<a href="http://stackoverflow.com">http://stackoverflow.com</a></p>

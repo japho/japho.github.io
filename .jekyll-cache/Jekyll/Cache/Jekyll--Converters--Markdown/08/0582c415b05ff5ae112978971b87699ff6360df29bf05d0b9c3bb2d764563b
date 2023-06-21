@@ -1,6 +1,6 @@
-I"�,<p>平时开发的时候可能会遇到这种问题：当一个UILabel的frame的高度设置的过大时，发现UILabel是垂直居中的，有的需求是需要将这个Label垂直向上显示，之前的办法是计算出label.text的字体所占用的frame大小，根据这个大小再重新设置label的frame值，未免有些麻烦，前阵子封装了个自定义label实现的垂直居中的设置。废话不多说，上代码。</p>
+I"#-<p>平时开发的时候可能会遇到这种问题：当一个UILabel的frame的高度设置的过大时，发现UILabel是垂直居中的，有的需求是需要将这个Label垂直向上显示，之前的办法是计算出label.text的字体所占用的frame大小，根据这个大小再重新设置label的frame值，未免有些麻烦，前阵子封装了个自定义label实现的垂直居中的设置。废话不多说，上代码。</p>
 
-<p><code class="highlighter-rouge">JFLabel.h</code></p>
+<p><code class="language-plaintext highlighter-rouge">JFLabel.h</code></p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  </span>
 <span class="c1">//  JFLabel.h  </span>
@@ -32,7 +32,7 @@
 <span class="kd">@end</span>  
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">JFLabel.m</code></p>
+<p><code class="language-plaintext highlighter-rouge">JFLabel.m</code></p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  </span>
 <span class="c1">//  JFLabel.m  </span>

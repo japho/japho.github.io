@@ -1,10 +1,10 @@
-I"�<p>释放对象有两种方式：一种是调用<code class="highlighter-rouge">release</code>方法，使其保留计数立即递减；另一种是调用<code class="highlighter-rouge">autorelease</code>方法，将其加入到“自动释放池”中。自动释放池用于存放那些需要稍后再某个时刻释放的对象。清空（<code class="highlighter-rouge">drain</code>）自动释放池时，系统会向其中的对象发送<code class="highlighter-rouge">release</code>信息。</p>
+I"!<p>释放对象有两种方式：一种是调用<code class="language-plaintext highlighter-rouge">release</code>方法，使其保留计数立即递减；另一种是调用<code class="language-plaintext highlighter-rouge">autorelease</code>方法，将其加入到“自动释放池”中。自动释放池用于存放那些需要稍后再某个时刻释放的对象。清空（<code class="language-plaintext highlighter-rouge">drain</code>）自动释放池时，系统会向其中的对象发送<code class="language-plaintext highlighter-rouge">release</code>信息。</p>
 
-<p>一般情况下无需担心自动释放池的创建问题。系统会自动创建一些线程，例如主线程，或GCD机制中的线程，这些线程默认都是自动释放池的，每次执行事件循环（<code class="highlighter-rouge">event loop</code>）时，就会将其清空。因此，不需要自己创建“自动释放池块”。通常只有一个地方需要创建自动释放池，那就是在main函数中。用自动释放池来包裹应用程序的主入口点。</p>
+<p>一般情况下无需担心自动释放池的创建问题。系统会自动创建一些线程，例如主线程，或GCD机制中的线程，这些线程默认都是自动释放池的，每次执行事件循环（<code class="language-plaintext highlighter-rouge">event loop</code>）时，就会将其清空。因此，不需要自己创建“自动释放池块”。通常只有一个地方需要创建自动释放池，那就是在main函数中。用自动释放池来包裹应用程序的主入口点。</p>
 
 <p>例如：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int main(int argc,  char *argv[])
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int main(int argc,  char *argv[])
 {
 @autoreleasepool{
 return UIApplicationMain(argc,  argv,  nil,  @"AppDelegate");
@@ -12,11 +12,11 @@ return UIApplicationMain(argc,  argv,  nil,  @"AppDelegate");
 }
 </code></pre></div></div>
 
-<p>如果不写这个块的话，那么由<code class="highlighter-rouge">UIApplicationMain</code>函数所释放的那些对象，就没有自动释放池可以容纳了，系统会警告。这个池可以理解成最外围捕捉全部自动释放对象所用的池。</p>
+<p>如果不写这个块的话，那么由<code class="language-plaintext highlighter-rouge">UIApplicationMain</code>函数所释放的那些对象，就没有自动释放池可以容纳了，系统会警告。这个池可以理解成最外围捕捉全部自动释放对象所用的池。</p>
 
-<p>自动释放池于左花括号处创建，并于右花括号处自动清空。位于自动释放池范围内的对象，将在此范围末尾处收到<code class="highlighter-rouge">release</code>消息。自动释放池可以嵌套。系统在自动释放对象时，会把它放到最内层的池里。</p>
+<p>自动释放池于左花括号处创建，并于右花括号处自动清空。位于自动释放池范围内的对象，将在此范围末尾处收到<code class="language-plaintext highlighter-rouge">release</code>消息。自动释放池可以嵌套。系统在自动释放对象时，会把它放到最内层的池里。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@autoreleasepool{
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@autoreleasepool{
 NSString *string =  [NSString  stringWithFormat:@"1  =  %i",  1];
 
 @autoreleasepool{
@@ -25,19 +25,19 @@ NSNumber  *number =  [NSNumber  numberWithInt:1];
 }
 </code></pre></div></div>
 
-<p>这两个对象都由类的工厂方法创建，这样创建出来的对象会自动释放。<code class="highlighter-rouge">NSString</code>对象在外围的自动释放池中，<code class="highlighter-rouge">NSNumber</code>在里层的自动释放池中。将自动释放池嵌套使用的好处是，可以借此控制应用程序的内存峰值，使其不致过高。</p>
+<p>这两个对象都由类的工厂方法创建，这样创建出来的对象会自动释放。<code class="language-plaintext highlighter-rouge">NSString</code>对象在外围的自动释放池中，<code class="language-plaintext highlighter-rouge">NSNumber</code>在里层的自动释放池中。将自动释放池嵌套使用的好处是，可以借此控制应用程序的内存峰值，使其不致过高。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for (int i =  0;i &lt; 10000;  i++)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for (int i =  0;i &lt; 10000;  i++)
 {
 [self doSomethingWithInt:i];
 }
 </code></pre></div></div>
 
-<p>如果方法<code class="highlighter-rouge">doSomethingWithInt:</code>要创建临时对象，那么这些对象很有可能放在自动释放池里，但是即便这些对象在调用完方法之后就不再使用了，他们也依然处于存活状态，因为目前还在自动释放池里。等系统线程执行下一次事件循环时才会清空。这意味着在执行<code class="highlighter-rouge">for</code>循环时，会持续有新的对象创建出来，并加入自动释放池中。所有这种对象都要等for循环执行完毕才会释放，这样一来，在执行<code class="highlighter-rouge">for</code>循环时，应用程序所占内存量就会持续上涨，而等到所有临时对象都释放后，内存用量又会突然下降。</p>
+<p>如果方法<code class="language-plaintext highlighter-rouge">doSomethingWithInt:</code>要创建临时对象，那么这些对象很有可能放在自动释放池里，但是即便这些对象在调用完方法之后就不再使用了，他们也依然处于存活状态，因为目前还在自动释放池里。等系统线程执行下一次事件循环时才会清空。这意味着在执行<code class="language-plaintext highlighter-rouge">for</code>循环时，会持续有新的对象创建出来，并加入自动释放池中。所有这种对象都要等for循环执行完毕才会释放，这样一来，在执行<code class="language-plaintext highlighter-rouge">for</code>循环时，应用程序所占内存量就会持续上涨，而等到所有临时对象都释放后，内存用量又会突然下降。</p>
 
 <p>这里增加一个自动释放池即可解决此问题。把循环内的代码包裹在“自动释放池块”中，那么在循环中自动释放的对象就会放在这个池，而不是线程的主池里面。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for (int i =  0;i &lt; 10000;  i++)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for (int i =  0;i &lt; 10000;  i++)
 {
 @autoreleasepool{
 [self doSomethingWithInt:i];
@@ -52,9 +52,9 @@ NSNumber  *number =  [NSNumber  numberWithInt:1];
 <p><strong>要点：</strong></p>
 
 <ul>
-  <li>自动释放池排布在栈中，对象收到<code class="highlighter-rouge">autorelease</code>消息后，系统将其放入最顶端的池里。</li>
+  <li>自动释放池排布在栈中，对象收到<code class="language-plaintext highlighter-rouge">autorelease</code>消息后，系统将其放入最顶端的池里。</li>
   <li>合理运用自动释放池，可降低应用程序的内存峰值。</li>
-  <li><code class="highlighter-rouge">@autoreleasepool</code>这种新写法大能创建出更为轻便的自动释放池。</li>
+  <li><code class="language-plaintext highlighter-rouge">@autoreleasepool</code>这种新写法大能创建出更为轻便的自动释放池。</li>
 </ul>
 
 :ET

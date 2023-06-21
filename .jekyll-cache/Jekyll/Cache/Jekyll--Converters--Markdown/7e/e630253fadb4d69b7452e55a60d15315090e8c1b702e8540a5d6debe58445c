@@ -1,4 +1,4 @@
-I"W<h3 id="下载微博sdk">下载微博SDK</h3>
+I"�Y<h3 id="下载微博sdk">下载微博SDK</h3>
 
 <p>微博SDK的官方github：<a href="https://github.com/sinaweibosdk/weibo_ios_sdk">https://github.com/sinaweibosdk/weibo_ios_sdk</a>
 下载所需要的SDK</p>
@@ -20,17 +20,17 @@
 <p><strong>所需依赖库：</strong></p>
 
 <blockquote>
-  <p><code class="highlighter-rouge">QuartzCore.framework</code>,
-<code class="highlighter-rouge">ImageIO.framework</code>,
-<code class="highlighter-rouge">SystemConfiguration.framework</code>,
-<code class="highlighter-rouge">Security.framework</code>,
-<code class="highlighter-rouge">CoreTelephony.framework</code>,
-<code class="highlighter-rouge">CoreText.framework</code>,
-<code class="highlighter-rouge">UIKit.framework</code>,
-<code class="highlighter-rouge">Foundation.framework</code>,
-<code class="highlighter-rouge">CoreGraphics.framework</code>,
-<code class="highlighter-rouge">libz.dylib</code>,
-<code class="highlighter-rouge">ibsqlite3.dylib</code></p>
+  <p><code class="language-plaintext highlighter-rouge">QuartzCore.framework</code>,
+<code class="language-plaintext highlighter-rouge">ImageIO.framework</code>,
+<code class="language-plaintext highlighter-rouge">SystemConfiguration.framework</code>,
+<code class="language-plaintext highlighter-rouge">Security.framework</code>,
+<code class="language-plaintext highlighter-rouge">CoreTelephony.framework</code>,
+<code class="language-plaintext highlighter-rouge">CoreText.framework</code>,
+<code class="language-plaintext highlighter-rouge">UIKit.framework</code>,
+<code class="language-plaintext highlighter-rouge">Foundation.framework</code>,
+<code class="language-plaintext highlighter-rouge">CoreGraphics.framework</code>,
+<code class="language-plaintext highlighter-rouge">libz.dylib</code>,
+<code class="language-plaintext highlighter-rouge">ibsqlite3.dylib</code></p>
 </blockquote>
 
 <p><strong>添加编译选项：</strong></p>
@@ -49,16 +49,16 @@
 
 <p><img src="http://upload-images.jianshu.io/upload_images/1269906-f7fa91be97a49511.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
 
-<p>如图，设置<code class="highlighter-rouge">URLSchemes</code>为你申请的<code class="highlighter-rouge">AppKey</code>,
-例如:<code class="highlighter-rouge">wb25432236852</code></p>
+<p>如图，设置<code class="language-plaintext highlighter-rouge">URLSchemes</code>为你申请的<code class="language-plaintext highlighter-rouge">AppKey</code>,
+例如:<code class="language-plaintext highlighter-rouge">wb25432236852</code></p>
 
 <h3 id="编写代码">编写代码</h3>
 
 <ul>
-  <li>在<code class="highlighter-rouge">Appdelegate</code>中导入头文件，声明遵循微博代理</li>
+  <li>在<code class="language-plaintext highlighter-rouge">Appdelegate</code>中导入头文件，声明遵循微博代理</li>
 </ul>
 
-<p><code class="highlighter-rouge">Appdelegate.m</code></p>
+<p><code class="language-plaintext highlighter-rouge">Appdelegate.m</code></p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="cp">#import &lt;UIKit/UIKit.h&gt;  </span>
@@ -76,7 +76,7 @@
 </code></pre></div></div>
 
 <ul>
-  <li>在<code class="highlighter-rouge">Appdelegate</code>中注册微博SDK</li>
+  <li>在<code class="language-plaintext highlighter-rouge">Appdelegate</code>中注册微博SDK</li>
 </ul>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
@@ -92,7 +92,7 @@
 </code></pre></div></div>
 
 <ul>
-  <li>重写<code class="highlighter-rouge">AppDelegate</code>中的<code class="highlighter-rouge">handleOpenURL</code>和<code class="highlighter-rouge">openURL</code>方法</li>
+  <li>重写<code class="language-plaintext highlighter-rouge">AppDelegate</code>中的<code class="language-plaintext highlighter-rouge">handleOpenURL</code>和<code class="language-plaintext highlighter-rouge">openURL</code>方法</li>
 </ul>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
@@ -109,7 +109,7 @@
 </code></pre></div></div>
 
 <ul>
-  <li>在你所要添加登录方法的<code class="highlighter-rouge">controller</code>中添加以下登录方法，该方法会跳转微博授权</li>
+  <li>在你所要添加登录方法的<code class="language-plaintext highlighter-rouge">controller</code>中添加以下登录方法，该方法会跳转微博授权</li>
 </ul>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
@@ -133,7 +133,7 @@
   <li>在Appdelegate中实现微博的回调方法，获取回调信息</li>
 </ul>
 
-<p>这里说明一下，下面的方法实现在<code class="highlighter-rouge">Appdelegate</code>中，当在你所需登录的<code class="highlighter-rouge">controller</code>调用的登录方法后会跳转微博进行授权，授权信息会以回调的方式调用<code class="highlighter-rouge">Appdelegate</code>中的下面方法，从该方法中我们可以得出授权所得到的<code class="highlighter-rouge">userId（用户唯一标识）</code>，和<code class="highlighter-rouge">accessToken</code>。拿到这两个参数后可以调用微博接口进行一系列的获取个人信息、转发、评论、发表微博等操作，这里我们只需要获取用户的个人信息就可以了。</p>
+<p>这里说明一下，下面的方法实现在<code class="language-plaintext highlighter-rouge">Appdelegate</code>中，当在你所需登录的<code class="language-plaintext highlighter-rouge">controller</code>调用的登录方法后会跳转微博进行授权，授权信息会以回调的方式调用<code class="language-plaintext highlighter-rouge">Appdelegate</code>中的下面方法，从该方法中我们可以得出授权所得到的<code class="language-plaintext highlighter-rouge">userId（用户唯一标识）</code>，和<code class="language-plaintext highlighter-rouge">accessToken</code>。拿到这两个参数后可以调用微博接口进行一系列的获取个人信息、转发、评论、发表微博等操作，这里我们只需要获取用户的个人信息就可以了。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="c1">//微博回调  </span>
@@ -159,11 +159,11 @@
 
 </code></pre></div></div>
 
-<p>当获取到反馈的<code class="highlighter-rouge">userID</code>和<code class="highlighter-rouge">accessToken</code>后，这里我使用了通知<code class="highlighter-rouge">Notification</code>的方式来调用刚才申请第三方登录的<code class="highlighter-rouge">controller</code>中的相应的方法。记得使用通知的时候在<code class="highlighter-rouge">dealloc</code>方法中进行通知的删除。</p>
+<p>当获取到反馈的<code class="language-plaintext highlighter-rouge">userID</code>和<code class="language-plaintext highlighter-rouge">accessToken</code>后，这里我使用了通知<code class="language-plaintext highlighter-rouge">Notification</code>的方式来调用刚才申请第三方登录的<code class="language-plaintext highlighter-rouge">controller</code>中的相应的方法。记得使用通知的时候在<code class="language-plaintext highlighter-rouge">dealloc</code>方法中进行通知的删除。</p>
 
 <ul>
-  <li>在实现登录的<code class="highlighter-rouge">controller</code>中的相应的通知方法中实现以下功能
-用刚刚在微博的回调方法中得到的<code class="highlighter-rouge">userId</code>和<code class="highlighter-rouge">accessToken</code>来请求微博的接口以获取用户的个人信息</li>
+  <li>在实现登录的<code class="language-plaintext highlighter-rouge">controller</code>中的相应的通知方法中实现以下功能
+用刚刚在微博的回调方法中得到的<code class="language-plaintext highlighter-rouge">userId</code>和<code class="language-plaintext highlighter-rouge">accessToken</code>来请求微博的接口以获取用户的个人信息</li>
 </ul>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>

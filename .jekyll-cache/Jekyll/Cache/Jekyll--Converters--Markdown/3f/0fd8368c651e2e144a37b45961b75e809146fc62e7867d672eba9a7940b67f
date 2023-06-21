@@ -1,4 +1,4 @@
-I"S<h2 id="runtime如何实现">runtime如何实现？</h2>
+I"�<h2 id="runtime如何实现">runtime如何实现？</h2>
 
 <p>OC这个语言尽可能的将一些决定从编译器推迟到运行时，他会尽可能的动态处理事情，这意味着这个语言不仅需要一个编译器，还需要一个运行时系统，使得这个语言得以运行。
 RunTime简称运行时。就是系统在运行的时候的一些机制，其中最主要的是消息机制。对于C语言，函数的调用在编译的时候会决定调用哪个函数（ C语言的函数调用请看这里 ）。编译完成之后直接顺序执行，无任何二义性。OC的函数调用成为消息发送。属于动态调用过程。在编译的时候并不能决定真正调用哪个函数（事实证明，在编 译阶段，OC可以调用任何函数，即使这个函数并未实现，只要申明过就不会报错。而C语言在编译阶段就会报错）。只有在真正运行的时候才会根据函数的名称找 到对应的函数来调用。</p>
@@ -11,11 +11,11 @@ RunTime简称运行时。就是系统在运行的时候的一些机制，其中�
 
 <h2 id="oc类怎么执行">OC类怎么执行？</h2>
 <ol>
-  <li>当程序启动时，就会加载项目中所有的类，而且加载后会调用每个类的<code class="highlighter-rouge">+load</code>方法，只会调用一次；</li>
-  <li>当第一次使用某个类时，就会调用当前类的<code class="highlighter-rouge">+initialize</code>方法；</li>
-  <li>先加载父类，再加载子类（先调用父类的<code class="highlighter-rouge">+load</code>方法，再调用子类的<code class="highlighter-rouge">+load</code>方法，最后调用分类的<code class="highlighter-rouge">+load</code>方法），先初始化父类，再初始化子类（先调用父类的<code class="highlighter-rouge">+initialize</code>方法，再调用子类的<code class="highlighter-rouge">+initialize</code>方法）。</li>
-  <li>注意：在初始化的时候，如果在分类中重写了<code class="highlighter-rouge">+initialize</code>方法，则会覆盖掉父类的。</li>
-  <li>重写<code class="highlighter-rouge">+initialize</code>方法可以监听类的使用情况。</li>
+  <li>当程序启动时，就会加载项目中所有的类，而且加载后会调用每个类的<code class="language-plaintext highlighter-rouge">+load</code>方法，只会调用一次；</li>
+  <li>当第一次使用某个类时，就会调用当前类的<code class="language-plaintext highlighter-rouge">+initialize</code>方法；</li>
+  <li>先加载父类，再加载子类（先调用父类的<code class="language-plaintext highlighter-rouge">+load</code>方法，再调用子类的<code class="language-plaintext highlighter-rouge">+load</code>方法，最后调用分类的<code class="language-plaintext highlighter-rouge">+load</code>方法），先初始化父类，再初始化子类（先调用父类的<code class="language-plaintext highlighter-rouge">+initialize</code>方法，再调用子类的<code class="language-plaintext highlighter-rouge">+initialize</code>方法）。</li>
+  <li>注意：在初始化的时候，如果在分类中重写了<code class="language-plaintext highlighter-rouge">+initialize</code>方法，则会覆盖掉父类的。</li>
+  <li>重写<code class="language-plaintext highlighter-rouge">+initialize</code>方法可以监听类的使用情况。</li>
 </ol>
 
 <p>首先从硬盘load程序代码到内存。

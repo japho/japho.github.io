@@ -1,4 +1,4 @@
-I"�<p>Objective-C不支持多继承，因此我们把某个类应该实现的一系列方法定义在协议里面。协议最常见的用途就是委托模式（<code class="highlighter-rouge">delegate</code>），“分类”（<code class="highlighter-rouge">category</code>），也是Objective-C的一种重要语言特性，利用分类机制，我们无需继承子类即可直接为当前类添加方法。</p>
+I"�<p>Objective-C不支持多继承，因此我们把某个类应该实现的一系列方法定义在协议里面。协议最常见的用途就是委托模式（<code class="language-plaintext highlighter-rouge">delegate</code>），“分类”（<code class="language-plaintext highlighter-rouge">category</code>），也是Objective-C的一种重要语言特性，利用分类机制，我们无需继承子类即可直接为当前类添加方法。</p>
 
 <p><strong>委托模式的主旨：</strong></p>
 
@@ -6,12 +6,12 @@
 
 <p>这个模式可将数据与业务逻辑解耦。视图中知应包含显示数据所需的逻辑代码，而不应决定要显示何种数据以及数据之间如何交互等问题。</p>
 
-<p><code class="highlighter-rouge">delegate</code>这个属性应该定义成<code class="highlighter-rouge">weak</code>，而非<code class="highlighter-rouge">strong</code>。因为两者之间必须为“费用有关系”。通常情况下，扮演<code class="highlighter-rouge">delegate</code>的对象也要持有本对象，直到对象用完之后才会被释放。假如这里声明的时候用的是<code class="highlighter-rouge">strong</code>，这里就会造成“循环引用”，对象无法被释放掉。所以<code class="highlighter-rouge">delegate</code>对象应该被声明为<code class="highlighter-rouge">weak</code>，或者<code class="highlighter-rouge">unsafe_unretained</code>，（区别在于<code class="highlighter-rouge">weak</code>可在相关对象销毁时自动清空设置成<code class="highlighter-rouge">nil</code>，不会造成野指针）。</p>
+<p><code class="language-plaintext highlighter-rouge">delegate</code>这个属性应该定义成<code class="language-plaintext highlighter-rouge">weak</code>，而非<code class="language-plaintext highlighter-rouge">strong</code>。因为两者之间必须为“费用有关系”。通常情况下，扮演<code class="language-plaintext highlighter-rouge">delegate</code>的对象也要持有本对象，直到对象用完之后才会被释放。假如这里声明的时候用的是<code class="language-plaintext highlighter-rouge">strong</code>，这里就会造成“循环引用”，对象无法被释放掉。所以<code class="language-plaintext highlighter-rouge">delegate</code>对象应该被声明为<code class="language-plaintext highlighter-rouge">weak</code>，或者<code class="language-plaintext highlighter-rouge">unsafe_unretained</code>，（区别在于<code class="language-plaintext highlighter-rouge">weak</code>可在相关对象销毁时自动清空设置成<code class="language-plaintext highlighter-rouge">nil</code>，不会造成野指针）。</p>
 
 <p>实现委托对象的办法是声明某个类遵从委托协议，然后把协议中想要实现的那些方法在类里实现出来。委托协议一般来说都是可选的（optional），因为委托者未必关心其中的所有方法，这里需要注意，如果在委托对象上调用了可选方法，则必须提前使用类型信息查询方法来判断这个委托对象能否响应相关选择子。
 例如</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if ([_delegate respondsToSelecto: @selector(networkFetcher:didReceiveData:)])
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if ([_delegate respondsToSelecto: @selector(networkFetcher:didReceiveData:)])
 {
 [_delegate networkFetcher:self didReceiveData:data];
 }

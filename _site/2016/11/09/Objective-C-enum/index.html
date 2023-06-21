@@ -210,7 +210,7 @@
 <h2 id="状态与选项states--options">状态与选项（states &amp; options）</h2>
 
 <h3 id="状态">状态</h3>
-<p>同时只能有一种，如<code class="highlighter-rouge">JFStateError</code>,<code class="highlighter-rouge">JFStateUnknow</code>，不可能同时是<code class="highlighter-rouge">JFStateError</code>和<code class="highlighter-rouge">JFStateUnknow</code>。如下：</p>
+<p>同时只能有一种，如<code class="language-plaintext highlighter-rouge">JFStateError</code>,<code class="language-plaintext highlighter-rouge">JFStateUnknow</code>，不可能同时是<code class="language-plaintext highlighter-rouge">JFStateError</code>和<code class="language-plaintext highlighter-rouge">JFStateUnknow</code>。如下：</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">typedef</span> <span class="kd">enum</span> <span class="kt">JFState</span> <span class="p">{</span>
     <span class="kt">JFStateOK</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
@@ -255,7 +255,7 @@
 
 <h4 id="位移枚举可复选的枚举-使用位移实现选项变量">位移枚举(可复选的枚举) 使用位移实现选项变量</h4>
 
-<p>使用枚举定义选项,每个选项均可启用或禁用，使用上述方式来定义枚举值,每个枚举值所对应的二进制表示中，只有1个二进制位的值是1。用“按位或操作符”可组合多个选项。用 <code class="highlighter-rouge">|</code> 来隔开</p>
+<p>使用枚举定义选项,每个选项均可启用或禁用，使用上述方式来定义枚举值,每个枚举值所对应的二进制表示中，只有1个二进制位的值是1。用“按位或操作符”可组合多个选项。用 <code class="language-plaintext highlighter-rouge">|</code> 来隔开</p>
 
 <p><strong><em>首先来补充下位运算的知识吧 ^_^</em></strong></p>
 
@@ -268,11 +268,11 @@
 </blockquote>
 
 <ul>
-  <li><strong>2、按位或”<code class="highlighter-rouge">|</code>“</strong></li>
+  <li><strong>2、按位或”<code class="language-plaintext highlighter-rouge">|</code>“</strong></li>
 </ul>
 
 <blockquote>
-  <p>只要对应的二个二进位有一个为1时，结果位就为1，否则为0。&gt;比如9<code class="highlighter-rouge">|</code>5，其实就是1001<code class="highlighter-rouge">|</code>0101=1101，因此9<code class="highlighter-rouge">|</code>5=13</p>
+  <p>只要对应的二个二进位有一个为1时，结果位就为1，否则为0。&gt;比如9<code class="language-plaintext highlighter-rouge">|</code>5，其实就是1001<code class="language-plaintext highlighter-rouge">|</code>0101=1101，因此9<code class="language-plaintext highlighter-rouge">|</code>5=13</p>
 </blockquote>
 
 <ul>
@@ -334,8 +334,8 @@
 </code></pre></div></div>
 
 <ul>
-  <li>定义这个<code class="highlighter-rouge">actionType</code>的选项为四个，这里按位异或，<code class="highlighter-rouge">0001|0010|0100|1000=1111</code>，得到结果这个type为15。</li>
-  <li>调用方法<code class="highlighter-rouge">[self action:type]</code>，进行按位与操作：<code class="highlighter-rouge">type &amp; ActionTypeUp</code>，<code class="highlighter-rouge">1111&amp;0001=0001</code>，得到这个是否选择了该选项。然后便可以进行判断了。</li>
+  <li>定义这个<code class="language-plaintext highlighter-rouge">actionType</code>的选项为四个，这里按位异或，<code class="language-plaintext highlighter-rouge">0001|0010|0100|1000=1111</code>，得到结果这个type为15。</li>
+  <li>调用方法<code class="language-plaintext highlighter-rouge">[self action:type]</code>，进行按位与操作：<code class="language-plaintext highlighter-rouge">type &amp; ActionTypeUp</code>，<code class="language-plaintext highlighter-rouge">1111&amp;0001=0001</code>，得到这个是否选择了该选项。然后便可以进行判断了。</li>
 </ul>
 
 
@@ -420,7 +420,7 @@
                     <div class="tags">
         				
                             
-                				<a href="/tags/#iOS" title="iOS" rel="31">
+                				<a href="/tags/#iOS" title="iOS" rel="32">
                                     iOS
                                 </a>
                             
@@ -554,7 +554,7 @@
                     
                 </ul>
                 <p class="copyright text-muted">
-                    Copyright &copy; Japho Blog 2020
+                    Copyright &copy; Japho Blog 2023
                     <br>
                     <!-- Theme on <a href="hhttps://github.com/japho/japho.github.io.git">GitHub</a> |
                     <iframe

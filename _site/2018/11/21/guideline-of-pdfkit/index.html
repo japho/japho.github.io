@@ -241,7 +241,7 @@
 
 <h3 id="创建-pdfview">创建 PDFView</h3>
 
-<p>引入 <code class="highlighter-rouge">#import &lt;PDFKit/PDFKit.h&gt;</code> ，创建 PDFView ，创建之前，首先要创建 PDFDocument ，这里通过文件路径 URl 进行创建。</p>
+<p>引入 <code class="language-plaintext highlighter-rouge">#import &lt;PDFKit/PDFKit.h&gt;</code> ，创建 PDFView ，创建之前，首先要创建 PDFDocument ，这里通过文件路径 URl 进行创建。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="kt">NSString</span> <span class="o">*</span><span class="n">pdfPath</span> <span class="o">=</span> <span class="p">[[</span><span class="kt">NSBundle</span> <span class="n">mainBundle</span><span class="p">]</span> <span class="nv">pathForResource</span><span class="p">:</span><span class="s">@"swift"</span> <span class="nv">ofType</span><span class="p">:</span><span class="s">@"pdf"</span><span class="p">];</span>
     <span class="kt">NSURL</span> <span class="o">*</span><span class="n">pdfUrl</span> <span class="o">=</span> <span class="p">[</span><span class="kt">NSURL</span> <span class="nv">fileURLWithPath</span><span class="p">:</span><span class="n">pdfPath</span><span class="p">];</span>
@@ -295,7 +295,7 @@
 
 <h3 id="获取-pdf-的大纲-pdfoutline">获取 PDF 的大纲 PDFOutline</h3>
 
-<p>PDFOutline 是一个层级关系的对象，他表示 PDF 的大纲（也就是我们常用的书签）。每个 PDFOutline 对象都可通过 <code class="highlighter-rouge">childAtIndex:</code> 方法获取出他的孩子对象，<code class="highlighter-rouge">注意</code>，这里需要先判断 <code class="highlighter-rouge">numberOfChildren</code>，以确定该 outline 对象存在多少个孩子节点，避免下标超界引发的崩溃。</p>
+<p>PDFOutline 是一个层级关系的对象，他表示 PDF 的大纲（也就是我们常用的书签）。每个 PDFOutline 对象都可通过 <code class="language-plaintext highlighter-rouge">childAtIndex:</code> 方法获取出他的孩子对象，<code class="language-plaintext highlighter-rouge">注意</code>，这里需要先判断 <code class="language-plaintext highlighter-rouge">numberOfChildren</code>，以确定该 outline 对象存在多少个孩子节点，避免下标超界引发的崩溃。</p>
 
 <p><strong>实现大纲功能</strong></p>
 
@@ -348,7 +348,7 @@
 
   <p>判断每个孩子节点是否还存在孩子节点，若有，则进行递归操作逐一进行删除。</p>
 
-  <p><code class="highlighter-rouge">注意</code>：此处是为了点击回收父节点时将该父节点下的所有子节点（不论层级）全部删除。</p>
+  <p><code class="language-plaintext highlighter-rouge">注意</code>：此处是为了点击回收父节点时将该父节点下的所有子节点（不论层级）全部删除。</p>
 </blockquote>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">removeOutlineWithParentOuline</span><span class="p">:(</span><span class="kt">PDFOutline</span> <span class="o">*</span><span class="p">)</span><span class="n">parentOutline</span>
@@ -448,7 +448,7 @@
 
 <p><strong>实现双击缩放或还原：</strong></p>
 
-<p>这里通过设置 pdfView 的 scaleFactor 属性即可实现，<code class="highlighter-rouge">注意</code>：<code class="highlighter-rouge">scaleFactorForSizeToFit</code>属性是当前 PDF 充满屏幕的比例。</p>
+<p>这里通过设置 pdfView 的 scaleFactor 属性即可实现，<code class="language-plaintext highlighter-rouge">注意</code>：<code class="language-plaintext highlighter-rouge">scaleFactorForSizeToFit</code>属性是当前 PDF 充满屏幕的比例。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="n">doubleTapAction</span>
 <span class="p">{</span>   
@@ -489,6 +489,13 @@
                         </a>
                     </li>
                     
+                    
+                    <li class="next">
+                        <a href="/2023/06/09/guideline-of-pdfkit/" data-toggle="tooltip" data-placement="top" title="iOS PDFKit 开发指北">
+                        Next<br>
+                        <span>iOS PDFKit 开发指北</span>
+                        </a>
+                    </li>
                     
                 </ul>
 
@@ -552,7 +559,7 @@
                     <div class="tags">
         				
                             
-                				<a href="/tags/#iOS" title="iOS" rel="31">
+                				<a href="/tags/#iOS" title="iOS" rel="32">
                                     iOS
                                 </a>
                             
@@ -686,7 +693,7 @@
                     
                 </ul>
                 <p class="copyright text-muted">
-                    Copyright &copy; Japho Blog 2020
+                    Copyright &copy; Japho Blog 2023
                     <br>
                     <!-- Theme on <a href="hhttps://github.com/japho/japho.github.io.git">GitHub</a> |
                     <iframe

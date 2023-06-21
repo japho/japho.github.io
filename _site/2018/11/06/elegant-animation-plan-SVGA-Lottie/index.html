@@ -201,7 +201,7 @@
 
 				<h2 id="前言">前言</h2>
 
-<p>在开发APP的过程中，需要在APP中实现设计同学的UE效果动画，一般都是通过代码实现的，当对于较复杂的动画时，例如直播中刷礼物时的动画，这时利用代码实现会比较复杂。而且<code class="highlighter-rouge">Android</code>和<code class="highlighter-rouge">iOS</code>两端不好统一效果，如果用gif图片来实现的话，在图片大小和动画帧数之间很难权衡。而且会导致内存吃紧。为了解决这样的问题，今天来介绍两款实现复杂动画的开源库：<code class="highlighter-rouge">Lottie</code>和<code class="highlighter-rouge">SVGA</code>。</p>
+<p>在开发APP的过程中，需要在APP中实现设计同学的UE效果动画，一般都是通过代码实现的，当对于较复杂的动画时，例如直播中刷礼物时的动画，这时利用代码实现会比较复杂。而且<code class="language-plaintext highlighter-rouge">Android</code>和<code class="language-plaintext highlighter-rouge">iOS</code>两端不好统一效果，如果用gif图片来实现的话，在图片大小和动画帧数之间很难权衡。而且会导致内存吃紧。为了解决这样的问题，今天来介绍两款实现复杂动画的开源库：<code class="language-plaintext highlighter-rouge">Lottie</code>和<code class="language-plaintext highlighter-rouge">SVGA</code>。</p>
 
 <h2 id="lottie">Lottie</h2>
 
@@ -209,7 +209,7 @@
   <p>Lottie is a mobile library for Android and iOS that parses Adobe After Effects animations exported as json with bodymovin and renders the vector animations natively on mobile and through React Native!</p>
 </blockquote>
 
-<p>大致意思是：<code class="highlighter-rouge">Lottie</code>是一个可以解析使用【<a href="https://github.com/airbnb/lottie-web">bodymovin</a>】插件从 <code class="highlighter-rouge">Adobe After Effects</code> 中导出的格式为<code class="highlighter-rouge">json</code>的文件，并在<code class="highlighter-rouge">iOS</code>、<code class="highlighter-rouge">Android</code>、<code class="highlighter-rouge">macOS</code>、<code class="highlighter-rouge">React Native</code>中进行解析使用的开源库。</p>
+<p>大致意思是：<code class="language-plaintext highlighter-rouge">Lottie</code>是一个可以解析使用【<a href="https://github.com/airbnb/lottie-web">bodymovin</a>】插件从 <code class="language-plaintext highlighter-rouge">Adobe After Effects</code> 中导出的格式为<code class="language-plaintext highlighter-rouge">json</code>的文件，并在<code class="language-plaintext highlighter-rouge">iOS</code>、<code class="language-plaintext highlighter-rouge">Android</code>、<code class="language-plaintext highlighter-rouge">macOS</code>、<code class="language-plaintext highlighter-rouge">React Native</code>中进行解析使用的开源库。</p>
 
 <p><a href="https://github.com/airbnb/lottie-ios">官方链接</a></p>
 
@@ -225,9 +225,9 @@
 
 <ul>
   <li>开发成本低，设计师导出json后，开发同学只需引用文件即可。</li>
-  <li>支持服务端URL创建，服务端可以配置<code class="highlighter-rouge">json</code>文件，随时替换动画。</li>
+  <li>支持服务端URL创建，服务端可以配置<code class="language-plaintext highlighter-rouge">json</code>文件，随时替换动画。</li>
   <li>性能提升，替换原使用帧图完成的动画，节省客户端空间和内存。</li>
-  <li>跨平台，<code class="highlighter-rouge">iOS</code>、<code class="highlighter-rouge">Android</code>使用一套方案，效果统一。</li>
+  <li>跨平台，<code class="language-plaintext highlighter-rouge">iOS</code>、<code class="language-plaintext highlighter-rouge">Android</code>使用一套方案，效果统一。</li>
   <li>支持转场动画</li>
 </ul>
 
@@ -249,58 +249,58 @@
 
 <p>一、在podfile中添加：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pod 'lottie-ios'
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pod 'lottie-ios'
 </code></pre></div></div>
 <p>二、运行</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pod install
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pod install
 </code></pre></div></div>
 
-<p>假如你的项目之前集成过其他三方，比如<code class="highlighter-rouge">Masonry</code>，这个时候你编译项目，可能会报<code class="highlighter-rouge">code1</code>错误，当然没报错最好。稍安勿躁，人家官方文档说了，还得安装<code class="highlighter-rouge">Carthage</code>。</p>
+<p>假如你的项目之前集成过其他三方，比如<code class="language-plaintext highlighter-rouge">Masonry</code>，这个时候你编译项目，可能会报<code class="language-plaintext highlighter-rouge">code1</code>错误，当然没报错最好。稍安勿躁，人家官方文档说了，还得安装<code class="language-plaintext highlighter-rouge">Carthage</code>。</p>
 
 <blockquote>
   <p><strong>安装Carthage</strong></p>
 
-  <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew install carthage
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew install carthage
 </code></pre></div>  </div>
 
   <p><strong>使用Carthage安装依赖</strong></p>
 
   <p>1、前往文件夹</p>
 
-  <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd ~/路径/项目文件夹
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd ~/路径/项目文件夹
 </code></pre></div>  </div>
 
   <p>2、创建一个空的 Carthage 文件 Cartfile</p>
 
-  <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>touch Cartfile
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>touch Cartfile
 </code></pre></div>  </div>
 
   <p>3、使用 Xcode 打开 Cartfile 文件</p>
 
-  <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>open -a Xcode Cartfile
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>open -a Xcode Cartfile
 </code></pre></div>  </div>
 
   <p>4、在cartfile里面加一行代码</p>
 
-  <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>github "airbnb/lottie-ios" "master"
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>github "airbnb/lottie-ios" "master"
 </code></pre></div>  </div>
 
   <p>5、终端执行更新命令</p>
 
-  <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>carthage update --platform iOS
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>carthage update --platform iOS
 </code></pre></div>  </div>
 </blockquote>
 
 <p><strong>手动集成Lottie</strong></p>
 
-<p>将<code class="highlighter-rouge">demo</code>中的<code class="highlighter-rouge">lottie-ios</code>文件夹拖入项目中即可</p>
+<p>将<code class="language-plaintext highlighter-rouge">demo</code>中的<code class="language-plaintext highlighter-rouge">lottie-ios</code>文件夹拖入项目中即可</p>
 
 <h3 id="lottie的使用">Lottie的使用</h3>
 
 <p>Lottie头文件：</p>
 
-<p><code class="highlighter-rouge">LOTAnimationView.h</code></p>
+<p><code class="language-plaintext highlighter-rouge">LOTAnimationView.h</code></p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//创建视图的几个方法</span>
 <span class="o">+</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="nv">animationNamed</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">animationName</span> <span class="kt">NS_SWIFT_NAME</span><span class="p">(</span><span class="nf">init</span><span class="p">(</span><span class="nv">name</span><span class="p">:));</span>
@@ -326,7 +326,7 @@
 <span class="cp">#endif</span>
 </code></pre></div></div>
 
-<p>最简单粗暴的方式就是<code class="highlighter-rouge">LOTAnimationView</code>来进行初始化，也是比较常用的方式：</p>
+<p>最简单粗暴的方式就是<code class="language-plaintext highlighter-rouge">LOTAnimationView</code>来进行初始化，也是比较常用的方式：</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">LOTAnimationView</span> <span class="o">*</span><span class="n">animation</span> <span class="o">=</span> <span class="p">[</span><span class="kt">LOTAnimationView</span> <span class="nv">animationNamed</span><span class="p">:</span><span class="s">@"Lottie"</span><span class="p">];</span>
 <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">view</span> <span class="nv">addSubview</span><span class="p">:</span><span class="n">animation</span><span class="p">];</span>
@@ -335,7 +335,7 @@
 <span class="p">}];</span>
 </code></pre></div></div>
 
-<p>当你使用了多个<code class="highlighter-rouge">bundle</code>文件时，可以使用以下方法：</p>
+<p>当你使用了多个<code class="language-plaintext highlighter-rouge">bundle</code>文件时，可以使用以下方法：</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">LOTAnimationView</span> <span class="o">*</span><span class="n">animation</span> <span class="o">=</span> <span class="p">[</span><span class="kt">LOTAnimationView</span> <span class="nv">animationNamed</span><span class="p">:</span><span class="s">@"Lottie"</span> <span class="nv">inBundle</span><span class="p">:[</span><span class="kt">NSBundle</span> <span class="kt">YOUR_BUNDLE</span><span class="p">]];</span>
 <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">view</span> <span class="nv">addSubview</span><span class="p">:</span><span class="n">animation</span><span class="p">];</span>
@@ -376,11 +376,11 @@
 
 <p>一、在podfile中添加：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pod 'SVGAPlayer'
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pod 'SVGAPlayer'
 </code></pre></div></div>
 <p>二、运行</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pod install
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pod install
 </code></pre></div></div>
 
 <h3 id="手动集成踩雷">手动集成踩雷</h3>
@@ -390,7 +390,7 @@
 <p>1、在 <a href="https://github.com/yyued/SVGAPlayer-iOS">GitHub</a>中下载项目工程，将以下文件夹导入工程：</p>
 
 <blockquote>
-  <p><code class="highlighter-rouge">Protobuf</code>,<code class="highlighter-rouge">SSZipArchive</code>,<code class="highlighter-rouge">SVGAPlayer</code></p>
+  <p><code class="language-plaintext highlighter-rouge">Protobuf</code>,<code class="language-plaintext highlighter-rouge">SSZipArchive</code>,<code class="language-plaintext highlighter-rouge">SVGAPlayer</code></p>
 </blockquote>
 
 <p>此时 build 可能会报错头文件不存在，采用以下方法：</p>
@@ -399,42 +399,42 @@
   <p>Targets -&gt; Build Settings -&gt; Header Search Pahts 添加路径</p>
 </blockquote>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"$(SRCROOT)/JFAnimationDemo/Libs/Protobuf/objectivec"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"$(SRCROOT)/JFAnimationDemo/Libs/Protobuf/objectivec"
 "$(SRCROOT)/JFAnimationDemo/Libs/SSZipArchive"
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">注意：</code>这里根据项目中具体类的位置进行相应的修改。</p>
+<p><code class="language-plaintext highlighter-rouge">注意：</code>这里根据项目中具体类的位置进行相应的修改。</p>
 
 <p>解决头文件不存在问题之后，下面可能会出现内存管理方法不可调用的问题。这是因为代码库中的部分类使用的是非ARC，所以需要对部分类进行配置：</p>
 
 <blockquote>
   <p>Targets -&gt; Build Phrases -&gt; Compile Sources 修改以下类的 Compiler Flags</p>
 
-  <p>设置 Compiler Flags 为 <code class="highlighter-rouge">-fno-objc-arc</code></p>
+  <p>设置 Compiler Flags 为 <code class="language-plaintext highlighter-rouge">-fno-objc-arc</code></p>
 </blockquote>
 
 <blockquote>
-  <p><code class="highlighter-rouge">GPBCodedOutputStream.m</code>,
-<code class="highlighter-rouge">GPBCodedInputStream.m</code>,
-<code class="highlighter-rouge">GPBUnknownFieldSet.m</code>,
-<code class="highlighter-rouge">GPBUtilities.m</code>,
-<code class="highlighter-rouge">GPBExtensionInternals.m</code>,
-<code class="highlighter-rouge">GPBArray.m</code>,
-<code class="highlighter-rouge">GPBRootObject.m</code>,
-<code class="highlighter-rouge">GPBExtensionRegistry.m</code>,
-<code class="highlighter-rouge">GPBDescriptor.m</code>,
-<code class="highlighter-rouge">Struct.pbobjc.m</code>,
-<code class="highlighter-rouge">GPBWellKnownTypes.m</code>,
-<code class="highlighter-rouge">Svga.pbobjc.m</code>,
-<code class="highlighter-rouge">GPBDictionary.m</code>,
-<code class="highlighter-rouge">Type.pbobjc.m</code>,
-<code class="highlighter-rouge">GPBMessage.m</code>,
-<code class="highlighter-rouge">GPBUnknownField.m</code></p>
+  <p><code class="language-plaintext highlighter-rouge">GPBCodedOutputStream.m</code>,
+<code class="language-plaintext highlighter-rouge">GPBCodedInputStream.m</code>,
+<code class="language-plaintext highlighter-rouge">GPBUnknownFieldSet.m</code>,
+<code class="language-plaintext highlighter-rouge">GPBUtilities.m</code>,
+<code class="language-plaintext highlighter-rouge">GPBExtensionInternals.m</code>,
+<code class="language-plaintext highlighter-rouge">GPBArray.m</code>,
+<code class="language-plaintext highlighter-rouge">GPBRootObject.m</code>,
+<code class="language-plaintext highlighter-rouge">GPBExtensionRegistry.m</code>,
+<code class="language-plaintext highlighter-rouge">GPBDescriptor.m</code>,
+<code class="language-plaintext highlighter-rouge">Struct.pbobjc.m</code>,
+<code class="language-plaintext highlighter-rouge">GPBWellKnownTypes.m</code>,
+<code class="language-plaintext highlighter-rouge">Svga.pbobjc.m</code>,
+<code class="language-plaintext highlighter-rouge">GPBDictionary.m</code>,
+<code class="language-plaintext highlighter-rouge">Type.pbobjc.m</code>,
+<code class="language-plaintext highlighter-rouge">GPBMessage.m</code>,
+<code class="language-plaintext highlighter-rouge">GPBUnknownField.m</code></p>
 </blockquote>
 
 <h3 id="svga的使用">SVGA的使用</h3>
 
-<p>首先初始化 <code class="highlighter-rouge">SVGAPlayer</code> 对象：</p>
+<p>首先初始化 <code class="language-plaintext highlighter-rouge">SVGAPlayer</code> 对象：</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">-</span> <span class="p">(</span><span class="kt">SVGAPlayer</span> <span class="o">*</span><span class="p">)</span><span class="n">svgaPlayer</span>
 <span class="p">{</span>
@@ -451,7 +451,7 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>然后初始化 <code class="highlighter-rouge">SVGAParser</code> 对象：</p>
+<p>然后初始化 <code class="language-plaintext highlighter-rouge">SVGAParser</code> 对象：</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">-</span> <span class="p">(</span><span class="kt">SVGAParser</span> <span class="o">*</span><span class="p">)</span><span class="n">svgaParser</span>
 <span class="p">{</span>
@@ -472,7 +472,7 @@
   <li>Name</li>
 </ul>
 
-<p><code class="highlighter-rouge">SVGAParser.h</code> 头文件中有如下方法：</p>
+<p><code class="language-plaintext highlighter-rouge">SVGAParser.h</code> 头文件中有如下方法：</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">parseWithURL</span><span class="p">:(</span><span class="n">nonnull</span> <span class="kt">NSURL</span> <span class="o">*</span><span class="p">)</span><span class="kt">URL</span>
      <span class="nv">completionBlock</span><span class="p">:(</span><span class="nf">void</span> <span class="p">(</span> <span class="o">^</span> <span class="n">_Nonnull</span> <span class="p">)(</span><span class="kt">SVGAVideoEntity</span> <span class="o">*</span> <span class="n">_Nullable</span> <span class="n">videoItem</span><span class="p">))</span><span class="n">completionBlock</span>
@@ -493,7 +493,7 @@
           <span class="nv">failureBlock</span><span class="p">:(</span><span class="nf">void</span> <span class="p">(</span> <span class="o">^</span> <span class="n">_Nullable</span><span class="p">)(</span><span class="kt">NSError</span> <span class="o">*</span> <span class="n">_Nonnull</span> <span class="n">error</span><span class="p">))</span><span class="n">failureBlock</span><span class="p">;</span>
 </code></pre></div></div>
 
-<p>调用此方法后，将返回的 <code class="highlighter-rouge">videoItem</code> 对象赋值，然后开始加载动画：</p>
+<p>调用此方法后，将返回的 <code class="language-plaintext highlighter-rouge">videoItem</code> 对象赋值，然后开始加载动画：</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">__weak</span> <span class="nf">__typeof</span><span class="p">(</span><span class="o">&amp;*</span><span class="k">self</span><span class="p">)</span><span class="n">weakSelf</span> <span class="o">=</span> <span class="k">self</span><span class="p">;</span>
 
@@ -548,7 +548,7 @@
 
 <p>项目中同时集成了 SVGA、Lottie 两套代码库，为了平时更高效的进行开发，将其封装为同一工具类，暴露出共有部分，方便使用。写的不好的地方，大家多提意见😉</p>
 
-<p><code class="highlighter-rouge">JFAnimationView.h</code></p>
+<p><code class="language-plaintext highlighter-rouge">JFAnimationView.h</code></p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//</span>
 <span class="c1">//  JFAnimationView.h</span>
@@ -695,7 +695,7 @@
 
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">JFAnimationView.m</code></p>
+<p><code class="language-plaintext highlighter-rouge">JFAnimationView.m</code></p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//</span>
 <span class="c1">//  JFAnimationView.m</span>
@@ -1151,7 +1151,7 @@
                     <div class="tags">
         				
                             
-                				<a href="/tags/#iOS" title="iOS" rel="31">
+                				<a href="/tags/#iOS" title="iOS" rel="32">
                                     iOS
                                 </a>
                             
@@ -1285,7 +1285,7 @@
                     
                 </ul>
                 <p class="copyright text-muted">
-                    Copyright &copy; Japho Blog 2020
+                    Copyright &copy; Japho Blog 2023
                     <br>
                     <!-- Theme on <a href="hhttps://github.com/japho/japho.github.io.git">GitHub</a> |
                     <iframe

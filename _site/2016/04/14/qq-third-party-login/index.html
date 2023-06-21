@@ -202,7 +202,7 @@
 				<h3 id="前言">前言</h3>
 
 <blockquote>
-  <p>平时我们经常会在一些app的登录界面中见到第三方登录，一些应用中一般会使用一些类似<code class="highlighter-rouge">shareSDK</code>的集成平台，他们是将QQ、微信、微博等第三方进行了二次封装，灵活性不太高，其实直接集成也是比较容易的。今天就来简单的说一下QQ的第三方登录的集成。</p>
+  <p>平时我们经常会在一些app的登录界面中见到第三方登录，一些应用中一般会使用一些类似<code class="language-plaintext highlighter-rouge">shareSDK</code>的集成平台，他们是将QQ、微信、微博等第三方进行了二次封装，灵活性不太高，其实直接集成也是比较容易的。今天就来简单的说一下QQ的第三方登录的集成。</p>
 </blockquote>
 
 <h3 id="注册开发者账号">注册开发者账号</h3>
@@ -223,22 +223,22 @@
   <p>sample：示例代码</p>
 
   <ol>
-    <li><code class="highlighter-rouge">TencentOpenAPI.framework</code>打包了iOS SDK的头文件定义和具体实现。</li>
-    <li><code class="highlighter-rouge">TencentOpenApi_iOS_Bundle.bundle</code> 打包了iOS SDK需要的资源文件。</li>
+    <li><code class="language-plaintext highlighter-rouge">TencentOpenAPI.framework</code>打包了iOS SDK的头文件定义和具体实现。</li>
+    <li><code class="language-plaintext highlighter-rouge">TencentOpenApi_iOS_Bundle.bundle</code> 打包了iOS SDK需要的资源文件。</li>
   </ol>
 </blockquote>
 
 <h3 id="创建项目导入sdk添加依赖库">创建项目导入SDK添加依赖库</h3>
 
 <ul>
-  <li>将<code class="highlighter-rouge">TencentOpenAPI.framework</code>和<code class="highlighter-rouge">TencentOpenApi_iOS_Bundle.bundle</code>拖入工程，注意勾选<code class="highlighter-rouge">copy items if needed</code></li>
+  <li>将<code class="language-plaintext highlighter-rouge">TencentOpenAPI.framework</code>和<code class="language-plaintext highlighter-rouge">TencentOpenApi_iOS_Bundle.bundle</code>拖入工程，注意勾选<code class="language-plaintext highlighter-rouge">copy items if needed</code></li>
 </ul>
 
 <p><img src="http://upload-images.jianshu.io/upload_images/1269906-51289c4fbecd86b8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="添加依赖库" /></p>
 
 <ul>
   <li>
-    <p>点击<code class="highlighter-rouge">Project navigator</code> 点击<code class="highlighter-rouge">TARGETS</code> —&gt;  <code class="highlighter-rouge">General</code>  —&gt; <code class="highlighter-rouge">Linked Frameworks and Libraries</code></p>
+    <p>点击<code class="language-plaintext highlighter-rouge">Project navigator</code> 点击<code class="language-plaintext highlighter-rouge">TARGETS</code> —&gt;  <code class="language-plaintext highlighter-rouge">General</code>  —&gt; <code class="language-plaintext highlighter-rouge">Linked Frameworks and Libraries</code></p>
   </li>
   <li>
     <p>点击加号添加</p>
@@ -252,20 +252,20 @@
 </ul>
 
 <blockquote>
-  <p><code class="highlighter-rouge">”Security.framework”</code>,
-<code class="highlighter-rouge">“libiconv.dylib”</code>,
-<code class="highlighter-rouge">“SystemConfiguration.framework”</code>,
-<code class="highlighter-rouge">“CoreGraphics.Framework”</code>,
-<code class="highlighter-rouge">“libsqlite3.dylib”</code>,
-<code class="highlighter-rouge">“CoreTelephony.framework”</code>,
-<code class="highlighter-rouge">“libstdc++.dylib”</code>,
-<code class="highlighter-rouge">“libz.dylib”</code></p>
+  <p><code class="language-plaintext highlighter-rouge">”Security.framework”</code>,
+<code class="language-plaintext highlighter-rouge">“libiconv.dylib”</code>,
+<code class="language-plaintext highlighter-rouge">“SystemConfiguration.framework”</code>,
+<code class="language-plaintext highlighter-rouge">“CoreGraphics.Framework”</code>,
+<code class="language-plaintext highlighter-rouge">“libsqlite3.dylib”</code>,
+<code class="language-plaintext highlighter-rouge">“CoreTelephony.framework”</code>,
+<code class="language-plaintext highlighter-rouge">“libstdc++.dylib”</code>,
+<code class="language-plaintext highlighter-rouge">“libz.dylib”</code></p>
 </blockquote>
 
 <h3 id="修改工程配置属性">修改工程配置属性</h3>
 
 <ul>
-  <li>在工程配置中的<code class="highlighter-rouge">Build Settings</code>一栏中找到<code class="highlighter-rouge">Linking</code>配置区，给<code class="highlighter-rouge">Other Linker Flags</code>配置项添加属性值<code class="highlighter-rouge">-fobjc-arc</code></li>
+  <li>在工程配置中的<code class="language-plaintext highlighter-rouge">Build Settings</code>一栏中找到<code class="language-plaintext highlighter-rouge">Linking</code>配置区，给<code class="language-plaintext highlighter-rouge">Other Linker Flags</code>配置项添加属性值<code class="language-plaintext highlighter-rouge">-fobjc-arc</code></li>
 </ul>
 
 <p><img src="http://upload-images.jianshu.io/upload_images/1269906-b7c82914bc009b68.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="修改工程配置" /></p>
@@ -275,22 +275,22 @@
 <p><img src="http://upload-images.jianshu.io/upload_images/1269906-f570fc54824ffcfe.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="修改工程配置" /></p>
 
 <ul>
-  <li>在XCode中，选择你的工程设置项，选中<code class="highlighter-rouge">TARGETS</code>一栏，在“info”标签栏的<code class="highlighter-rouge">URL type</code>添加一条新的<code class="highlighter-rouge">URL scheme</code>，新的<code class="highlighter-rouge">scheme = tencent + appid</code>（例如你的<code class="highlighter-rouge">appid</code>是<code class="highlighter-rouge">123456</code> 则填入<code class="highlighter-rouge">tencent123456</code>） <code class="highlighter-rouge">identifier</code> 填写：<code class="highlighter-rouge">tencentopenapi</code>。</li>
+  <li>在XCode中，选择你的工程设置项，选中<code class="language-plaintext highlighter-rouge">TARGETS</code>一栏，在“info”标签栏的<code class="language-plaintext highlighter-rouge">URL type</code>添加一条新的<code class="language-plaintext highlighter-rouge">URL scheme</code>，新的<code class="language-plaintext highlighter-rouge">scheme = tencent + appid</code>（例如你的<code class="language-plaintext highlighter-rouge">appid</code>是<code class="language-plaintext highlighter-rouge">123456</code> 则填入<code class="language-plaintext highlighter-rouge">tencent123456</code>） <code class="language-plaintext highlighter-rouge">identifier</code> 填写：<code class="language-plaintext highlighter-rouge">tencentopenapi</code>。</li>
 </ul>
 
-<p><code class="highlighter-rouge">注意：</code>此处的配置是实现应用间的跳转即跳转至QQ进行授权以及跳转回app进行其他的操作。</p>
+<p><code class="language-plaintext highlighter-rouge">注意：</code>此处的配置是实现应用间的跳转即跳转至QQ进行授权以及跳转回app进行其他的操作。</p>
 
 <p><img src="http://upload-images.jianshu.io/upload_images/1269906-cb563972e0817714.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="修改工程配置" /></p>
 
 <h3 id="创建应用">创建应用</h3>
 
-<p>在腾讯开发者平台中创建应用，获得<code class="highlighter-rouge">appId</code>及<code class="highlighter-rouge">appKey</code>，具体步骤详见开发中心，这里不再赘述。</p>
+<p>在腾讯开发者平台中创建应用，获得<code class="language-plaintext highlighter-rouge">appId</code>及<code class="language-plaintext highlighter-rouge">appKey</code>，具体步骤详见开发中心，这里不再赘述。</p>
 
 <h3 id="开始添加代码">开始添加代码</h3>
 
 <p>做好了之前的步骤，现在开始添加调用授权的代码。</p>
 
-<p><code class="highlighter-rouge">AppDelegate.m:</code></p>
+<p><code class="language-plaintext highlighter-rouge">AppDelegate.m:</code></p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="cp">#import "AppDelegate.h"  </span>
@@ -521,7 +521,7 @@
                     <div class="tags">
         				
                             
-                				<a href="/tags/#iOS" title="iOS" rel="31">
+                				<a href="/tags/#iOS" title="iOS" rel="32">
                                     iOS
                                 </a>
                             
@@ -655,7 +655,7 @@
                     
                 </ul>
                 <p class="copyright text-muted">
-                    Copyright &copy; Japho Blog 2020
+                    Copyright &copy; Japho Blog 2023
                     <br>
                     <!-- Theme on <a href="hhttps://github.com/japho/japho.github.io.git">GitHub</a> |
                     <iframe

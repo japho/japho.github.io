@@ -203,28 +203,28 @@
 
 				<h3 id="块的基础知识">块的基础知识</h3>
 
-<p>块与函数类似，只不过是直接定义在另一个函数里的，和定义它的那个函数共享同一个范围内的东西。用<code class="highlighter-rouge">“^”</code>符号表示。简单的块：</p>
+<p>块与函数类似，只不过是直接定义在另一个函数里的，和定义它的那个函数共享同一个范围内的东西。用<code class="language-plaintext highlighter-rouge">“^”</code>符号表示。简单的块：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>^{
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>^{
 //Block implementation here
 }
 </code></pre></div></div>
 
-<p>块其实就是个值，而且自有其相关类型。与<code class="highlighter-rouge">int</code>、<code class="highlighter-rouge">float</code>或Objective-C对象一样，可以把块赋值给变量。</p>
+<p>块其实就是个值，而且自有其相关类型。与<code class="language-plaintext highlighter-rouge">int</code>、<code class="language-plaintext highlighter-rouge">float</code>或Objective-C对象一样，可以把块赋值给变量。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>void (^someBlock)() = ^{
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>void (^someBlock)() = ^{
 //Block implementation here
 };
 </code></pre></div></div>
 
-<p>定义了一个名为<code class="highlighter-rouge">someBlock</code>的变量。块类型的语法结构如下：</p>
+<p>定义了一个名为<code class="language-plaintext highlighter-rouge">someBlock</code>的变量。块类型的语法结构如下：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>return_type (^block_name)(parameters)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>return_type (^block_name)(parameters)
 </code></pre></div></div>
 
-<p>例如：定义一个块，返回<code class="highlighter-rouge">int</code>值，并且接受两个<code class="highlighter-rouge">int</code>参数返回和：</p>
+<p>例如：定义一个块，返回<code class="language-plaintext highlighter-rouge">int</code>值，并且接受两个<code class="language-plaintext highlighter-rouge">int</code>参数返回和：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int (^addBlock)(int a, int b) = ^(int a, int b){
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int (^addBlock)(int a, int b) = ^(int a, int b){
 return a + b;
 }
 int add = addBlock(2, 5); // add = 7;
@@ -232,28 +232,28 @@ int add = addBlock(2, 5); // add = 7;
 
 <p>块的强大之处：在声明的范围内，所有变量都可以为其所捕获。也就是说，那个范围里的全部变量，在块里依然可以使用。例如：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int additional = 5;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int additional = 5;
 int (^addBlock)(int a, int b) = ^(int a, int b){
 return a + b + additional;
 }
 int add = addBlock(2, 5); // add = 7;
 </code></pre></div></div>
 
-<p>默认情况下，为块所捕获的变量，是不可以在块里修改的。编译器会报错，声明变量时加上<code class="highlighter-rouge">__block</code>修饰符，这样就可以在块内修改了。</p>
+<p>默认情况下，为块所捕获的变量，是不可以在块里修改的。编译器会报错，声明变量时加上<code class="language-plaintext highlighter-rouge">__block</code>修饰符，这样就可以在块内修改了。</p>
 
 <p>如果块所捕获的变量时对象类型，那么就会自动保留它。系统在释放这个块的时候，也会将其一并释放。实际上，在其他Objective-C对象所能响应的选择子中，有很多是块也可以响应的。而重要的在于块和其他对象一样，也有引用计数，当最后一个指向块的引用移走之后，块就会回收了。回收时，也会释放块所捕获的变量。</p>
 
-<p>如果将块定义在Objective-C类的实例方法中，除了可以访问类的所有实例变量之外，还可以使用<code class="highlighter-rouge">self</code>变量。块总可以修改实例变量，所以在声明时无须加<code class="highlighter-rouge">__block</code>。不过如果是通过<code class="highlighter-rouge">setter</code>、<code class="highlighter-rouge">getter</code>方法捕获了实例变量，那么也会把<code class="highlighter-rouge">self</code>变量一并捕获，因为实例变量是与<code class="highlighter-rouge">self</code>所指代的实例关联在一起的。（此时要注意循环引用）</p>
+<p>如果将块定义在Objective-C类的实例方法中，除了可以访问类的所有实例变量之外，还可以使用<code class="language-plaintext highlighter-rouge">self</code>变量。块总可以修改实例变量，所以在声明时无须加<code class="language-plaintext highlighter-rouge">__block</code>。不过如果是通过<code class="language-plaintext highlighter-rouge">setter</code>、<code class="language-plaintext highlighter-rouge">getter</code>方法捕获了实例变量，那么也会把<code class="language-plaintext highlighter-rouge">self</code>变量一并捕获，因为实例变量是与<code class="language-plaintext highlighter-rouge">self</code>所指代的实例关联在一起的。（此时要注意循环引用）</p>
 
 <h3 id="块的内部结构">块的内部结构</h3>
 
-<p>块本身也是对象，在存放块对象的内存区域中，首个变量是只想<code class="highlighter-rouge">Class</code>对象的指针，该指针叫做<code class="highlighter-rouge">isa</code>指针。在内存布局中，最重要的就是<code class="highlighter-rouge">invoke</code>变量，这是个函数指针，指向块的实现代码。函数原型至少要接受一个<code class="highlighter-rouge">void*</code>类型的参数，此参数代表块。<code class="highlighter-rouge">descriptor</code>是指向结构体的指针，每个块里都包含此结构体，其中声明了块对象的总体大小，还声明了<code class="highlighter-rouge">copy</code>和<code class="highlighter-rouge">dispose</code>两个辅助函数所对应的函数指针。块还会把它所捕获的所有变量都拷贝一份，这些靠背放在了<code class="highlighter-rouge">descriptor</code>之后，捕获多少变量就要占据多少内存空间，这里拷贝的不是对象本身，而是指向这些对象的指针变量。</p>
+<p>块本身也是对象，在存放块对象的内存区域中，首个变量是只想<code class="language-plaintext highlighter-rouge">Class</code>对象的指针，该指针叫做<code class="language-plaintext highlighter-rouge">isa</code>指针。在内存布局中，最重要的就是<code class="language-plaintext highlighter-rouge">invoke</code>变量，这是个函数指针，指向块的实现代码。函数原型至少要接受一个<code class="language-plaintext highlighter-rouge">void*</code>类型的参数，此参数代表块。<code class="language-plaintext highlighter-rouge">descriptor</code>是指向结构体的指针，每个块里都包含此结构体，其中声明了块对象的总体大小，还声明了<code class="language-plaintext highlighter-rouge">copy</code>和<code class="language-plaintext highlighter-rouge">dispose</code>两个辅助函数所对应的函数指针。块还会把它所捕获的所有变量都拷贝一份，这些靠背放在了<code class="language-plaintext highlighter-rouge">descriptor</code>之后，捕获多少变量就要占据多少内存空间，这里拷贝的不是对象本身，而是指向这些对象的指针变量。</p>
 
 <h3 id="全局块栈块堆块">全局块、栈块、堆块</h3>
 
 <p>定义块的时候，其所占用的区域是分配在栈中的。就是说，块只在定义它的那个范围内有效。</p>
 
-<p>编译器会给每个快分配好栈内存，然而等离开了相应的范围之后，编译器有可能把分配给块的内存复写掉。运行起来时而正确时而错误。为解决此问题，给每块对象发送<code class="highlighter-rouge">copy</code>消息。这样就可以把块从栈复制到堆中。拷贝之后的块可在定义它的范围之外使用，而且一旦复制到堆上，块就成了带引用计数的对象了。后续的复制不会真的执行复制，只是递增独享的引用计数。</p>
+<p>编译器会给每个快分配好栈内存，然而等离开了相应的范围之后，编译器有可能把分配给块的内存复写掉。运行起来时而正确时而错误。为解决此问题，给每块对象发送<code class="language-plaintext highlighter-rouge">copy</code>消息。这样就可以把块从栈复制到堆中。拷贝之后的块可在定义它的范围之外使用，而且一旦复制到堆上，块就成了带引用计数的对象了。后续的复制不会真的执行复制，只是递增独享的引用计数。</p>
 
 <p>除了栈块、堆块外，还有全局块。这种快不会捕捉任何状态（比如外围变量），运行时也无须有状态来参与。块所使用的整个内存区域，在编译期就完全确定了。因此，全局块可声明在全局内存里。</p>
 
@@ -347,7 +347,7 @@ int add = addBlock(2, 5); // add = 7;
                     <div class="tags">
         				
                             
-                				<a href="/tags/#iOS" title="iOS" rel="31">
+                				<a href="/tags/#iOS" title="iOS" rel="32">
                                     iOS
                                 </a>
                             
@@ -481,7 +481,7 @@ int add = addBlock(2, 5); // add = 7;
                     
                 </ul>
                 <p class="copyright text-muted">
-                    Copyright &copy; Japho Blog 2020
+                    Copyright &copy; Japho Blog 2023
                     <br>
                     <!-- Theme on <a href="hhttps://github.com/japho/japho.github.io.git">GitHub</a> |
                     <iframe

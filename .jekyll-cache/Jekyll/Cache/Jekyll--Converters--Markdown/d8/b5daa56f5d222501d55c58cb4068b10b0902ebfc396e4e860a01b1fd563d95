@@ -1,4 +1,4 @@
-I"[�<h2 id="前言">前言</h2>
+I"��<h2 id="前言">前言</h2>
 
 <p>平时经常会遇到做第三分享的需求，相信大家好多都使用的集成的分享平台shareSDK、友盟分享等。他们其实是对各种第三方平台进行了二次封装，有时需求只要求做其中一种平台的分享的时候其实像shareSDK这种集成环境就有些显得比较冗余了，因为他集成了很多的平台，用户可自定义程度不高，使得自己的程序会变得很臃肿，今天就把自己的干货拿出来，来讲一讲自定义的第三方分享。
 下面主要讲一下目前应用比较广的，QQ、微信、微博的分享。</p>
@@ -13,7 +13,7 @@
   <li>微信SDK集成：<a href="http://www.jianshu.com/p/92902fecb861">微信SDK集成</a></li>
 </ul>
 
-<p>注意在集成SDK后需要在<code class="highlighter-rouge">Appdelegate</code>中进行注册</p>
+<p>注意在集成SDK后需要在<code class="language-plaintext highlighter-rouge">Appdelegate</code>中进行注册</p>
 
 <h2 id="微博的分享">微博的分享</h2>
 
@@ -66,7 +66,7 @@
 
 <p>在分享工具类的头文件里：</p>
 
-<p><code class="highlighter-rouge">JFTools.h</code></p>
+<p><code class="language-plaintext highlighter-rouge">JFTools.h</code></p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">typedef</span> <span class="nv">enum</span> <span class="p">:</span> <span class="kt">NSUInteger</span> <span class="p">{</span>  
     <span class="kt">QQShare_Friends</span><span class="p">,</span>  
@@ -154,7 +154,7 @@
 
 <p>既然分享就要分享的彻底点，下面po出博主自己封装的分享工具类，如有不足之处还请大家多提意见😏</p>
 
-<p><code class="highlighter-rouge">JFShareTool.h</code></p>
+<p><code class="language-plaintext highlighter-rouge">JFShareTool.h</code></p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  </span>
 <span class="c1">//  JFShareTool.h  </span>
@@ -202,7 +202,7 @@
 <span class="kd">@end</span>
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">JFShareTool.m</code></p>
+<p><code class="language-plaintext highlighter-rouge">JFShareTool.m</code></p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  </span>
 <span class="c1">//  JFShareTool.m  </span>

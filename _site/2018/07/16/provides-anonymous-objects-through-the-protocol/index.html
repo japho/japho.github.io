@@ -205,17 +205,17 @@
 
 <p>这个概念通常称为“<strong>匿名对象</strong>”，例如</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@property (nonatomic, weak) id&lt;PersonDelegate&gt; delegate;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@property (nonatomic, weak) id&lt;PersonDelegate&gt; delegate;
 </code></pre></div></div>
 
-<p>由于该属性的类型是 <code class="highlighter-rouge">id&lt;PersonDelegate&gt;</code> ，实际上任何类的对象都能充当这一属性，即便该类不继承自<code class="highlighter-rouge">NSObject</code>也可以，只要遵循<code class="highlighter-rouge">PersonDelegate</code>协议就可以。对于具备此属性的类来说，<code class="highlighter-rouge">delegate</code>就是“匿名的”。</p>
+<p>由于该属性的类型是 <code class="language-plaintext highlighter-rouge">id&lt;PersonDelegate&gt;</code> ，实际上任何类的对象都能充当这一属性，即便该类不继承自<code class="language-plaintext highlighter-rouge">NSObject</code>也可以，只要遵循<code class="language-plaintext highlighter-rouge">PersonDelegate</code>协议就可以。对于具备此属性的类来说，<code class="language-plaintext highlighter-rouge">delegate</code>就是“匿名的”。</p>
 
-<p><code class="highlighter-rouge">NSDictionary</code>也可以说明这个概念。字典中，键的标准内存管理语义是“设置时拷贝”，而值的语义是“设置时保留”。</p>
+<p><code class="language-plaintext highlighter-rouge">NSDictionary</code>也可以说明这个概念。字典中，键的标准内存管理语义是“设置时拷贝”，而值的语义是“设置时保留”。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)setObject:(id)object forKey:(id&lt;NSCopying&gt;)key;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)setObject:(id)object forKey:(id&lt;NSCopying&gt;)key;
 </code></pre></div></div>
 
-<p>键的参数类型为<code class="highlighter-rouge">id&lt;NSCopying&gt;</code>，作为参数值的对象，可以是任何类型。只要遵循NSCopying协议就可以。</p>
+<p>键的参数类型为<code class="language-plaintext highlighter-rouge">id&lt;NSCopying&gt;</code>，作为参数值的对象，可以是任何类型。只要遵循NSCopying协议就可以。</p>
 
 <p>有时候对象类型并不重要，重要的是对象有没有实现某些方法。在这种情况下，也可以用这些“匿名类型”来表达这一概念。即便实现代码总是使用固定的类，还是可能会把它写成遵循某些协议的匿名类型，以表示类型在此处并不重要。</p>
 
@@ -309,7 +309,7 @@
                     <div class="tags">
         				
                             
-                				<a href="/tags/#iOS" title="iOS" rel="31">
+                				<a href="/tags/#iOS" title="iOS" rel="32">
                                     iOS
                                 </a>
                             
@@ -443,7 +443,7 @@
                     
                 </ul>
                 <p class="copyright text-muted">
-                    Copyright &copy; Japho Blog 2020
+                    Copyright &copy; Japho Blog 2023
                     <br>
                     <!-- Theme on <a href="hhttps://github.com/japho/japho.github.io.git">GitHub</a> |
                     <iframe
