@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="The shortest answer is doing.">
+    <meta name="keywords"  content="Japho, Japho Blog, Japho的博客, iOS, Apple, iPhone">
+    <meta name="theme-color" content="#000000">
+    
+    <title>AttributeTextParser - Japho Blog</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <!-- Safari Webpage Icon    by-BY -->
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="http://localhost:4000/2023/06/26/guideline-of-attibuteTextParser/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Japho Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/postimage/post-bg-2015.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/postimage/post-bg-2015.jpg')
+    }
+
+    
+</style>
+<header class="intro-header" >
+    <div class="header-mask"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#iOS" title="iOS">iOS</a>
+                        
+                    </div>
+                    <h1>AttributeTextParser</h1>
+                    
+                    
+                    <h2 class="subheading">Easily build NSAttributedString from XML/HTML like strings.</h2>
+                    
+                    <span class="meta">Posted by Japho on June 26, 2023</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<h2 id="前言">前言</h2>
+
+<p>iOS 开发过程中，经常需要实现一些较为复杂的文本展示，一般需要通过富文本进行处理。iOS 平台下，富文本 API 调用较为繁琐，为了解决这一问题，AttributeTextParser 提供了一套副文本解析方案。</p>
+
+<p>AttributeTextParser 无需关注复杂繁琐的 NSAttributeString 的 API，只需将需要展示的内容拼接为类 HTML 标签，传入即可进行解析。通过类 HTML 标签对需要展示的富文本进行处理，提升代码阅读性、开发效率。</p>
+
+<p>目前 AttributeTextParser 支持已解析类型：<strong>字体</strong>、<strong>颜色</strong>、<strong>图片（静态图片、Gif、序列帧图片）</strong>、<strong>超链</strong>。</p>
+
+<h2 id="效果展示">效果展示</h2>
+
+<p><img src="https://pic.imgdb.cn/item/6492c2e21ddac507ccfb321d.png" width="366" height="292" /></p>
+
+<h2 id="语法">语法</h2>
+
+<ul>
+  <li>每个标记需要包含在<code class="language-plaintext highlighter-rouge">&lt;</code>和<code class="language-plaintext highlighter-rouge">&gt;</code>之间，类似<code class="language-plaintext highlighter-rouge">&lt;font&gt;</code>、<code class="language-plaintext highlighter-rouge">&lt;img&gt;</code></li>
+  <li>标记中参数格式为 <code class="language-plaintext highlighter-rouge">xxx="xxx"</code></li>
+</ul>
+
+<h4 id="字体-font">字体 &lt;font&gt;</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;font size=\"16.\" color=\"0,1,0,1.\"&gt;
+
+</code></pre></div></div>
+
+<p>font 标签以<code class="language-plaintext highlighter-rouge">&lt;font&gt;</code>为标记，包含以下属性</p>
+
+<blockquote>
+  <p><strong>size</strong>：字号（非必须)</p>
+
+  <p><strong>color</strong>：颜色（非必须），以“,”区分，分别为R、G、B、A，可使用</p>
+
+  <p><code class="language-plaintext highlighter-rouge">+ (NSString *)colorStringWithHexString:(NSString *)color</code></p>
+
+  <p>生成字符串颜色值。该标记之后，到下个<font>标记之前的所有内容中的颜色、字号，均已该标记为准。</font></p>
+</blockquote>
+
+<p><strong>示例</strong></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;font size=\"16.\" color=\"0,0,0,1.\"&gt;字号16，黑色\n&lt;font size=\"24.\" color=\"1,0,0,1.\"&gt;现在为红色，字号24
+</code></pre></div></div>
+
+<p><img src="https://pic.imgdb.cn/item/6492cbdc1ddac507cc0b9f79.png" alt="" /></p>
+
+<h4 id="图片-img">图片 &lt;img&gt;</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;img width=\"40\" height=\"40\" src=\"test.png\"&gt; // 静态图片
+&lt;img width=\"40\" height=\"40\" descent=\"0\" src=\"pia\" type=\"1\"&gt; // Gif
+&lt;img width=\"40\" height=\"40\" descent=\"0\" src=\"1.png,2.png,3.png\" type=\"2\" fps=\"10\"&gt; // 序列帧
+</code></pre></div></div>
+
+<p>img 标签以<code class="language-plaintext highlighter-rouge">&lt;img&gt;</code>为标记，包含以下属性</p>
+
+<blockquote>
+  <p><strong>width</strong>：图片宽度（必须❗️）</p>
+
+  <p><strong>height</strong>：图片宽度（必须❗️）</p>
+
+  <p><strong>scr</strong>：图片地址（必须❗️），可以为本地文件路径、项目本地图片、以“,”分割的序列帧图片</p>
+
+  <p><strong>descent</strong>：图片相对于文字行的间距（非必须），默认为0，descent &gt; 0，图片向下偏移，descent &lt; 0，图片向上便宜，具体偏移量视数值而定</p>
+
+  <p><strong>type</strong>：传递图片的类型（非必须），当图片不是静态图片时，需要传 type 类型。0：静态图片，1：Gif，2：序列帧</p>
+
+  <p><strong>fps</strong>：序列帧图片的fps（非必须），当图片为序列帧时，默认 fps 为6，如果需要修改，可修改此参数</p>
+</blockquote>
+
+<p><strong>示例</strong></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSString *text1 = [NSString stringWithFormat:@"&lt;font size=\"16.\" color=\"0,0,0,1.\"&gt;字号16，黑色\n
+&lt;font size=\"24.\" color=\"1,0,0,1.\"&gt;现在为红色，字号24\n\nPng   
+&lt;img width=\"200\" height=\"133\" src=\"1.jpeg\"&gt;\n\nGif     
+&lt;img width=\"250\" height=\"133\" descent=\"0\" src=\"2.gif\" type=\"1\"&gt;\n\n序列帧
+&lt;img width=\"142\" height=\"34\" descent=\"0\" src=\"%@\" type=\"2\" fps=\"20\"&gt;", filePaths];
+</code></pre></div></div>
+
+<p><img src="https://pic.imgdb.cn/item/6492d5741ddac507cc1aac3f.png" alt="" /></p>
+
+<h4 id="超链接-link">超链接 &lt;link&gt;</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;link length=\"6\" href=\"www.6.cn\" color=\"0.819608,0.905882,0.713726,1.000000\"&gt;链接点击事件
+</code></pre></div></div>
+
+<p>link 标签以<code class="language-plaintext highlighter-rouge">&lt;link&gt;</code>为标记，包含以下属性</p>
+
+<blockquote>
+  <p><strong>length</strong>：链接有效长度（必须❗️），<code class="language-plaintext highlighter-rouge">&lt;img&gt;</code>标签占用1个长度，自该标签后，length 个长度内均响应点击事件，点击事件由代理进行回调。</p>
+
+  <p><strong>href</strong>：点击事件代理返回超链内容（必须❗️），设置点击事件后，点击该区域，代理会返回该 href 用于逻辑处理。</p>
+
+  <p><strong>color</strong>：颜色（非必须），以“,”区分，分别为R、G、B、A，可使用</p>
+
+  <p><code class="language-plaintext highlighter-rouge">+ (NSString *)colorStringWithHexString:(NSString *)color</code></p>
+
+  <p>生成字符串颜色值。该标记之后，到下个<code class="language-plaintext highlighter-rouge">&lt;font&gt;</code>或<code class="language-plaintext highlighter-rouge">&lt;link&gt;</code>标记之前的所有内容中的颜色、字号，均已该标记为准。</p>
+</blockquote>
+
+<p><strong>示例</strong></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;link length=\"6\" href=\"www.6.cn\" color=\"0.819608,0.905882,0.713726,1.000000\"&gt;链接点击事件此处非连接点击事件
+</code></pre></div></div>
+
+<p><img src="https://pic.imgdb.cn/item/649947781ddac507ccfd6841.png" alt="" /></p>
+
+<h2 id="attributetextparser">AttributeTextParser</h2>
+
+<h4 id="核心方法">核心方法</h4>
+
+<p><code class="language-plaintext highlighter-rouge">attributeStringFromHtmlString: attributes:</code></p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">/// 传入格式化标签，返回适用于 AttributeLabel 的 NSAttributedString</span>
+<span class="c1">/// @param htmlString 格式化标签</span>
+<span class="c1">/// @param attributes 附加属性</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">NSAttributedString</span> <span class="o">*</span><span class="p">)</span><span class="nv">attributeStringFromHtmlString</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">htmlString</span>
+                                           <span class="nv">attributes</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">NSDictionary</span><span class="o">&lt;</span><span class="kt">AttributedStringKey</span><span class="p">,</span> <span class="n">id</span><span class="o">&gt;</span> <span class="o">*</span><span class="p">)</span><span class="n">attributes</span><span class="p">;</span>
+
+</code></pre></div></div>
+
+<p>该方法将传入的类 HTML 标签转换为<code class="language-plaintext highlighter-rouge">NSAttributedString</code>，attributes 参数为附件属性，该附加属性将作用于整个富文本字符串中，目前支持字体名称、行间距、断行模式。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">typedef</span> <span class="kt">NSString</span> <span class="o">*</span><span class="kt">AttributedStringKey</span> <span class="kt">NS_EXTENSIBLE_STRING_ENUM</span><span class="p">;</span>
+
+<span class="kt">OBJC_EXTERN</span> <span class="kt">AttributedStringKey</span> <span class="n">const</span> <span class="kt">FontAttributedName</span><span class="p">;</span>
+<span class="kt">OBJC_EXTERN</span> <span class="kt">AttributedStringKey</span> <span class="n">const</span> <span class="kt">LineSpacingAttributedName</span><span class="p">;</span>
+<span class="kt">OBJC_EXTERN</span> <span class="kt">AttributedStringKey</span> <span class="n">const</span> <span class="kt">LineBreakModeAttributedName</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">getAttributeSizeWithContainerSize: attributeString:</code></p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">/// 获取富文本尺寸</span>
+<span class="c1">/// @param containerSize 容器尺寸</span>
+<span class="c1">/// @param attributeString 富文本字符串</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">CGSize</span><span class="p">)</span><span class="nv">getAttributeSizeWithContainerSize</span><span class="p">:(</span><span class="kt">CGSize</span><span class="p">)</span><span class="n">containerSize</span> <span class="nv">attributeString</span><span class="p">:(</span><span class="kt">NSAttributedString</span> <span class="o">*</span><span class="p">)</span><span class="n">attributeString</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>该方法会返回富文本在 containerSize 下所需占用的尺寸。</p>
+
+<h4 id="点击事件回调">点击事件回调</h4>
+
+<p>当使用<code class="language-plaintext highlighter-rouge">&lt;link&gt;</code>处理点击事件时，持有解析器对象的类需遵循以下方法：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">@protocol</span> <span class="kt">AttributeTextParserDelegate</span> <span class="o">&lt;</span><span class="kt">NSObject</span><span class="o">&gt;</span>
+
+<span class="kd">@optional</span>
+
+<span class="c1">/// 超链接点击回调</span>
+<span class="c1">/// @param textParser textParser</span>
+<span class="c1">/// @param href 超链接</span>
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">textParser</span><span class="p">:(</span><span class="kt">AttributeTextParser</span> <span class="o">*</span><span class="p">)</span><span class="n">textParser</span> <span class="nv">linkTouchedWithHref</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">href</span><span class="p">;</span>
+
+<span class="kd">@end</span>
+</code></pre></div></div>
+
+<p>该方法会将<code class="language-plaintext highlighter-rouge">&lt;link&gt;</code>标签中的 href 作为参数回调到代理中，以供业务逻辑代码进行处理。</p>
+
+<h2 id="使用示例">使用示例</h2>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="n">viewDidLoad</span> <span class="p">{</span>
+    <span class="kt">AttributeTextParser</span> <span class="o">*</span><span class="n">parser</span> <span class="o">=</span> <span class="p">[[</span><span class="kt">AttributeTextParser</span> <span class="n">alloc</span><span class="p">]</span> <span class="kd">init</span><span class="p">];</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="k">self</span><span class="p">;</span>
+    
+    <span class="kt">NSString</span> <span class="o">*</span><span class="n">htmlString</span> <span class="o">=</span> <span class="s">@"&lt;font size=</span><span class="se">\"</span><span class="s">16.</span><span class="se">\"</span><span class="s"> color=</span><span class="se">\"</span><span class="s">0,0,0,1.</span><span class="se">\"</span><span class="s">&gt;字号16，黑色"</span><span class="p">;</span>
+    <span class="kt">NSAttributedString</span> <span class="o">*</span><span class="n">attibuteStr</span> <span class="o">=</span> <span class="p">[</span><span class="n">parser</span> <span class="nv">attributeStringFromHtmlString</span><span class="p">:</span><span class="n">htmlString</span> <span class="nv">attributes</span><span class="p">:</span><span class="err">@</span><span class="p">{</span>
+        <span class="kt">FontAttributedName</span> <span class="p">:</span> <span class="s">@"PingFangSC-Semibold"</span><span class="p">,</span>
+        <span class="kt">LineSpacingAttributedName</span> <span class="p">:</span> <span class="err">@</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span>
+        <span class="kt">LineBreakModeAttributedName</span> <span class="p">:</span> <span class="err">@</span><span class="p">(</span><span class="kt">NSLineBreakByTruncatingTail</span><span class="p">)</span>
+    <span class="p">}];</span>
+    
+    <span class="kt">AttributedLabel</span> <span class="o">*</span><span class="n">label</span> <span class="o">=</span> <span class="p">[[</span><span class="kt">AttributedLabel</span> <span class="n">alloc</span><span class="p">]</span> <span class="kd">init</span><span class="p">];</span>
+    <span class="n">label</span><span class="o">.</span><span class="n">attributedText</span> <span class="o">=</span> <span class="n">attibuteStr</span><span class="p">;</span>
+    <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">view</span> <span class="nv">addSubview</span><span class="p">:</span><span class="n">label</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="cp">#pragma mark - AttributeTextParserDelegate</span>
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">textParser</span><span class="p">:(</span><span class="kt">AttributeTextParser</span> <span class="o">*</span><span class="p">)</span><span class="n">textParser</span> <span class="nv">linkTouchedWithHref</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">href</span> <span class="p">{</span>
+    <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"Href : %@"</span><span class="p">,</span> <span class="n">href</span><span class="p">);</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<ul>
+  <li>初始化 AttributeTextParser，如果需要点击事件响应，则需添加代理。</li>
+</ul>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">AttributeTextParser</span> <span class="o">*</span><span class="n">parser</span> <span class="o">=</span> <span class="p">[[</span><span class="kt">AttributeTextParser</span> <span class="n">alloc</span><span class="p">]</span> <span class="kd">init</span><span class="p">];</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="k">self</span><span class="p">;</span>
+</code></pre></div></div>
+
+<ul>
+  <li>添加代理回调</li>
+</ul>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#pragma mark - AttributeTextParserDelegate</span>
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">textParser</span><span class="p">:(</span><span class="kt">AttributeTextParser</span> <span class="o">*</span><span class="p">)</span><span class="n">textParser</span> <span class="nv">linkTouchedWithHref</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">href</span> <span class="p">{</span>
+    <span class="kt">NSLog</span><span class="p">(</span><span class="s">@"Href : %@"</span><span class="p">,</span> <span class="n">href</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>将拼接好的类 HTML 标签生成 NSAttributedString</li>
+</ul>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">NSAttributedString</span> <span class="o">*</span><span class="n">attibuteStr</span> <span class="o">=</span> <span class="p">[</span><span class="n">parser</span> <span class="nv">attributeStringFromHtmlString</span><span class="p">:</span><span class="n">htmlString</span> <span class="nv">attributes</span><span class="p">:</span><span class="err">@</span><span class="p">{</span>
+	<span class="kt">FontAttributedName</span> <span class="p">:</span> <span class="s">@"PingFangSC-Semibold"</span><span class="p">,</span>
+	<span class="kt">LineSpacingAttributedName</span> <span class="p">:</span> <span class="err">@</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span>
+	<span class="kt">LineBreakModeAttributedName</span> <span class="p">:</span> <span class="err">@</span><span class="p">(</span><span class="kt">NSLineBreakByTruncatingTail</span><span class="p">)</span>
+<span class="p">}];</span>
+</code></pre></div></div>
+
+<p>这里可以添加附属属性 attributes，以字典的形式传递，分别为：</p>
+
+<blockquote>
+  <p>FontAttributedName：字体名称</p>
+
+  <p>LineSpacingAttributedName：行间距</p>
+
+  <p>LineBreakModeAttributedName：断行模式</p>
+</blockquote>
+
+<ul>
+  <li>调用 AttributedLabel 或 AttributedTextView 进行展示</li>
+</ul>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">AttributedLabel</span> <span class="o">*</span><span class="n">label</span> <span class="o">=</span> <span class="p">[[</span><span class="kt">AttributedLabel</span> <span class="n">alloc</span><span class="p">]</span> <span class="kd">init</span><span class="p">];</span>
+<span class="n">label</span><span class="o">.</span><span class="n">attributedText</span> <span class="o">=</span> <span class="n">attibuteStr</span><span class="p">;</span>
+<span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">view</span> <span class="nv">addSubview</span><span class="p">:</span><span class="n">label</span><span class="p">];</span>
+</code></pre></div></div>
+
+<h2 id="源码解析">源码解析</h2>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="o">-</span> <span class="p">(</span><span class="kt">NSAttributedString</span> <span class="o">*</span><span class="p">)</span><span class="nv">attributeStringFromHtmlString</span><span class="p">:(</span><span class="kt">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">htmlString</span> <span class="nv">attributes</span><span class="p">:(</span><span class="kt">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="n">attributes</span> <span class="p">{</span>
+    <span class="kt">NSMutableAttributedString</span> <span class="o">*</span><span class="n">finalString</span> <span class="o">=</span> <span class="p">[[</span><span class="kt">NSMutableAttributedString</span> <span class="n">alloc</span><span class="p">]</span> <span class="nv">initWithString</span><span class="p">:</span><span class="n">htmlString</span><span class="p">];</span>
+    <span class="c1">// 通过正则将类 HTML 标签拆分</span>
+    <span class="kt">NSRegularExpression</span> <span class="o">*</span><span class="n">regex</span> <span class="o">=</span> <span class="p">[</span><span class="kt">NSRegularExpression</span> <span class="nv">regularExpressionWithPattern</span><span class="p">:</span><span class="s">@"&lt;[^&gt;]+&gt;"</span> <span class="nv">options</span><span class="p">:</span><span class="kt">NSRegularExpressionCaseInsensitive</span> <span class="nv">error</span><span class="p">:</span><span class="kc">nil</span><span class="p">];</span>
+    <span class="kt">NSArray</span> <span class="o">*</span><span class="n">resultArray</span> <span class="o">=</span> <span class="p">[</span><span class="n">regex</span> <span class="nv">matchesInString</span><span class="p">:</span><span class="n">htmlString</span> <span class="nv">options</span><span class="p">:</span><span class="mi">0</span> <span class="nv">range</span><span class="p">:</span><span class="kt">NSMakeRange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">htmlString</span><span class="o">.</span><span class="n">length</span><span class="p">)];</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">NSTextCheckingResult</span> <span class="o">*</span><span class="n">result</span> <span class="k">in</span> <span class="n">resultArray</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// 获取每个 &lt;&gt; 标签，e.g.:&lt;font size="14.000000"&gt;</span>
+        <span class="kt">NSString</span> <span class="o">*</span><span class="n">htmlAttributedString</span> <span class="o">=</span> <span class="p">[</span><span class="n">htmlString</span> <span class="nv">substringWithRange</span><span class="p">:</span><span class="n">result</span><span class="o">.</span><span class="n">range</span><span class="p">];</span>
+        <span class="c1">// 去除 &lt;&gt;，font size="14.000000"</span>
+        <span class="kt">NSString</span> <span class="o">*</span><span class="n">htmlAttributedContent</span> <span class="o">=</span> <span class="p">[</span><span class="n">htmlAttributedString</span> <span class="nv">substringWithRange</span><span class="p">:</span><span class="kt">NSMakeRange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">htmlAttributedString</span><span class="o">.</span><span class="n">length</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)];</span>
+        
+        <span class="c1">// font</span>
+        <span class="c1">// 获取每个 &lt;font&gt; 标签中字体属性</span>
+        <span class="kt">NSDictionary</span> <span class="o">*</span><span class="n">fontInfo</span> <span class="o">=</span> <span class="p">[</span><span class="k">self</span> <span class="nv">fontInfoWithString</span><span class="p">:</span><span class="n">htmlAttributedContent</span> <span class="nv">attributes</span><span class="p">:</span><span class="n">attributes</span><span class="p">];</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">fontInfo</span> <span class="o">!=</span> <span class="kc">nil</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// fontInfo 存在，则表示本次 forin 循环遍历为 &lt;font&gt; 标签，定位标签位置</span>
+            <span class="kt">NSRange</span> <span class="n">fontInfoRange</span> <span class="o">=</span> <span class="p">[</span><span class="n">finalString</span><span class="o">.</span><span class="n">string</span> <span class="nv">rangeOfString</span><span class="p">:</span><span class="n">htmlAttributedString</span> <span class="nv">options</span><span class="p">:</span><span class="kt">NSLiteralSearch</span><span class="p">];</span>
+            <span class="c1">// 移除标记语言 &lt;font&gt;</span>
+            <span class="p">[</span><span class="n">finalString</span> <span class="nv">replaceCharactersInRange</span><span class="p">:</span><span class="n">fontInfoRange</span> <span class="nv">withString</span><span class="p">:</span><span class="s">@""</span><span class="p">];</span>
+            <span class="c1">// 字体设置范围为自此 &lt;font&gt; 标签后的所有字符串</span>
+            <span class="kt">NSRange</span> <span class="n">replaceRange</span> <span class="o">=</span> <span class="kt">NSMakeRange</span><span class="p">(</span><span class="n">fontInfoRange</span><span class="o">.</span><span class="n">location</span><span class="p">,</span> <span class="n">finalString</span><span class="o">.</span><span class="n">length</span> <span class="o">-</span> <span class="n">fontInfoRange</span><span class="o">.</span><span class="n">location</span><span class="p">);</span>
+            <span class="c1">// 设置范围内字体</span>
+            <span class="k">if</span> <span class="p">([[</span><span class="n">fontInfo</span> <span class="n">allKeys</span><span class="p">]</span> <span class="nv">containsObject</span><span class="p">:</span><span class="kt">NSFontAttributeName</span><span class="p">])</span> <span class="p">{</span>
+                <span class="kt">UIFont</span> <span class="o">*</span><span class="n">font</span> <span class="o">=</span> <span class="p">[</span><span class="n">fontInfo</span> <span class="nv">objectForKey</span><span class="p">:</span><span class="kt">NSFontAttributeName</span><span class="p">];</span>
+                <span class="p">[</span><span class="n">finalString</span> <span class="nv">yy_setFont</span><span class="p">:</span><span class="n">font</span> <span class="nv">range</span><span class="p">:</span><span class="n">replaceRange</span><span class="p">];</span>
+            <span class="p">}</span>
+            <span class="c1">// 设置范围内颜色</span>
+            <span class="k">if</span> <span class="p">([[</span><span class="n">fontInfo</span> <span class="n">allKeys</span><span class="p">]</span> <span class="nv">containsObject</span><span class="p">:</span><span class="kt">NSForegroundColorAttributeName</span><span class="p">])</span> <span class="p">{</span>
+                <span class="kt">UIColor</span> <span class="o">*</span><span class="n">color</span> <span class="o">=</span> <span class="p">[</span><span class="n">fontInfo</span> <span class="nv">objectForKey</span><span class="p">:</span><span class="kt">NSForegroundColorAttributeName</span><span class="p">];</span>
+                <span class="p">[</span><span class="n">finalString</span> <span class="nv">yy_setColor</span><span class="p">:</span><span class="n">color</span> <span class="nv">range</span><span class="p">:</span><span class="n">replaceRange</span><span class="p">];</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        
+        <span class="c1">// image</span>
+        <span class="c1">// 获取每个 &lt;img&gt; 标签中属性</span>
+        <span class="kt">NSDictionary</span> <span class="o">*</span><span class="n">imageInfo</span> <span class="o">=</span> <span class="p">[</span><span class="k">self</span> <span class="nv">imageInfoWithString</span><span class="p">:</span><span class="n">htmlAttributedContent</span> <span class="nv">attributes</span><span class="p">:</span><span class="n">attributes</span><span class="p">];</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">imageInfo</span> <span class="o">!=</span> <span class="kc">nil</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// imageInfo 存在，则表示本次 forin 循环遍历为 &lt;img&gt; 标签</span>
+            <span class="kt">CGFloat</span> <span class="n">width</span> <span class="o">=</span> <span class="p">[[</span><span class="n">imageInfo</span> <span class="nv">objectForKey</span><span class="p">:</span><span class="s">@"width"</span><span class="p">]</span> <span class="n">floatValue</span><span class="p">];</span>
+            <span class="kt">CGFloat</span> <span class="n">height</span> <span class="o">=</span> <span class="p">[[</span><span class="n">imageInfo</span> <span class="nv">objectForKey</span><span class="p">:</span><span class="s">@"height"</span><span class="p">]</span> <span class="n">floatValue</span><span class="p">];</span>
+            <span class="kt">CGFloat</span> <span class="n">descent</span> <span class="o">=</span> <span class="p">[[</span><span class="n">imageInfo</span> <span class="nv">objectForKey</span><span class="p">:</span><span class="s">@"descent"</span><span class="p">]</span> <span class="n">floatValue</span><span class="p">];</span> <span class="c1">// 向下偏移量</span>
+            <span class="kt">NSString</span> <span class="o">*</span><span class="n">fileName</span> <span class="o">=</span> <span class="p">[</span><span class="n">imageInfo</span> <span class="nv">objectForKey</span><span class="p">:</span><span class="s">@"fileName"</span><span class="p">];</span>
+            <span class="kt">CGFloat</span> <span class="n">fps</span> <span class="o">=</span> <span class="p">[[</span><span class="n">imageInfo</span> <span class="nv">objectForKey</span><span class="p">:</span><span class="s">@"fps"</span><span class="p">]</span> <span class="n">floatValue</span><span class="p">];</span>
+            <span class="kt">CGFloat</span> <span class="n">duration</span> <span class="o">=</span> <span class="p">[[</span><span class="n">imageInfo</span> <span class="nv">objectForKey</span><span class="p">:</span><span class="s">@"duration"</span><span class="p">]</span> <span class="n">floatValue</span><span class="p">];</span>
+            <span class="kt">EnumAttributeTextImageType</span> <span class="n">imageType</span> <span class="o">=</span> <span class="p">[[</span><span class="n">imageInfo</span> <span class="nv">objectForKey</span><span class="p">:</span><span class="s">@"type"</span><span class="p">]</span> <span class="n">integerValue</span><span class="p">];</span>
+            
+            <span class="c1">// 生成图片 attachment</span>
+            <span class="n">id</span> <span class="n">attrachmentContent</span><span class="p">;</span>
+            <span class="k">switch</span> <span class="p">(</span><span class="n">imageType</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="kt">EnumAttributeTextImageTypeDefault</span><span class="p">:</span> <span class="p">{</span> <span class="c1">// 静态图片</span>
+                    <span class="kt">YYImage</span> <span class="o">*</span><span class="n">image</span> <span class="o">=</span> <span class="p">[</span><span class="k">self</span> <span class="nv">imageWithFilePath</span><span class="p">:</span><span class="n">fileName</span><span class="p">];</span>
+                    <span class="n">attrachmentContent</span> <span class="o">=</span> <span class="n">image</span><span class="p">;</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="kt">EnumAttributeTextImageTypeGif</span><span class="p">:</span> <span class="p">{</span> <span class="c1">// 动图 Gif</span>
+                    <span class="kt">YYImage</span> <span class="o">*</span><span class="n">image</span> <span class="o">=</span> <span class="p">[</span><span class="kt">YYImage</span> <span class="nv">imageNamed</span><span class="p">:</span><span class="n">fileName</span><span class="p">];</span>
+                    <span class="n">image</span><span class="o">.</span><span class="n">preloadAllAnimatedImageFrames</span> <span class="o">=</span> <span class="kt">YES</span><span class="p">;</span>
+                    <span class="n">attrachmentContent</span> <span class="o">=</span> <span class="n">image</span><span class="p">;</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="kt">EnumAttributeTextImageTypeFrame</span><span class="p">:</span> <span class="p">{</span> <span class="c1">// 序列帧</span>
+                    <span class="kt">NSArray</span> <span class="o">*</span><span class="n">imageStringArray</span> <span class="o">=</span> <span class="p">[</span><span class="n">fileName</span> <span class="nv">componentsSeparatedByString</span><span class="p">:</span><span class="s">@","</span><span class="p">];</span>
+                    <span class="c1">// 默认 fps 为 6</span>
+                    <span class="kt">NSTimeInterval</span> <span class="n">defaultDuration</span> <span class="o">=</span> <span class="mi">1</span><span class="o">.</span><span class="n">f</span> <span class="o">/</span> <span class="mi">6</span><span class="o">.</span><span class="n">f</span><span class="p">;</span> <span class="c1">// defaultDuration 为每帧时间</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">duration</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">imageStringArray</span><span class="o">.</span><span class="n">count</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">defaultDuration</span> <span class="o">=</span> <span class="n">duration</span> <span class="o">/</span> <span class="n">imageStringArray</span><span class="o">.</span><span class="n">count</span><span class="p">;</span> <span class="c1">// 动画总时间 / 动画总帧数 = 每帧所用时间</span>
+                    <span class="p">}</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">fps</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">defaultDuration</span> <span class="o">=</span> <span class="mi">1</span><span class="o">.</span><span class="n">f</span> <span class="o">/</span> <span class="n">fps</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="kt">YYFrameImage</span> <span class="o">*</span><span class="n">frameImage</span> <span class="o">=</span> <span class="p">[[</span><span class="kt">YYFrameImage</span> <span class="n">alloc</span><span class="p">]</span> <span class="nv">initWithImagePaths</span><span class="p">:</span><span class="n">imageStringArray</span>
+                                                                       <span class="nv">oneFrameDuration</span><span class="p">:</span><span class="n">defaultDuration</span>
+                                                                              <span class="nv">loopCount</span><span class="p">:</span><span class="mi">0</span><span class="p">];</span>
+                    <span class="n">attrachmentContent</span> <span class="o">=</span> <span class="n">frameImage</span><span class="p">;</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            
+            <span class="kt">NSMutableAttributedString</span> <span class="o">*</span><span class="n">attachString</span> <span class="o">=</span> <span class="p">[</span><span class="kt">NSMutableAttributedString</span> <span class="nv">v6cn_attachmentStringWithImage</span><span class="p">:</span><span class="n">attrachmentContent</span>
+                                                                                                         <span class="nv">ascent</span><span class="p">:</span><span class="n">height</span> <span class="o">-</span> <span class="n">descent</span>
+                                                                                                        <span class="nv">descent</span><span class="p">:</span><span class="n">descent</span>
+                                                                                                           <span class="nv">size</span><span class="p">:</span><span class="kt">CGSizeMake</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)];</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">attachString</span><span class="p">)</span> <span class="p">{</span>
+                <span class="c1">// attachString 存在，替换 &lt;img&gt; 标签</span>
+                <span class="kt">NSRange</span> <span class="n">imageInfoRange</span> <span class="o">=</span> <span class="p">[</span><span class="n">finalString</span><span class="o">.</span><span class="n">string</span> <span class="nv">rangeOfString</span><span class="p">:</span><span class="n">htmlAttributedString</span> <span class="nv">options</span><span class="p">:</span><span class="kt">NSLiteralSearch</span><span class="p">];</span>
+                <span class="p">[</span><span class="n">finalString</span> <span class="nv">replaceCharactersInRange</span><span class="p">:</span><span class="n">imageInfoRange</span> <span class="nv">withAttributedString</span><span class="p">:</span><span class="n">attachString</span><span class="p">];</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="kt">NSMutableDictionary</span> <span class="o">*</span><span class="n">linkHrefDictionaryM</span> <span class="o">=</span> <span class="p">[</span><span class="kt">NSMutableDictionary</span> <span class="n">dictionary</span><span class="p">];</span>
+    <span class="c1">// 处理完除 link 的其他标签之后，再去处理 link</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">NSTextCheckingResult</span> <span class="o">*</span><span class="n">result</span> <span class="k">in</span> <span class="n">resultArray</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// 获取每个 &lt;&gt; 标签，e.g.: &lt;link length="4" href="www.6.cn" color="0.819608,0.905882,0.713726,1.000000"&gt;</span>
+        <span class="kt">NSString</span> <span class="o">*</span><span class="n">htmlAttributedString</span> <span class="o">=</span> <span class="p">[</span><span class="n">htmlString</span> <span class="nv">substringWithRange</span><span class="p">:</span><span class="n">result</span><span class="o">.</span><span class="n">range</span><span class="p">];</span>
+        <span class="c1">// 去除 &lt;&gt;，link length="4" href="www.6.cn" color="0.819608,0.905882,0.713726,1.000000"</span>
+        <span class="kt">NSString</span> <span class="o">*</span><span class="n">htmlAttributedContent</span> <span class="o">=</span> <span class="p">[</span><span class="n">htmlAttributedString</span> <span class="nv">substringWithRange</span><span class="p">:</span><span class="kt">NSMakeRange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">htmlAttributedString</span><span class="o">.</span><span class="n">length</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)];</span>
+        
+        <span class="c1">//link</span>
+        <span class="c1">// 获取每个 &lt;link&gt; 标签中属性</span>
+        <span class="kt">NSDictionary</span> <span class="o">*</span><span class="n">linkInfoDictionary</span> <span class="o">=</span> <span class="p">[</span><span class="k">self</span> <span class="nv">linkInfoWithString</span><span class="p">:</span><span class="n">htmlAttributedContent</span> <span class="nv">attributes</span><span class="p">:</span><span class="n">attributes</span><span class="p">];</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">linkInfoDictionary</span> <span class="o">!=</span> <span class="kc">nil</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kt">NSInteger</span> <span class="n">linkLength</span> <span class="o">=</span> <span class="p">[[</span><span class="n">linkInfoDictionary</span> <span class="nv">objectForKey</span><span class="p">:</span><span class="s">@"length"</span><span class="p">]</span> <span class="n">integerValue</span><span class="p">];</span>
+            <span class="kt">NSString</span> <span class="o">*</span><span class="n">href</span> <span class="o">=</span> <span class="p">[</span><span class="n">linkInfoDictionary</span> <span class="nv">objectForKey</span><span class="p">:</span><span class="s">@"href"</span><span class="p">];</span>
+            <span class="kt">NSDictionary</span> <span class="o">*</span><span class="n">linkAttributes</span> <span class="o">=</span> <span class="p">[</span><span class="n">linkInfoDictionary</span> <span class="nv">objectForKey</span><span class="p">:</span><span class="s">@"attributes"</span><span class="p">];</span>
+            
+            <span class="c1">// link 标记符 range，&lt;link length="4" href="www.6.cn" color="0.819608,0.905882,0.713726,1.000000"&gt;，&lt;&gt;</span>
+            <span class="kt">NSRange</span> <span class="n">linkInfoRange</span> <span class="o">=</span> <span class="p">[</span><span class="n">finalString</span><span class="o">.</span><span class="n">string</span> <span class="nv">rangeOfString</span><span class="p">:</span><span class="n">htmlAttributedString</span> <span class="nv">options</span><span class="p">:</span><span class="kt">NSLiteralSearch</span><span class="p">];</span>
+            
+            <span class="c1">// 防止 location 越界</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">linkInfoRange</span><span class="o">.</span><span class="n">location</span> <span class="o">&gt;</span> <span class="n">finalString</span><span class="o">.</span><span class="n">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">linkInfoRange</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">finalString</span><span class="o">.</span><span class="n">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+            <span class="p">}</span>
+            
+            <span class="c1">// 删除 &lt;link&gt; 标签</span>
+            <span class="p">[</span><span class="n">finalString</span> <span class="nv">replaceCharactersInRange</span><span class="p">:</span><span class="n">linkInfoRange</span> <span class="nv">withString</span><span class="p">:</span><span class="s">@""</span><span class="p">];</span>
+            
+            <span class="k">if</span> <span class="p">(</span><span class="n">finalString</span><span class="o">.</span><span class="n">length</span> <span class="o">&lt;</span> <span class="n">linkInfoRange</span><span class="o">.</span><span class="n">location</span> <span class="o">+</span> <span class="n">linkLength</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">linkLength</span> <span class="o">=</span> <span class="n">finalString</span><span class="o">.</span><span class="n">length</span> <span class="o">-</span> <span class="n">linkInfoRange</span><span class="o">.</span><span class="n">location</span><span class="p">;</span>
+            <span class="p">}</span>
+            
+            <span class="k">if</span> <span class="p">(</span><span class="n">linkLength</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">linkLength</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="p">}</span>
+            
+            <span class="c1">// 超链range，超链之后开始计算，受 length 控制，图片长度计算为 1</span>
+            <span class="kt">NSRange</span> <span class="n">linkRange</span> <span class="o">=</span> <span class="kt">NSMakeRange</span><span class="p">(</span><span class="n">linkInfoRange</span><span class="o">.</span><span class="n">location</span><span class="p">,</span> <span class="n">linkLength</span><span class="p">);</span>
+            
+            <span class="c1">// 用于储存 href，以 range 为 key</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">href</span> <span class="o">&amp;&amp;</span> <span class="n">href</span><span class="o">.</span><span class="n">length</span><span class="p">)</span> <span class="p">{</span>
+                <span class="p">[</span><span class="n">linkHrefDictionaryM</span> <span class="nv">setValue</span><span class="p">:</span><span class="n">href</span> <span class="nv">forKey</span><span class="p">:</span><span class="kt">NSStringFromRange</span><span class="p">(</span><span class="n">linkRange</span><span class="p">)];</span>
+            <span class="p">}</span>
+            
+            <span class="kt">UIColor</span> <span class="o">*</span><span class="n">highlightColor</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">linkAttributes</span> <span class="o">&amp;&amp;</span> <span class="n">linkAttributes</span><span class="o">.</span><span class="n">allKeys</span><span class="o">.</span><span class="n">count</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">([[</span><span class="n">linkAttributes</span> <span class="n">allKeys</span><span class="p">]</span> <span class="nv">containsObject</span><span class="p">:</span><span class="kt">NSForegroundColorAttributeName</span><span class="p">])</span> <span class="p">{</span>
+                    <span class="n">highlightColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">linkAttributes</span> <span class="nv">objectForKey</span><span class="p">:</span><span class="kt">NSForegroundColorAttributeName</span><span class="p">];</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            
+            <span class="p">[</span><span class="n">finalString</span> <span class="nv">yy_setTextHighlightRange</span><span class="p">:</span><span class="n">linkRange</span>
+                                            <span class="nv">color</span><span class="p">:</span><span class="n">highlightColor</span>
+                                  <span class="nv">backgroundColor</span><span class="p">:[</span><span class="kt">UIColor</span> <span class="n">clearColor</span><span class="p">]</span>
+                                        <span class="nv">tapAction</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="kt">UIView</span> <span class="o">*</span> <span class="n">_Nonnull</span> <span class="n">containerView</span><span class="p">,</span> <span class="kt">NSAttributedString</span> <span class="o">*</span> <span class="n">_Nonnull</span> <span class="n">text</span><span class="p">,</span> <span class="kt">NSRange</span> <span class="n">range</span><span class="p">,</span> <span class="kt">CGRect</span> <span class="n">rect</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kt">NSArray</span> <span class="o">*</span><span class="n">linkHrefKeysArray</span> <span class="o">=</span> <span class="p">[</span><span class="n">linkHrefDictionaryM</span> <span class="n">allKeys</span><span class="p">];</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">NSString</span> <span class="o">*</span><span class="n">tempKey</span> <span class="k">in</span> <span class="n">linkHrefKeysArray</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">([</span><span class="n">tempKey</span> <span class="nv">isEqualToString</span><span class="p">:</span><span class="kt">NSStringFromRange</span><span class="p">(</span><span class="n">range</span><span class="p">)])</span> <span class="p">{</span>
+                        <span class="kt">NSString</span> <span class="o">*</span><span class="n">href</span> <span class="o">=</span> <span class="p">[</span><span class="n">linkHrefDictionaryM</span> <span class="nv">objectForKey</span><span class="p">:</span><span class="n">tempKey</span><span class="p">];</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="k">self</span><span class="o">.</span><span class="n">delegate</span> <span class="o">&amp;&amp;</span> <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">delegate</span> <span class="nv">respondsToSelector</span><span class="p">:</span><span class="kd">@selector</span><span class="p">(</span><span class="nv">textParser</span><span class="p">:</span><span class="nv">linkTouchedWithHref</span><span class="p">:)])</span> <span class="p">{</span>
+                            <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">delegate</span> <span class="nv">textParser</span><span class="p">:</span><span class="k">self</span> <span class="nv">linkTouchedWithHref</span><span class="p">:</span><span class="n">href</span><span class="p">];</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}];</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// 去除其他 HTML 标签</span>
+    <span class="kt">NSArray</span> <span class="o">*</span><span class="n">arrHtmlTagResult</span> <span class="o">=</span> <span class="p">[</span><span class="n">regex</span> <span class="nv">matchesInString</span><span class="p">:</span><span class="n">finalString</span><span class="o">.</span><span class="n">string</span> <span class="nv">options</span><span class="p">:</span><span class="mi">0</span> <span class="nv">range</span><span class="p">:</span><span class="kt">NSMakeRange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">finalString</span><span class="o">.</span><span class="n">length</span><span class="p">)];</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">NSInteger</span> <span class="n">i</span> <span class="o">=</span> <span class="n">arrHtmlTagResult</span><span class="o">.</span><span class="n">count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">NSTextCheckingResult</span> <span class="o">*</span><span class="n">result</span> <span class="o">=</span> <span class="n">arrHtmlTagResult</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="p">[</span><span class="n">finalString</span> <span class="nv">replaceCharactersInRange</span><span class="p">:</span><span class="n">result</span><span class="o">.</span><span class="n">range</span> <span class="nv">withString</span><span class="p">:</span><span class="s">@""</span><span class="p">];</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// 设置追加属性</span>
+    <span class="kt">CGFloat</span> <span class="n">lineSpacing</span> <span class="o">=</span> <span class="p">[[</span><span class="n">attributes</span> <span class="nv">objectForKey</span><span class="p">:</span><span class="kt">LineSpacingAttributedName</span><span class="p">]</span> <span class="n">floatValue</span><span class="p">];</span>
+    <span class="kt">NSLineBreakMode</span> <span class="n">lineBreakMode</span> <span class="o">=</span> <span class="p">[[</span><span class="n">attributes</span> <span class="nv">objectForKey</span><span class="p">:</span><span class="kt">LineBreakModeAttributedName</span><span class="p">]</span> <span class="n">integerValue</span><span class="p">];</span>
+    
+    <span class="n">finalString</span><span class="o">.</span><span class="n">yy_lineSpacing</span> <span class="o">=</span> <span class="n">lineSpacing</span><span class="p">;</span>
+    <span class="n">finalString</span><span class="o">.</span><span class="n">yy_lineBreakMode</span> <span class="o">=</span> <span class="n">lineBreakMode</span><span class="p">;</span>
+    <span class="n">finalString</span><span class="o">.</span><span class="n">yy_baseWritingDirection</span> <span class="o">=</span> <span class="kt">NSWritingDirectionLeftToRight</span><span class="p">;</span>
+    <span class="n">finalString</span><span class="o">.</span><span class="n">yy_writingDirection</span> <span class="o">=</span> <span class="err">@</span><span class="p">[</span><span class="err">@</span><span class="p">(</span><span class="kt">NSWritingDirectionLeftToRight</span> <span class="o">|</span> <span class="kt">NSWritingDirectionOverride</span><span class="p">)];</span>
+    
+    <span class="k">return</span> <span class="n">finalString</span><span class="p">;</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<h2 id="标签拓展">标签拓展</h2>
+
+<p>当现有标签不满足需求时，可添加拓展标签，类似</p>
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">&lt;b&gt;</code>加粗</p>
+
+  <p><code class="language-plaintext highlighter-rouge">&lt;i&gt;</code>斜体</p>
+
+  <p><code class="language-plaintext highlighter-rouge">&lt;badge id=56&gt;</code>徽章视图</p>
+
+  <p><code class="language-plaintext highlighter-rouge">&lt;fans name="张三"&gt;</code>粉丝团徽章</p>
+
+  <p><code class="language-plaintext highlighter-rouge">&lt;view id=0xdddr3333&gt;</code>插入UIView</p>
+</blockquote>
+
+<p>只需在<code class="language-plaintext highlighter-rouge">attributeStringFromHtmlString: attributes:</code>中继续拓展其他类型即可实现。</p>
+
+<h2 id="关于第三方依赖">关于第三方依赖</h2>
+
+<p>目前项目中 AttributeTextParser 集成了 YYKit，通过 YYKit 来实现富文本相关内容，但 AttributeTextParser 不与富文本第三方强耦合，可以使用 NSAttributeString 原生 API 进行实现，也可使用其他富文本第三方进行实现；</p>
+
+<p><strong>关于原生方法实现思路</strong></p>
+
+<blockquote>
+  <ul>
+    <li>通过 <code class="language-plaintext highlighter-rouge">addAttributes: range:</code> 方法可实现类似字体 NSFontAttributeName、颜色 NSForegroundColorAttributeName、超链 NSLinkAttributeName 等功能；</li>
+    <li>通过 NSTextAttachment 添加图片，虽然 NSTextAttachment 默认不支持动图，但是可以通过复写<code class="language-plaintext highlighter-rouge">NSTextAttachmentContainer</code>类中<code class="language-plaintext highlighter-rouge">imageForBounds: textContainer: characterIndex:</code>方法进行实现</li>
+    <li>关于点击事件，可以为 <code class="language-plaintext highlighter-rouge">UITextView</code> 添加 tap 事件，可通过下述方法获取 NSLinkAttributeName 的值，通过 <code class="language-plaintext highlighter-rouge">UITextView</code> 回调给外部，进行事件的传递。</li>
+  </ul>
+</blockquote>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>UITextPosition *position = [self.textView closestPositionToPoint:[tap locationInView:self.textView]];
+NSDictionary&lt;NSAttributedStringKey, id&gt; *textStylings = [self.textView textStylingAtPosition:position inDirection:UITextStorageDirectionForward];
+NSString *url = [textStylings objectForKey:NSLinkAttributeName];
+</code></pre></div></div>
+
+<h2 id="one-more-thing">One More Thing</h2>
+
+<p>在现有架构下，房间公聊解析可进一步容器化，去除本地 socket 解析逻辑，将业务逻辑交给前端、服务端解析，返回一段类 HTML 标签，端上公聊展示，对于单一符文本样式（无定制UI需求），只做展示解析处理，不再处理业务。</p>
+
+
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2018/11/21/guideline-of-pdfkit/" data-toggle="tooltip" data-placement="top" title="iOS PDFKit 开发指北">
+                        Previous<br>
+                        <span>iOS PDFKit 开发指北</span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+
+
+                <!--Gitalk评论start  -->
+                
+                <!-- 引入Gitalk评论插件  -->
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+                <div id="gitalk-container"></div>
+                <!-- 引入一个生产md5的js，用于对id值进行处理，防止其过长 -->
+                <!-- Thank DF:https://github.com/NSDingFan/NSDingFan.github.io/issues/3#issuecomment-407496538 -->
+                <script src="/js/md5.min.js"></script>
+                <script type="text/javascript">
+                    var gitalk = new Gitalk({
+                    clientID: '440847f85c950402a76b',
+                    clientSecret: '92371c89905e71fe83cfd3815f779358726d9c48',
+                    repo: 'japho.github.io',
+                    owner: 'japho',
+                    admin: ['japho'],
+                    distractionFreeMode: true,
+                    id: md5(location.pathname),
+                    });
+                    gitalk.render('gitalk-container');
+                </script>
+                
+                <!-- Gitalk end -->
+
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+                				<a href="/tags/#iOS" title="iOS" rel="32">
+                                    iOS
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#读书笔记" title="读书笔记" rel="13">
+                                    读书笔记
+                                </a>
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="https://www.jianshu.com/u/a1d80b6eaa9e">简书·Japho</a></li>
+                    
+                        <li><a href="https://apple.com">Apple</a></li>
+                    
+                        <li><a href="https://developer.apple.com/">Apple Developer</a></li>
+                    
+                        <li><a href="https://analytics.google.com">Google Analytics</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        // BY Fix:去除标题前的‘#’ issues:<https://github.com/qiubaiying/qiubaiying.github.io/issues/137>
+        // anchors.options = {
+        //   visible: 'always',
+        //   placement: 'right',
+        //   icon: '#'
+        // };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <!-- add jianshu add target = "_blank" to <a> by BY -->
+                    
+                            <li>
+                                <a target="_blank" href="https://www.jianshu.com/u/a1d80b6eaa9e">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa  fa-stack-1x fa-inverse">简</i>
+                                    </span>
+                                </a>
+                            </li>
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/japho">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="http://weibo.com/wangjifeng1114">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+
+
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/japho">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Japho Blog 2023
+                    <br>
+                    <!-- Theme on <a href="hhttps://github.com/japho/japho.github.io.git">GitHub</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=japho&repo=japho.github.io&type=star&count=true" >
+                    </iframe> -->
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script type="text/javascript">
+    if(navigator.serviceWorker){
+        // For security reasons, a service worker can only control the pages that are in the same directory level or below it. That's why we put sw.js at ROOT level.
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {console.log('Service Worker Registered. ', registration)})
+            .catch((error) => {console.log('ServiceWorker registration failed: ', error)})
+    }
+</script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/ 
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers   
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-128251504-1';
+    var _gaDomain = 'japho.top';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/apple-touch-icon.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

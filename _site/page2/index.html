@@ -183,6 +183,26 @@
             ">
     			
 <div class="post-preview">
+    <a href="/2018/07/02/only-dealloc-notification-in-dealloc-methods/">
+        <h2 class="post-title">
+            在dealloc方法中只释放引用并解除监听
+        </h2>
+        
+        <h3 class="post-subtitle">
+            《Effective Objective-C 2.0》读书笔记
+        </h3>
+        
+        <div class="post-content-preview">
+            对象经历生命周期后，就会被系统回收，这时就会执行dealloc方法。在每个对象的生命周期内，此方法只执行一次。不应该自己调用dealloc方法，运行期系统会在适当的时候调用他，而且一旦调用dea...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Japho on July 2, 2018
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
     <a href="/2018/07/01/do-not-using-property-in-category/">
         <h2 class="post-title">
             勿在分类中声明属性
@@ -377,29 +397,6 @@ UIWindow *keyWindow = [[UIAp...
 </div>
 <hr>
 
-<div class="post-preview">
-    <a href="/2016/11/07/iOS-Widget-realiziton/">
-        <h2 class="post-title">
-            iOS Widget的简单实现
-        </h2>
-        
-        <h3 class="post-subtitle">
-            基于iOS10的插件开发
-        </h3>
-        
-        <div class="post-content-preview">
-            前言
-
-
-  自iOS8之后，苹果支持了扩展（Extension）的开发，开发者可以通过系统提供给我们的扩展接入点 (Extension point) 来为系统特定的服务提供某些附加的功能。今年...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Japho on November 7, 2016
-    </p>
-</div>
-<hr>
-
 
 <!-- Pager -->
 
@@ -434,7 +431,7 @@ UIWindow *keyWindow = [[UIAp...
                     <div class="tags">
                         
                             
-                                <a href="/tags/#iOS" title="iOS" rel="31">
+                                <a href="/tags/#iOS" title="iOS" rel="32">
                                     iOS
                                 </a>
                             
